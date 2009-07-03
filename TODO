@@ -1,0 +1,49 @@
+Need a tool for converting RGB images to CMYK.
+
+Needs to be able to store conversion presets.  The presets will have names, and be presented in a "SimpleCombo":
+
+ConfigTemplate ConversionPreset::Template[]=
+{
+	ConfigTemplate("Description",""),
+	ConfigTemplate("InProfile",""),
+	ConfigTemplate("OutProfile",""),
+	ConfigTemplate("Intent",""),
+	ConfigTemplate("HoldBlack",int(0)),
+	ConfigTemplate("HoldGrey",int(0)),
+	ConfigTemplate("Overprint",int(0)),
+	ConfigTemplate()
+};
+
+These options will be saved in $XDG_CONFIG_HOME/cmyktool/
+On startup this directory will be scanned, and each file loaded in turn into a dummy ConfigDB
+from which the description will be extracted.
+(Can SimpleComboOption be changed so instead of a static array it builds a list?)
+
+SimpleComboOptions opts;
+opts.add("Shortname",_("User-visible name"));
+opts.add(...
+(Lifespan?)
+Can't easily make such a thing global.
+
+The UI would have a panel on the left containing the list of files to be processed, then a notebook.
+The first page of the notebook will contain a drop-down with the list of presets, the last of which will be "New..."
+When a preset is selected, the values from that preset will be loaded into the widgets beneath the combo.
+Any change to these values must change the Combo's value to "New..."
+
+The widgets beneath will allow In and Out profiles to be selected, along with a rendering intent.
+If the Out profile is CMYK, a combo box with the following options will be available:
+Normal
+Hold Black
+Hold Grey
+Overprint Black
+
+The second pane of the notebook will contain a preview of the original image.
+The third pane of the notebook will contain a preview of the converted file.
+This will need a cached version of the transformed CMYK data, because we will need checkboxes
+for C, M, Y and K, so the plates can be dropped out for inspection of the result.
+
+Also needs to support converting from CMYK to RGB.
+
+Need to improve support for GhostScript backend.  Colourspace can be set using the input profile's colourspace.
+Temp files?  Lifetimes?  Multiple pages?
+
