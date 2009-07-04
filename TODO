@@ -49,8 +49,10 @@ for C, M, Y and K, so the plates can be dropped out for inspection of the result
 
 Also needs to support converting from CMYK to RGB.
 
-Need to improve support for GhostScript backend.  Colourspace can be set using the input profile's colourspace.
-Temp files?  Lifetimes?  Multiple pages?
+| Need to improve support for GhostScript backend.  Colourspace can be set using the input profile's colourspace.
+| Temp files?  Lifetimes?  Multiple pages?
+
+Need to separate rendering and temp file tracking.
 
 Need an ImageBuffer of some kind - something that can hold an image for further processing.
 
