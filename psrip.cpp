@@ -7,6 +7,8 @@
 #include "support/util.h"
 #include "support/progresstext.h"
 #include "support/thread.h"
+#include "support/threadutil.h"
+
 
 using namespace std;
 
@@ -29,42 +31,11 @@ class PSRip_TempFile : public TempFile
 };
 
 
-class PSRip_Thread : public ThreadFunction, public Thread
-{
-	public:
-	PSRip_Thread(const char *cmd) : ThreadFunction(), Thread(this), cmd(cmd)
-	{
-		Start();
-		WaitSync();
-	}
-	virtual ~PSRip_Thread()
-	{
-	}
-	virtual int Entry(Thread &t)
-	{
-		SendSync();
-		try
-		{
-			if(system(cmd))
-				throw "Command failed";
-		}
-		catch(const char *err)
-		{
-			cerr << "Subthread error: " << err << endl;
-			returncode=-1;
-		}
-		return(returncode);
-	}
-	protected:
-	const char *cmd;
-};
-
-
 class PSRip : public TempFileTracker
 {
 	public:
 	PSRip(SearchPathHandler &searchpath,const char *filename,IS_TYPE type,int resolution=600,int firstpage=0,int lastpage=0)
-		: TempFileTracker(), searchpath(searchpath)
+		: TempFileTracker(), searchpath(searchpath), tempname()
 	{
 
 		// Locate GhostScript executable...
@@ -130,7 +101,7 @@ class PSRip : public TempFileTracker
 			free(lpage);
 
 		// Create temporary output filename
-		char *tempname=tempnam(NULL,"PSRIP");
+		tempname=tempnam(NULL,"PSRIP");
 
 		// Now build the actual command.
 		const char *gsfmtstring="%s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s";
@@ -144,7 +115,7 @@ class PSRip : public TempFileTracker
 
 		// Execute the command...
 
-		PSRip_Thread thread(gscmd);
+		Thread_SystemCommand thread(gscmd);
 		ProgressText prog;
 		while(!thread.TestFinished())
 		{
@@ -159,29 +130,36 @@ class PSRip : public TempFileTracker
 		// Now scan the output files and add them to the TempFileTracker
 
 		int page=1;
-		char *buf=(char *)malloc(strlen(tempname)+10);
-		while(page)
+		char *rfn=NULL;
+		while((rfn=GetRippedFilename(page)))
 		{
-			snprintf(buf,strlen(tempname)+10,"%s_%d.tif",tempname,page);
-			cerr << "Checking whether " << buf << " exists..." << endl;
-			if(CheckFileExists(buf))
-			{
-				cerr << "Yes - adding..." << endl;
-				new PSRip_TempFile(this,buf);
-				++page;
-			}
-			else
-				page=0;			
+			new PSRip_TempFile(this,rfn);
+			++page;
+			free(rfn);
 		}
 
 		free(gscmd);
-		free(tempname);
 	}
 	~PSRip()
 	{
+		if(tempname)
+			free(tempname);
 	}
+	char *GetRippedFilename(int page)
+	{
+		char *buf=(char *)malloc(strlen(tempname)+10);
+		snprintf(buf,strlen(tempname)+10,"%s_%d.tif",tempname,page);
+		cerr << "Checking whether " << buf << " exists..." << endl;
+		if(!CheckFileExists(buf))
+		{
+			free(buf);
+			buf=NULL;
+		}
+		return(buf);
+	}	
 	protected:
 	SearchPathHandler &searchpath;
+	char *tempname;
 };
 
 
