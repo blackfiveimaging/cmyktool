@@ -24,6 +24,11 @@ opts.add("Shortname",_("User-visible name"));
 opts.add(...
 (Lifespan?)
 Can't easily make such a thing global.
+Can subclass it, then create a global static instance - however, translation
+must be deferred until the strings are actually needed, because the text domain
+won't be set up in time for instantiation of such a global.
+The other way around this is to sort out the lifespan issue for widgets, then copy the
+list of options - then a constructing function can use a local SimpleComboOptions.
 
 The UI would have a panel on the left containing the list of files to be processed, then a notebook.
 The first page of the notebook will contain a drop-down with the list of presets, the last of which will be "New..."
@@ -46,4 +51,74 @@ Also needs to support converting from CMYK to RGB.
 
 Need to improve support for GhostScript backend.  Colourspace can be set using the input profile's colourspace.
 Temp files?  Lifetimes?  Multiple pages?
+
+Need an ImageBuffer of some kind - something that can hold an image for further processing.
+
+// CachedImage_Deferred - the base class for cached images.  Sets up the width, height, type, etc.
+// and allocated storage, but doesn't actually read the data from the ImageSource until asked.
+// ReadImage() reads and caches the entire image.
+// ReadRow() reads and caches a single row.
+// Generally you won't use this except with ImageSource_Tee.
+
+CachedImage_Deferred
+{
+	public:
+	CachedImage_Deferred(ImageSource *source);
+	~CachedImage_Deferred();
+	void ReadImage();
+	void ReadRow(int row);
+	ImageSource_Cache *GetImageSource();
+	protected:
+	int width,int height;
+	int samplesperpixel;
+	IS_TYPE type;
+	ISDataType *imagedata;
+	friend class ImageSource_Cache;
+	friend class ImageSource_Tee;
+};
+
+
+// Convenience subclass, this variant completely builds and processes the Cached Image immediately.
+
+CachedImage : public CachedImage_Deferred
+{
+	public:
+	CachedImage(ImageSource *source)
+	{
+		ReadImage();
+	}
+	~CachedImage()
+	{
+	}
+	protected:
+};
+
+
+// The GetImageSource member function of the CachedImage classes will return one of these.
+// Unlike most imagesources, this one claims no ownership of the source data, so you can 
+// have as many operating concurrently and as many times on the Cached image as you like.
+
+ImageSource_Cache
+{
+	public:
+	ImageSource_Cache(CachedImage *img);
+	~ImageSource_Cache();
+	ISDataType *GetRow(int row);
+	protected:
+	CachedImage;
+};
+
+
+// ImageSource_Tee is used if you want to "tap into" the ImageSource chain at some point and
+// cache the image as it's built, but still perform further processing - for example, you might
+// want to cache the image before colour management is applied, but still transform for display
+// on the monitor.
+// Alternatively, you might be converting RGB data to CMYK, then to the monitor for proofing, but
+// want to build a cache of the CMYK data for a separate display of individual separations.
+
+ImageSource_Tee
+{
+	public:
+	ImageSource_Tee(ImageSource *source,CachedImage
+}
 

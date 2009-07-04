@@ -20,11 +20,12 @@ libdeflatten_la_SOURCES = \
 	imagesource_extractchannel.cpp \
 	imagesource_extractchannel.h
 
-bin_PROGRAMS = deflatten recombine decompose
+bin_PROGRAMS = deflatten recombine decompose psrip
 
 recombine_SOURCES = recombine.cpp
 decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp
+psrip_SOURCES = psrip.cpp
 
 LDADD = \
 	imageutils/libimageutils.la	\
