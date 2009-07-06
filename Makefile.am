@@ -1,10 +1,11 @@
 # Makefile.am
 
-SUBDIRS = po support imagesource imageutils miscwidgets profilemanager
+SUBDIRS = po support imagesource imageutils miscwidgets profilemanager pixbufthumbnail
 
 localedir=$(datadir)/locale
 
-AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -I./imageutils -I./miscwidgets -I./profilemanager \
+AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -I./imageutils \
+	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail \
 	$(LCMS_CFLAGS) $(GTK2_CFLAGS)
 
 noinst_LTLIBRARIES = libdeflatten.la
@@ -34,6 +35,7 @@ LDADD = \
 	imagesource/libimagesource.la	\
 	support/libsupport.la	\
 	profilemanager/libprofilemanager.la	\
+	pixbufthumbnail/libpixbufthumbnail.la	\
 	libdeflatten.la \
 	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS)
 
@@ -49,6 +51,10 @@ support/libsupport.la:
 profilemanager/libprofilemanager.la:
 	cd profilemanager
 	$(MAKE) libprofilemanager.la
+
+pixbufthumbnail/libpixbufthumbnail.la:
+	cd pixbufthumbnail
+	$(MAKE) libpixbufthumbnail.la
 
 
 EXTRA_DIST = COPYING README TODO

@@ -72,5 +72,6 @@ AC_CONFIG_FILES([Makefile po/Makefile.in
                  imageutils/Makefile
                  support/Makefile
 				 miscwidgets/Makefile
+				 pixbufthumbnail/Makefile
                  profilemanager/Makefile])
 AC_OUTPUT

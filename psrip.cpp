@@ -1,184 +1,112 @@
 #include <iostream>
 #include <cstdio>
 
-#include "imagesource/imagesource.h"
-#include "support/tempfile.h"
-#include "support/searchpath.h"
-#include "support/util.h"
-#include "support/progresstext.h"
-#include "support/thread.h"
-#include "support/threadutil.h"
+#include <gtk/gtk.h>
 
+#include "imagesource/imagesource_util.h"
+#include "imagesource/pixbuf_from_imagesource.h"
+#include "miscwidgets/imageselector.h"
+#include "miscwidgets/pixbufview.h"
+#include "miscwidgets/generaldialogs.h"
+#include "support/progressbar.h"
+#include "support/progresstext.h"
+#include "psrip.h"
+
+#include "config.h"
+#include "gettext.h"
+#define _(x) gettext(x)
 
 using namespace std;
 
 
-class PSRip_TempFile : public TempFile
+class PSRipUI : public SearchPathHandler
 {
 	public:
-	PSRip_TempFile(TempFileTracker *header,const char *fname) : TempFile(header)
+	PSRipUI() : SearchPathHandler(), window(NULL), imgsel(NULL), pbview(NULL)
 	{
-		filename=strdup(fname);
+#ifdef WIN32
+		AddPath("c:/gs/bin/;c:/Program Files/gs/bin");
+#else
+		AddPath("/usr/bin");
+#endif
+
+		GtkWidget *window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+		gtk_window_set_title (GTK_WINDOW (window), _("PSRip Test"));
+		gtk_signal_connect (GTK_OBJECT (window), "delete_event",
+			(GtkSignalFunc) gtk_main_quit, NULL);
+		gtk_widget_show(window);
+
+		GtkWidget *hbox=gtk_hbox_new(FALSE,0);
+		gtk_container_add(GTK_CONTAINER(window),hbox);
+		gtk_widget_show(GTK_WIDGET(hbox));
+
+		imgsel=imageselector_new(NULL,true,false);
+		gtk_box_pack_start(GTK_BOX(hbox),imgsel,FALSE,FALSE,0);
+		gtk_widget_show(imgsel);
+
+		pbview=pixbufview_new(NULL,false);
+		gtk_box_pack_start(GTK_BOX(hbox),pbview,TRUE,TRUE,0);
+		gtk_widget_show(pbview);
+
+		gtk_signal_connect (GTK_OBJECT (imgsel), "changed",
+			G_CALLBACK(image_changed), this);
 	}
-	virtual ~PSRip_TempFile()
+	~PSRipUI()
 	{
+		if(session)
+			delete session;
 	}
-	virtual const char *Filename()
+	void Rip(const char *filename)
 	{
-		return(filename);
+		ProgressBar *prog=new ProgressBar("Ripping file...",false,window);
+		session=new PSRip(*this,filename,prog,IS_TYPE_CMYK);
+
+		TempFile *temp=session->FirstTempFile();
+		while(temp)
+		{
+			cerr << "Got file: " << temp->Filename() << endl;
+			imageselector_set_filename(IMAGESELECTOR(imgsel),temp->Filename());
+			temp=temp->NextTempFile();
+		}
+		delete prog;
+	}
+	static void image_changed(GtkWidget *widget,gpointer userdata)
+	{
+		PSRipUI *rip=(PSRipUI *)userdata;
+		const char *filename=imageselector_get_filename(IMAGESELECTOR(rip->imgsel));
+		try
+		{
+			cerr << "Adding image " << filename << endl;
+			ImageSource *is=ISLoadImage(filename);
+			GdkPixbuf *pb=pixbuf_from_imagesource(is);
+			pixbufview_set_pixbuf(PIXBUFVIEW(rip->pbview),pb);
+		}
+		catch(const char *err)
+		{
+			ErrorMessage_Dialog(err);
+		}
 	}
 	protected:
-};
-
-
-class PSRip : public TempFileTracker
-{
-	public:
-	PSRip(SearchPathHandler &searchpath,const char *filename,IS_TYPE type,int resolution=600,int firstpage=0,int lastpage=0)
-		: TempFileTracker(), searchpath(searchpath), tempname()
-	{
-
-		// Locate GhostScript executable...
-#ifdef WIN32
-		char *gspath=searchpath.SearchPaths("gswin32c.exe");
-#else
-		char *gspath=searchpath.SearchPaths("gs");
-#endif
-		if(!gspath)
-			throw "Can't locate GhostScript executable!";
-
-
-		// Select an appropriate GS device for output...
-
-		const char *gsdev=NULL;
-		switch(STRIP_ALPHA(type))
-		{
-			case IS_TYPE_BW:
-				gsdev="tifflzw";
-				break;
-			case IS_TYPE_GREY:
-				gsdev="tiffgray";
-				break;
-			case IS_TYPE_RGB:
-				gsdev="tiff24nc";
-				break;
-			case IS_TYPE_CMYK:
-				gsdev="tiff32nc";
-				break;
-			case IS_TYPE_DEVICEN:
-				// FIXME: add support for DeviceN using the tiffsep device.
-			default:
-				throw "PSRip: type not yet supported";
-				break;
-		}
-		cerr << "Using Ghostscript device: " << gsdev << endl;
-
-
-		// Create FirstPage and LastPage paramters, if needed...	
-
-		char *fpage=NULL;
-		char *lpage=NULL;
-		if(firstpage)
-		{
-			const char *pagefmt=" -dFirstPage=%d";
-			int bl=strlen(pagefmt)+20;
-			fpage=(char *)malloc(bl);
-			snprintf(fpage,bl,pagefmt,firstpage);
-		}
-		if(lastpage)
-		{
-			const char *pagefmt=" -dFirstPage=%d";
-			int bl=strlen(pagefmt)+20;
-			lpage=(char *)malloc(bl);
-			snprintf(lpage,bl,pagefmt,lastpage);
-		}
-		char *pages=SafeStrcat(fpage,lpage);	// Will be a valid empty string if both are NULL.
-												// Must be free()d.
-		// Having built "pages", don't need these any more.
-		if(fpage)
-			free(fpage);
-		if(lpage)
-			free(lpage);
-
-		// Create temporary output filename
-		tempname=tempnam(NULL,"PSRIP");
-
-		// Now build the actual command.
-		const char *gsfmtstring="%s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s";
-		int cmdlen=strlen(gsfmtstring)+10+strlen(gspath)+strlen(gsdev)+strlen(pages)+strlen(filename);
-		char *gscmd=(char *)malloc(cmdlen);
-		snprintf(gscmd,cmdlen,gsfmtstring,gspath,gsdev,tempname,resolution,resolution,pages,filename);
-		free(pages);
-		free(gspath);
-
-		cerr << "Built command: " << gscmd << endl;
-
-		// Execute the command...
-
-		Thread_SystemCommand thread(gscmd);
-		ProgressText prog;
-		while(!thread.TestFinished())
-		{
-			prog.DoProgress(0,0);
-#ifdef WIN32
-			sleep(100);
-#else
-			usleep(100000);
-#endif
-		}
-
-		// Now scan the output files and add them to the TempFileTracker
-
-		int page=1;
-		char *rfn=NULL;
-		while((rfn=GetRippedFilename(page)))
-		{
-			new PSRip_TempFile(this,rfn);
-			++page;
-			free(rfn);
-		}
-
-		free(gscmd);
-	}
-	~PSRip()
-	{
-		if(tempname)
-			free(tempname);
-	}
-	char *GetRippedFilename(int page)
-	{
-		char *buf=(char *)malloc(strlen(tempname)+10);
-		snprintf(buf,strlen(tempname)+10,"%s_%d.tif",tempname,page);
-		cerr << "Checking whether " << buf << " exists..." << endl;
-		if(!CheckFileExists(buf))
-		{
-			free(buf);
-			buf=NULL;
-		}
-		return(buf);
-	}	
-	protected:
-	SearchPathHandler &searchpath;
-	char *tempname;
+	GtkWidget *window;
+	GtkWidget *imgsel;
+	GtkWidget *pbview;
+	GdkPixbuf *currentimage;
+	PSRip *session;
 };
 
 
 int main(int argc,char *argv[])
 {
+	gtk_init(&argc,&argv);
+
 	if(argc>1)
 	{
 		try
 		{
-			SearchPathHandler searchpath;
-#ifdef WIN32
-			searchpath.AddPath("c:/gs/bin/;c:/Program Files/gs/bin");
-#else
-			searchpath.AddPath("/usr/bin");
-#endif
+			PSRipUI ripper;
+			ripper.Rip(argv[1]);
 
-			cerr << "Processing file " << argv[1] << endl;
-			PSRip rip(searchpath,argv[1],IS_TYPE_CMYK);
-
+			gtk_main();
 
 		}
 		catch(const char *err)
