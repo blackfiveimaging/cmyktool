@@ -19,7 +19,11 @@ libdeflatten_la_SOURCES = \
 	imagesource_plane.cpp \
 	imagesource_plane.h \
 	imagesource_extractchannel.cpp \
-	imagesource_extractchannel.h
+	imagesource_extractchannel.h	\
+	psrip_core.cpp	\
+	psrip_core.h	\
+	psripui.cpp	\
+	psripui.h
 
 bin_PROGRAMS = deflatten recombine decompose psrip
 
@@ -29,6 +33,7 @@ deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
 
 LDADD = \
+	libdeflatten.la \
 	imageutils/libimageutils.la	\
 	miscwidgets/libmiscwidgets.la	\
 	support/libsupport.la	\
@@ -36,7 +41,6 @@ LDADD = \
 	support/libsupport.la	\
 	profilemanager/libprofilemanager.la	\
 	pixbufthumbnail/libpixbufthumbnail.la	\
-	libdeflatten.la \
 	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS)
 
 
