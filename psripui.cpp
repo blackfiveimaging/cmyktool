@@ -31,7 +31,7 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		Start();
 		sync.Wait();
 		cerr << "Subthread up, running and subscribed - starting RIP" << endl;
-		session->Rip(filename,IS_TYPE_CMYK);
+		session->Rip(filename,IS_TYPE_RGB);
 		cerr << "Rip started" << endl;
 		sync.Broadcast();
 		sync.ReleaseMutex();
@@ -54,11 +54,11 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		sync.ObtainMutex();
 		sync.Wait();
 		sync.ReleaseMutex();
+		g_timeout_add(100,pulse,this);
 		while(!session->TestFinished())
 		{
-			if(session->Event.Query())
+			if(session->Event.QueryAndWait())
 			{
-				cerr << "Triggering idle function" << endl;
 				g_timeout_add(1,updateimgselfunc,this);
 			}
 #ifdef WIN32
@@ -71,6 +71,20 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		return(0);
 	}
 	protected:
+	static gboolean pulse(gpointer ud)
+	{
+		PSRipUIThread *t=(PSRipUIThread *)ud;
+		if(t->session->TestFinished())
+		{
+			if(t->prog)
+				delete t->prog;
+			t->prog=NULL;
+			return(FALSE);
+		}
+		if(t->prog)
+			t->prog->DoProgress(0,0);
+		return(TRUE);
+	}
 	static gboolean updateimgselfunc(gpointer ud)
 	{
 		PSRipUIThread *t=(PSRipUIThread *)ud;
@@ -79,7 +93,6 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		TempFile *temp=t->session->FirstTempFile();
 		while(temp)
 		{
-			t->prog->DoProgress(0,0);
 			cerr << "Got file: " << temp->Filename() << endl;
 			imageselector_add_filename(IMAGESELECTOR(t->ripui.imgsel),temp->Filename());
 			temp=temp->NextTempFile();
@@ -101,6 +114,7 @@ PSRipUI::PSRipUI() : SearchPathHandler(), window(NULL), imgsel(NULL), pbview(NUL
 	AddPath("/usr/bin");
 #endif
 	GtkWidget *window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_default_size(GTK_WINDOW(window),600,450);
 	gtk_window_set_title (GTK_WINDOW (window), _("PSRip Test"));
 	gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 		(GtkSignalFunc) gtk_main_quit, NULL);
