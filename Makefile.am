@@ -23,7 +23,8 @@ libdeflatten_la_SOURCES = \
 	psrip_core.cpp	\
 	psrip_core.h	\
 	psripui.cpp	\
-	psripui.h
+	psripui.h	\
+	gettext.h
 
 bin_PROGRAMS = deflatten recombine decompose psrip
 

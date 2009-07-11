@@ -11,6 +11,7 @@
 
 class PSRip_TempFile;
 class Thread_PSRipFileMonitor;
+class Thread_PSRipProcess;
 class PSRip : public TempFileTracker, public ThreadEventHandler
 {
 	public:
@@ -23,9 +24,10 @@ class PSRip : public TempFileTracker, public ThreadEventHandler
 	protected:
 	SearchPathHandler &searchpath;
 	char *tempname;
-	Thread_SystemCommand *ripthread;
+	Thread_PSRipProcess *ripthread;
 	Thread_PSRipFileMonitor *monitorthread;
 	friend class Thread_PSRipFileMonitor;
+	friend class Thread_PSRipProcess;
 };
 
 #endif

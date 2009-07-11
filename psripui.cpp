@@ -27,12 +27,13 @@ class PSRipUIThread : public ThreadFunction, public Thread
 	{
 		prog=new ProgressBar(_("Ripping File..."),false,ripui.window);
 		session=new PSRip(ripui);
-		sync.ObtainMutex();
 		Start();
-		sync.Wait();
+		WaitSync();
+//		sync.Wait();
 		cerr << "Subthread up, running and subscribed - starting RIP" << endl;
-		session->Rip(filename,IS_TYPE_RGB);
+		session->Rip(filename,IS_TYPE_RGB,300);
 		cerr << "Rip started" << endl;
+		sync.ObtainMutex();
 		sync.Broadcast();
 		sync.ReleaseMutex();
 	}
@@ -47,18 +48,30 @@ class PSRipUIThread : public ThreadFunction, public Thread
 	{
 		cerr << "RipUI thread running..." << endl;
 		session->Event.Subscribe();
-		cerr << "Subscribed to event, releasing main thread..." << endl;
+#if 0
+		cerr << "RipUIThread: Subscribed to event, releasing main thread..." << endl;
 		sync.ObtainMutex();
+		cerr << "RipUIThread: Obtained Sync mutex" << endl;
 		sync.Broadcast();
+		cerr << "RipUIThread: Broadcast signal" << endl;
 		sync.ReleaseMutex();
+		cerr << "RipUIThread: Released sync mutex" << endl;
+		// Race condition here maybe?
 		sync.ObtainMutex();
+		cerr << "RipUIThread: Re-acquired sync mutex - waiting for sync" << endl;
+		cerr << "RipUIThread: received - releasing mutex" << endl;
+#endif
+		sync.ObtainMutex();
+		SendSync();
 		sync.Wait();
 		sync.ReleaseMutex();
 		g_timeout_add(100,pulse,this);
 		while(!session->TestFinished())
 		{
+			cerr << "RipUIThread: Waiting on event" << endl;
 			if(session->Event.QueryAndWait())
 			{
+				cerr << "RipUIThread: Event detected - triggering update" << endl;
 				g_timeout_add(1,updateimgselfunc,this);
 			}
 #ifdef WIN32
@@ -93,7 +106,6 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		TempFile *temp=t->session->FirstTempFile();
 		while(temp)
 		{
-			cerr << "Got file: " << temp->Filename() << endl;
 			imageselector_add_filename(IMAGESELECTOR(t->ripui.imgsel),temp->Filename());
 			temp=temp->NextTempFile();
 		}
@@ -162,9 +174,13 @@ void PSRipUI::image_changed(GtkWidget *widget,gpointer userdata)
 	{
 		cerr << "Adding image " << filename << endl;
 		ImageSource *is=ISLoadImage(filename);
-		GdkPixbuf *pb=pixbuf_from_imagesource(is);
-		pixbufview_set_pixbuf(PIXBUFVIEW(rip->pbview),pb);
-		g_object_unref(G_OBJECT(pb));
+		if(is)
+		{
+			GdkPixbuf *pb=pixbuf_from_imagesource(is);
+			pixbufview_set_pixbuf(PIXBUFVIEW(rip->pbview),pb);
+			g_object_unref(G_OBJECT(pb));
+			delete is;
+		}
 	}
 	catch(const char *err)
 	{
