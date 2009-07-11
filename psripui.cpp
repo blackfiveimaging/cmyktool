@@ -48,19 +48,6 @@ class PSRipUIThread : public ThreadFunction, public Thread
 	{
 		cerr << "RipUI thread running..." << endl;
 		session->Event.Subscribe();
-#if 0
-		cerr << "RipUIThread: Subscribed to event, releasing main thread..." << endl;
-		sync.ObtainMutex();
-		cerr << "RipUIThread: Obtained Sync mutex" << endl;
-		sync.Broadcast();
-		cerr << "RipUIThread: Broadcast signal" << endl;
-		sync.ReleaseMutex();
-		cerr << "RipUIThread: Released sync mutex" << endl;
-		// Race condition here maybe?
-		sync.ObtainMutex();
-		cerr << "RipUIThread: Re-acquired sync mutex - waiting for sync" << endl;
-		cerr << "RipUIThread: received - releasing mutex" << endl;
-#endif
 		sync.ObtainMutex();
 		SendSync();
 		sync.Wait();
@@ -121,7 +108,7 @@ class PSRipUIThread : public ThreadFunction, public Thread
 PSRipUI::PSRipUI() : SearchPathHandler(), window(NULL), imgsel(NULL), pbview(NULL), monitorthread(NULL)
 {
 #ifdef WIN32
-	AddPath("c:/gs/bin/;c:/Program Files/gs/bin");
+	AddPath("c:/gs/gs8.64/bin;c:/Program Files/gs/bin;c:/Program Files/gs/gs8.64/bin");
 #else
 	AddPath("/usr/bin");
 #endif

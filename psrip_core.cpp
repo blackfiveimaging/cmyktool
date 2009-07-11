@@ -37,7 +37,7 @@ class PSRip_TempFile : public TempFile
 // Uses fork()/exec() to make the process cancellable.
 
 
-#define GS_ARGC 8
+#define GS_ARGC 9
 class Thread_PSRipProcess : public ThreadFunction, public Thread
 {
 	public:
@@ -136,6 +136,7 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 	}
 	virtual int Entry(Thread &t)
 	{
+#ifndef WIN32
 		for(int i=0;i<argc;++i)
 		{
 			if(argv[i])
@@ -158,6 +159,29 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 				cerr << "Subprocess complete." << endl;
 				break;
 		}		
+#else
+		SendSync();
+		int cmdlen=1;
+		for(int i=0;i<argc;++i)
+		{
+			if(argv[i])
+				cmdlen+=strlen(argv[i])+1;
+		}
+		char *cmd=(char *)malloc(cmdlen);
+
+		// Yes, I know - yuk.
+		snprintf(cmd,cmdlen,"%s %s %s %s %s %s %s %s",
+			argv[0] ? argv[0] : "",
+			argv[1] ? argv[1] : "",
+			argv[2] ? argv[2] : "",
+			argv[3] ? argv[3] : "",
+			argv[4] ? argv[4] : "",
+			argv[5] ? argv[5] : "",
+			argv[6] ? argv[6] : "",
+			argv[7] ? argv[7] : "");
+		cerr << "Using command " << cmd << endl;
+		system(cmd);
+#endif
 		return(0);
 	}
 	protected:
@@ -256,89 +280,8 @@ void PSRip::Rip(const char *filename,IS_TYPE type,int resolution,int firstpage,i
 	if(tempname)
 		free(tempname);
 	tempname=tempnam(NULL,"PSRIP");
-	cerr << "Using tempname: " << tempname << endl;
-
-#if 0
-	// Locate GhostScript executable...
-#ifdef WIN32
-	char *gspath=searchpath.SearchPaths("gswin32c.exe");
-#else
-	char *gspath=searchpath.SearchPaths("gs");
-#endif
-	if(!gspath)
-		throw "Can't locate GhostScript executable!";
-
-
-	// Select an appropriate GS device for output...
-
-	const char *gsdev=NULL;
-	switch(STRIP_ALPHA(type))
-	{
-		case IS_TYPE_BW:
-			gsdev="tifflzw";
-			break;
-		case IS_TYPE_GREY:
-			gsdev="tiffgray";
-			break;
-		case IS_TYPE_RGB:
-			gsdev="tiff24nc";
-			break;
-		case IS_TYPE_CMYK:
-			gsdev="tiff32nc";
-			break;
-		case IS_TYPE_DEVICEN:
-			// FIXME: add support for DeviceN using the tiffsep device.
-		default:
-			throw "PSRip: type not yet supported";
-			break;
-	}
-	cerr << "Using Ghostscript device: " << gsdev << endl;
-
-
-	// Create FirstPage and LastPage paramters, if needed...	
-
-	char *fpage=NULL;
-	char *lpage=NULL;
-	if(firstpage)
-	{
-		const char *pagefmt=" -dFirstPage=%d";
-		int bl=strlen(pagefmt)+20;
-		fpage=(char *)malloc(bl);
-		snprintf(fpage,bl,pagefmt,firstpage);
-	}
-	if(lastpage)
-	{
-		const char *pagefmt=" -dFirstPage=%d";
-		int bl=strlen(pagefmt)+20;
-		lpage=(char *)malloc(bl);
-		snprintf(lpage,bl,pagefmt,lastpage);
-	}
-	char *pages=SafeStrcat(fpage,lpage);	// Will be a valid empty string if both are NULL.
-											// Must be free()d.
-	// Having built "pages", don't need these any more.
-	if(fpage)
-		free(fpage);
-	if(lpage)
-		free(lpage);
-
-	// Create temporary output filename
-	tempname=tempnam(NULL,"PSRIP");
-
-	// Now build the actual command.
-	const char *gsfmtstring="%s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s";
-	int cmdlen=strlen(gsfmtstring)+10+strlen(gspath)+strlen(gsdev)+strlen(pages)+strlen(filename);
-	char *gscmd=(char *)malloc(cmdlen);
-	snprintf(gscmd,cmdlen,gsfmtstring,gspath,gsdev,tempname,resolution,resolution,pages,filename);
-	free(pages);
-	free(gspath);
-
-	cerr << "Built command: " << gscmd << endl;
-#endif
-
-	// Execute the command...
 
 	ripthread=new Thread_PSRipProcess(*this,filename,type,resolution,firstpage,lastpage);
-	cerr << "Created ripthread: " << long(ripthread) << endl;
 
 	monitorthread=new Thread_PSRipFileMonitor(*this);
 }
@@ -357,7 +300,6 @@ bool PSRip::TestFinished()
 
 PSRip::~PSRip()
 {
-	cerr << "Disposing of ripthread - " << long(ripthread) << endl;
 	if(monitorthread)
 		delete monitorthread;
 	if(ripthread)
