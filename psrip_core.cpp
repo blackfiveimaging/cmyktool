@@ -1,7 +1,10 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+
+#ifndef WIN32
 #include <sys/wait.h>
+#endif
 
 #include "imagesource/imagesource.h"
 #include "support/util.h"
@@ -237,7 +240,7 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 			else
 			{
 #ifdef WIN32
-				sleep(100);
+				Sleep(100);
 #else
 				usleep(100000);
 #endif

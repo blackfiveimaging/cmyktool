@@ -62,7 +62,7 @@ class PSRipUIThread : public ThreadFunction, public Thread
 				g_timeout_add(1,updateimgselfunc,this);
 			}
 #ifdef WIN32
-			sleep(100);
+			Sleep(100);
 #else
 			usleep(100000);
 #endif
