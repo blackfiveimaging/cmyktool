@@ -45,7 +45,7 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 {
 	public:
 	Thread_PSRipProcess(PSRip &rip,const char *filename,IS_TYPE type,int resolution, int firstpage, int lastpage)
-		: ThreadFunction(), Thread(this), rip(rip), argc(0), forkpid(0)
+		: ThreadFunction(), Thread(this), rip(rip), argc(0), forkpid(-1)
 	{
 		for(int i=0;i<(GS_ARGC+1);++i)
 			argv[i]=NULL;
@@ -187,6 +187,14 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 #endif
 		return(0);
 	}
+	virtual void Stop()
+	{
+#ifndef WIN32
+		if(forkpid)
+			kill(forkpid,SIGTERM);
+#endif			
+		Thread::Stop();
+	}
 	protected:
 	PSRip &rip;
 	int argc;
@@ -287,6 +295,13 @@ void PSRip::Rip(const char *filename,IS_TYPE type,int resolution,int firstpage,i
 	ripthread=new Thread_PSRipProcess(*this,filename,type,resolution,firstpage,lastpage);
 
 	monitorthread=new Thread_PSRipFileMonitor(*this);
+}
+
+
+void PSRip::Stop()
+{
+	if(ripthread)
+		ripthread->Stop();
 }
 
 

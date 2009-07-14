@@ -25,7 +25,7 @@ class PSRipUIThread : public ThreadFunction, public Thread
 	public:
 	PSRipUIThread(PSRipUI &ripui,const char *filename) : ThreadFunction(), Thread(this), ripui(ripui), session(NULL), prog(NULL)
 	{
-		prog=new ProgressBar(_("Ripping File..."),false,ripui.window);
+		prog=new ProgressBar(_("Ripping File..."),true,ripui.window);
 		session=new PSRip(ripui);
 		Start();
 		WaitSync();
@@ -82,7 +82,10 @@ class PSRipUIThread : public ThreadFunction, public Thread
 			return(FALSE);
 		}
 		if(t->prog)
-			t->prog->DoProgress(0,0);
+		{
+			if(!t->prog->DoProgress(0,0))
+				t->session->Stop();
+		}
 		return(TRUE);
 	}
 	static gboolean updateimgselfunc(gpointer ud)

@@ -111,16 +111,3 @@ ImageSource_Cache
 };
 
 
-// ImageSource_Tee is used if you want to "tap into" the ImageSource chain at some point and
-// cache the image as it's built, but still perform further processing - for example, you might
-// want to cache the image before colour management is applied, but still transform for display
-// on the monitor.
-// Alternatively, you might be converting RGB data to CMYK, then to the monitor for proofing, but
-// want to build a cache of the CMYK data for a separate display of individual separations.
-
-ImageSource_Tee
-{
-	public:
-	ImageSource_Tee(ImageSource *source,CachedImage
-}
-
