@@ -11,13 +11,12 @@ AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -
 noinst_LTLIBRARIES = libdeflatten.la
 
 libdeflatten_la_SOURCES = \
-	cmyktypes.h \
 	imagesource_deflatten.cpp	\
 	imagesource_deflatten.h \
 	imagesource_flatten.cpp	\
 	imagesource_flatten.h \
-	imagesource_plane.cpp \
-	imagesource_plane.h \
+	imagesource_combine.cpp \
+	imagesource_combine.h \
 	imagesource_extractchannel.cpp \
 	imagesource_extractchannel.h	\
 	psrip_core.cpp	\

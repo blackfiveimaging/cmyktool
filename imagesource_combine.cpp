@@ -43,10 +43,10 @@ ISDataType *ImageSource_Combine::GetRow(int row)
 		}
 	}
 
-	cc=Colour.c; cc/=255.0;
-	cm=Colour.m; cm/=255.0;
-	cy=Colour.y; cy/=255.0;
-	ck=Colour.k; ck/=255.0;
+	cc=colour[0]; cc/=IS_SAMPLEMAX;
+	cm=colour[1]; cm/=IS_SAMPLEMAX;
+	cy=colour[2]; cy/=IS_SAMPLEMAX;
+	ck=colour[3]; ck/=IS_SAMPLEMAX;
 
 	switch(source->type)
 	{
@@ -112,6 +112,10 @@ ImageSource_Combine::ImageSource_Combine(struct ImageSource *source,ISDeviceNVal
 			break;
 		case IS_TYPE_DEVICEN:
 			samplesperpixel=channels;
+			break;
+		default:
+			throw "ImageSource_Combine: Unsupported type";
+			break;
 	}
 
 	MakeRowBuffer();

@@ -19,16 +19,10 @@ On startup this directory will be scanned, and each file loaded in turn into a d
 from which the description will be extracted.
 (Can SimpleComboOption be changed so instead of a static array it builds a list?)
 
-SimpleComboOptions opts;
-opts.add("Shortname",_("User-visible name"));
-opts.add(...
-(Lifespan?)
-Can't easily make such a thing global.
-Can subclass it, then create a global static instance - however, translation
-must be deferred until the strings are actually needed, because the text domain
-won't be set up in time for instantiation of such a global.
-The other way around this is to sort out the lifespan issue for widgets, then copy the
-list of options - then a constructing function can use a local SimpleComboOptions.
+| SimpleComboOptions opts;
+| opts.add("Shortname",_("User-visible name"));
+| opts.add(...
+| The list must be copied for the widget - otherwise a constructing function can't safely use a local SimpleComboOptions.
 
 The UI would have a panel on the left containing the list of files to be processed, then a notebook.
 The first page of the notebook will contain a drop-down with the list of presets, the last of which will be "New..."
@@ -108,6 +102,63 @@ ImageSource_Cache
 	ISDataType *GetRow(int row);
 	protected:
 	CachedImage;
+};
+
+
+-------------------------------------
+
+PSRip
+
+Tool needs to allow a PS File to be dragged and dropped, or selected from a menu.  When a PS file is opened, a dialog
+will pop up asking for RIP options - which amounts to:
+
+* B/w, Grey, RGB or CMYK rendering.
+* Resolution
+* Text anti-aliasing (generally turned off) -dTextAlphaBits=4
+* Graphics anti-aliasing (generally turned on) -dGraphicsAlphaBits=4
+
+#define PSRIPOPTIONS_ARGC_MAX=10;
+class PSRipOptions
+{
+	public:
+	PSRipOptions(ISType type=IS_TYPE_RGB,int resolution=300,int firstpage=0,int lastpage=0,bool textantialias=false,bool gfxantialias=true)
+		: type(type),resolution(resolution),firstpage(firstpage),lastpage(lastpage),
+		textantialias(textantialias),gfxantialias(gfxantialias), argc(0)
+	{
+	}
+	~PSRipOptions()
+	{
+	}
+
+	// Build argv array ready for execv call.  Returns a pointer to the argv array.
+	const char **GetArgv()
+	{
+	}
+
+	// Returns the number of arguments.
+	int  *GetArgc()
+	{
+		if(!argc)
+			const char *dummy=GetArgv();
+		return(argc);
+	}
+
+	// Save the options into a ConfigDB.
+	void ToDB(ConfigDB &db)
+	{
+	}
+
+	// Retrieve the options from a ConfigDB
+	void FromDB(ConfigDB &db)
+	{
+	}
+
+	protected:
+	ISType type;
+	int resolution;
+	bool textantialias;
+	int argc;
+	char *argv[PSRIPOPTIONS_ARGC_MAX];
 };
 
 
