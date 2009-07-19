@@ -12,6 +12,7 @@ class PSRipUI : public SearchPathHandler
 	void Rip(const char *filename);
 	static void image_changed(GtkWidget *widget,gpointer userdata);
 	protected:
+	PSRipOptions options;
 	GtkWidget *window;
 	GtkWidget *imgsel;
 	GtkWidget *pbview;

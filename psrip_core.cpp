@@ -44,98 +44,15 @@ class PSRip_TempFile : public TempFile
 class Thread_PSRipProcess : public ThreadFunction, public Thread
 {
 	public:
-	Thread_PSRipProcess(PSRip &rip,const char *filename,IS_TYPE type,int resolution, int firstpage, int lastpage)
+	Thread_PSRipProcess(PSRip &rip,const char *filename,PSRipOptions &opt)
 		: ThreadFunction(), Thread(this), rip(rip), argc(0), forkpid(-1)
 	{
-		for(int i=0;i<(GS_ARGC+1);++i)
-			argv[i]=NULL;
-
-		// Build a GhostScript command according to the following format:
-		// %s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s
-
-		// Locate GhostScript executable...
-#ifdef WIN32
-		argv[argc]=rip.searchpath.SearchPaths("gswin32c.exe");
-#else
-		argv[argc]=rip.searchpath.SearchPaths("gs");
-#endif
-		if(!argv[argc])
-			throw "Can't locate GhostScript executable!";
-
-		++argc;
-
-		// Select an appropriate GS device for output...
-
-		switch(STRIP_ALPHA(type))
-		{
-			case IS_TYPE_BW:
-				argv[argc]=strdup("-sDEVICE=tifflzw");
-				break;
-			case IS_TYPE_GREY:
-				argv[argc]=strdup("-sDEVICE=tiffgray");
-				break;
-			case IS_TYPE_RGB:
-				argv[argc]=strdup("-sDEVICE=tiff24nc");
-				break;
-			case IS_TYPE_CMYK:
-				argv[argc]=strdup("-sDEVICE=tiff32nc");
-				break;
-			case IS_TYPE_DEVICEN:
-				// FIXME: add support for DeviceN using the tiffsep device.
-			default:
-				throw "PSRip: type not yet supported";
-				break;
-		}
-		cerr << "Using Ghostscript device: " << argv[argc] << endl;
-		++argc;
-
-		// Create FirstPage and LastPage paramters, if needed...	
-		if(firstpage)
-		{
-			const char *pagefmt=" -dFirstPage=%d";
-			int bl=strlen(pagefmt)+20;
-			argv[argc]=(char *)malloc(bl);
-			snprintf(argv[argc],bl,pagefmt,firstpage);
-			++argc;
-		}
-		if(lastpage)
-		{
-			const char *pagefmt=" -dFirstPage=%d";
-			int bl=strlen(pagefmt)+20;
-			argv[argc]=(char *)malloc(bl);
-			snprintf(argv[argc],bl,pagefmt,lastpage);
-			++argc;
-		}
-
-		// Build output name;
-		const char *outfmt="-sOutputFile=%s_%%d.tif";
-		int outl=strlen(rip.tempname)+strlen(outfmt)+1;
-		argv[argc]=(char *)malloc(outl);
-		snprintf(argv[argc],outl,outfmt,rip.tempname);
-		++argc;
-
-		// Build resolution;
-		const char *resfmt="-r%dx%d";
-		int resl=strlen(resfmt)+20;
-		argv[argc]=(char *)malloc(resl);
-		snprintf(argv[argc],resl,resfmt,resolution,resolution);
-		++argc;
-
-		argv[argc++]=strdup("-dBATCH");
-		argv[argc++]=strdup("-dNOPAUSE");
-		argv[argc++]=strdup(filename);
-		argv[argc]=NULL;
-
+		argv=opt.GetArgV(filename,argc);
 		Start();
 		WaitSync();
 	}
 	virtual ~Thread_PSRipProcess()
 	{
-		for(int i=0;i<(GS_ARGC+1);++i)
-		{
-			if(argv[i])
-				free(argv[i]);
-		}
 	}
 	virtual int Entry(Thread &t)
 	{
@@ -153,7 +70,7 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 				break;
 			case 0:
 				cerr << "Subprocess running..." << endl;
-				execv(argv[0],&argv[0]);
+				execv(argv[0],argv);
 				break;
 			default:
 				cerr << "Waiting for subprocess to complete..." << endl;
@@ -198,7 +115,7 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 	protected:
 	PSRip &rip;
 	int argc;
-	char *argv[GS_ARGC+1];
+	char * const *argv;
 	int forkpid;
 };
 
@@ -270,14 +187,14 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 
 
 
-PSRip::PSRip(SearchPathHandler &searchpath)
+PSRip::PSRip()
 	: TempFileTracker(), ThreadEventHandler(), Event(*this,"FileReady"),
-	searchpath(searchpath), tempname(), ripthread(NULL), monitorthread(NULL)
+	tempname(), ripthread(NULL), monitorthread(NULL)
 {
 }
 
 
-void PSRip::Rip(const char *filename,IS_TYPE type,int resolution,int firstpage,int lastpage)
+void PSRip::Rip(const char *filename,PSRipOptions &opts)
 {
 	if(monitorthread)
 		delete monitorthread;
@@ -288,11 +205,9 @@ void PSRip::Rip(const char *filename,IS_TYPE type,int resolution,int firstpage,i
 	ripthread=NULL;
 
 	// Create temporary output filename
-	if(tempname)
-		free(tempname);
-	tempname=tempnam(NULL,"PSRIP");
+	tempname=BuildFilename(filename,"","");
 
-	ripthread=new Thread_PSRipProcess(*this,filename,type,resolution,firstpage,lastpage);
+	ripthread=new Thread_PSRipProcess(*this,filename,opts);
 
 	monitorthread=new Thread_PSRipFileMonitor(*this);
 }
@@ -331,7 +246,7 @@ PSRip::~PSRip()
 char *PSRip::GetRippedFilename(int page)
 {
 	char *buf=(char *)malloc(strlen(tempname)+10);
-	snprintf(buf,strlen(tempname)+10,"%s_%d.tif",tempname,page);
+	snprintf(buf,strlen(tempname)+10,"%s_%03d.tif",tempname,page);
 	if(!CheckFileExists(buf))
 	{
 		free(buf);
@@ -339,4 +254,142 @@ char *PSRip::GetRippedFilename(int page)
 	}
 	return(buf);
 }	
+
+
+// PSRipOptions
+
+
+PSRipOptions::PSRipOptions(IS_TYPE type,int resolution,int firstpage,int lastpage,bool textantialias,bool gfxantialias)
+	: SearchPathHandler(), type(type),resolution(resolution),firstpage(firstpage),lastpage(lastpage),
+	textantialias(textantialias),gfxantialias(gfxantialias), argc(0)
+{
+#ifdef WIN32
+	AddPath("c:/gs/gs8.64/bin;c:/Program Files/gs/bin;c:/Program Files/gs/gs8.64/bin");
+#else
+	AddPath("/usr/bin");
+#endif
+
+	for(int i=0;i<(PSRIPOPTIONS_ARGC_MAX+1);++i)
+		argv[i]=NULL;
+}
+
+
+PSRipOptions::~PSRipOptions()
+{
+	for(int i=0;i<(PSRIPOPTIONS_ARGC_MAX+1);++i)
+	{
+		if(argv[i])
+			free(argv[i]);
+	}
+}
+
+
+// Build argv array ready for execv call.  Returns a pointer to the argv array.
+char * const *PSRipOptions::GetArgV(const char *filename,int &retargc)
+{
+	// Free results of any previous run
+	for(int i=0;i<(PSRIPOPTIONS_ARGC_MAX+1);++i)
+	{
+		if(argv[i])
+			free(argv[i]);
+	}
+	argc=0;
+
+	// Build a GhostScript command according to the following format:
+	// %s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s
+
+	// Locate GhostScript executable...
+#ifdef WIN32
+	argv[argc]=SearchPaths("gswin32c.exe");
+#else
+	argv[argc]=SearchPaths("gs");
+#endif
+	if(!argv[argc])
+		throw "Can't locate GhostScript executable!";
+
+	++argc;
+
+	// Select an appropriate GS device for output...
+
+	switch(STRIP_ALPHA(type))
+	{
+		case IS_TYPE_BW:
+			argv[argc]=strdup("-sDEVICE=tifflzw");
+			break;
+		case IS_TYPE_GREY:
+			argv[argc]=strdup("-sDEVICE=tiffgray");
+			break;
+		case IS_TYPE_RGB:
+			argv[argc]=strdup("-sDEVICE=tiff24nc");
+			break;
+		case IS_TYPE_CMYK:
+			argv[argc]=strdup("-sDEVICE=tiff32nc");
+			break;
+		case IS_TYPE_DEVICEN:
+			// FIXME: add support for DeviceN using the tiffsep device.
+		default:
+			throw "PSRip: type not yet supported";
+			break;
+	}
+	cerr << "Using Ghostscript device: " << argv[argc] << endl;
+	++argc;
+
+	// Create anti-aliasing parameters
+	if(textantialias)
+		argv[argc++]=strdup("-dTextAlphaBits=4");
+
+	if(gfxantialias)
+		argv[argc++]=strdup("-dGraphicsAlphaBits=4");
+
+	// Create FirstPage and LastPage paramters, if needed...	
+	if(firstpage)
+	{
+		const char *pagefmt=" -dFirstPage=%d";
+		int bl=strlen(pagefmt)+20;
+		argv[argc]=(char *)malloc(bl);
+		snprintf(argv[argc],bl,pagefmt,firstpage);
+		++argc;
+	}
+
+	if(lastpage)
+	{
+		const char *pagefmt=" -dFirstPage=%d";
+		int bl=strlen(pagefmt)+20;
+		argv[argc]=(char *)malloc(bl);
+		snprintf(argv[argc],bl,pagefmt,lastpage);
+		++argc;
+	}
+
+	// Build output name;
+	char *tmp=BuildFilename(filename,"_%03d","tif");
+	argv[argc++]=BuildFilename("-sOutputFile=",tmp,"");
+	free(tmp);
+
+	// Build resolution;
+	const char *resfmt="-r%dx%d";
+	int resl=strlen(resfmt)+20;
+	argv[argc]=(char *)malloc(resl);
+	snprintf(argv[argc],resl,resfmt,resolution,resolution);
+	++argc;
+
+	argv[argc++]=strdup("-dBATCH");
+	argv[argc++]=strdup("-dNOPAUSE");
+	argv[argc++]=strdup(filename);
+	argv[argc]=NULL;
+
+
+	retargc=argc;
+	return(&argv[0]);
+}
+
+
+// Save the options into a ConfigDB.
+void PSRipOptions::ToDB(ConfigDB &db)
+{
+}
+
+// Retrieve the options from a ConfigDB
+void PSRipOptions::FromDB(ConfigDB &db)
+{
+}
 

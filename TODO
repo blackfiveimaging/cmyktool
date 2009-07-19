@@ -117,48 +117,5 @@ will pop up asking for RIP options - which amounts to:
 * Text anti-aliasing (generally turned off) -dTextAlphaBits=4
 * Graphics anti-aliasing (generally turned on) -dGraphicsAlphaBits=4
 
-#define PSRIPOPTIONS_ARGC_MAX=10;
-class PSRipOptions
-{
-	public:
-	PSRipOptions(ISType type=IS_TYPE_RGB,int resolution=300,int firstpage=0,int lastpage=0,bool textantialias=false,bool gfxantialias=true)
-		: type(type),resolution(resolution),firstpage(firstpage),lastpage(lastpage),
-		textantialias(textantialias),gfxantialias(gfxantialias), argc(0)
-	{
-	}
-	~PSRipOptions()
-	{
-	}
-
-	// Build argv array ready for execv call.  Returns a pointer to the argv array.
-	const char **GetArgv()
-	{
-	}
-
-	// Returns the number of arguments.
-	int  *GetArgc()
-	{
-		if(!argc)
-			const char *dummy=GetArgv();
-		return(argc);
-	}
-
-	// Save the options into a ConfigDB.
-	void ToDB(ConfigDB &db)
-	{
-	}
-
-	// Retrieve the options from a ConfigDB
-	void FromDB(ConfigDB &db)
-	{
-	}
-
-	protected:
-	ISType type;
-	int resolution;
-	bool textantialias;
-	int argc;
-	char *argv[PSRIPOPTIONS_ARGC_MAX];
-};
 
 

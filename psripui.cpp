@@ -26,12 +26,12 @@ class PSRipUIThread : public ThreadFunction, public Thread
 	PSRipUIThread(PSRipUI &ripui,const char *filename) : ThreadFunction(), Thread(this), ripui(ripui), session(NULL), prog(NULL)
 	{
 		prog=new ProgressBar(_("Ripping File..."),true,ripui.window);
-		session=new PSRip(ripui);
+		session=new PSRip;
 		Start();
 		WaitSync();
 //		sync.Wait();
 		cerr << "Subthread up, running and subscribed - starting RIP" << endl;
-		session->Rip(filename,IS_TYPE_RGB,300);
+		session->Rip(filename,ripui.options);
 		cerr << "Rip started" << endl;
 		sync.ObtainMutex();
 		sync.Broadcast();

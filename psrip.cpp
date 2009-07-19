@@ -27,6 +27,11 @@ int main(int argc,char *argv[])
 	{
 		try
 		{
+//			PSRipOptions opts;
+//			PSRip ripper;
+//			ripper.Rip(argv[1],opts);
+
+
 			PSRipUI ripper;
 			ripper.Rip(argv[1]);
 
