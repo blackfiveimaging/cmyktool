@@ -90,7 +90,7 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 		char *cmd=(char *)malloc(cmdlen);
 
 		// Yes, I know - yuk.
-		snprintf(cmd,cmdlen,"%s %s %s %s %s %s %s %s",
+		snprintf(cmd,cmdlen,"%s %s %s %s %s %s %s %s %s %s %s",
 			argv[0] ? argv[0] : "",
 			argv[1] ? argv[1] : "",
 			argv[2] ? argv[2] : "",
@@ -99,6 +99,9 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 			argv[5] ? argv[5] : "",
 			argv[6] ? argv[6] : "",
 			argv[7] ? argv[7] : "");
+			argv[8] ? argv[8] : "",
+			argv[9] ? argv[9] : "");
+			argv[10] ? argv[10] : "",
 		cerr << "Using command " << cmd << endl;
 		system(cmd);
 #endif
@@ -333,6 +336,9 @@ char * const *PSRipOptions::GetArgV(const char *filename,int &retargc)
 	}
 	cerr << "Using Ghostscript device: " << argv[argc] << endl;
 	++argc;
+
+	// Enable interpolation
+	argv[argc++]=strdup("-dDOINTERPOLATE");
 
 	// Create anti-aliasing parameters
 	if(textantialias)
