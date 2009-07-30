@@ -25,12 +25,13 @@ libdeflatten_la_SOURCES = \
 	psripui.h	\
 	gettext.h
 
-bin_PROGRAMS = deflatten recombine decompose psrip
+bin_PROGRAMS = deflatten recombine decompose psrip test
 
 recombine_SOURCES = recombine.cpp
 decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
+test_SOURCES = test.cpp
 
 LDADD = \
 	libdeflatten.la \
