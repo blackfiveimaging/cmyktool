@@ -39,8 +39,8 @@ LDADD = \
 	miscwidgets/libmiscwidgets.la	\
 	support/libsupport.la	\
 	imagesource/libimagesource.la	\
-	support/libsupport.la	\
 	profilemanager/libprofilemanager.la	\
+	support/libsupport.la	\
 	pixbufthumbnail/libpixbufthumbnail.la	\
 	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS)
 
