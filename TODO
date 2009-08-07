@@ -17,7 +17,7 @@ ConfigTemplate ConversionPreset::Template[]=
 These options will be saved in $XDG_CONFIG_HOME/cmyktool/
 On startup this directory will be scanned, and each file loaded in turn into a dummy ConfigDB
 from which the description will be extracted.
-(Can SimpleComboOption be changed so instead of a static array it builds a list?)
+|(Can SimpleComboOption be changed so instead of a static array it builds a list?)
 
 | SimpleComboOptions opts;
 | opts.add("Shortname",_("User-visible name"));
@@ -48,61 +48,7 @@ Also needs to support converting from CMYK to RGB.
 
 Need to separate rendering and temp file tracking.
 
-Need an ImageBuffer of some kind - something that can hold an image for further processing.
-
-// CachedImage_Deferred - the base class for cached images.  Sets up the width, height, type, etc.
-// and allocated storage, but doesn't actually read the data from the ImageSource until asked.
-// ReadImage() reads and caches the entire image.
-// ReadRow() reads and caches a single row.
-// Generally you won't use this except with ImageSource_Tee.
-
-CachedImage_Deferred
-{
-	public:
-	CachedImage_Deferred(ImageSource *source);
-	~CachedImage_Deferred();
-	void ReadImage();
-	void ReadRow(int row);
-	ImageSource_Cache *GetImageSource();
-	protected:
-	int width,int height;
-	int samplesperpixel;
-	IS_TYPE type;
-	ISDataType *imagedata;
-	friend class ImageSource_Cache;
-	friend class ImageSource_Tee;
-};
-
-
-// Convenience subclass, this variant completely builds and processes the Cached Image immediately.
-
-CachedImage : public CachedImage_Deferred
-{
-	public:
-	CachedImage(ImageSource *source)
-	{
-		ReadImage();
-	}
-	~CachedImage()
-	{
-	}
-	protected:
-};
-
-
-// The GetImageSource member function of the CachedImage classes will return one of these.
-// Unlike most imagesources, this one claims no ownership of the source data, so you can 
-// have as many operating concurrently and as many times on the Cached image as you like.
-
-ImageSource_Cache
-{
-	public:
-	ImageSource_Cache(CachedImage *img);
-	~ImageSource_Cache();
-	ISDataType *GetRow(int row);
-	protected:
-	CachedImage;
-};
+| Need an ImageBuffer of some kind - something that can hold an image for further processing.
 
 
 -------------------------------------

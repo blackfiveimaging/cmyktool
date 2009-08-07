@@ -97,19 +97,35 @@ class TestUI : public ConfigFile
 			(GtkSignalFunc) gtk_main_quit, NULL);
 		gtk_widget_show(window);
 
+		g_signal_connect(G_OBJECT(window),"motion-notify-event",G_CALLBACK(mousemove),this);
+
+
 		GtkWidget *hbox=gtk_hbox_new(FALSE,0);
 		gtk_container_add(GTK_CONTAINER(window),hbox);
 		gtk_widget_show(GTK_WIDGET(hbox));
 
-		colsel=colorantselector_new(NULL);
-		gtk_signal_connect (GTK_OBJECT (colsel), "changed",
-			(GtkSignalFunc) ColorantsChanged, this);
-		gtk_box_pack_start(GTK_BOX(hbox),colsel,FALSE,FALSE,0);
-		gtk_widget_show(colsel);
-
 		pbview=pixbufview_new(NULL,false);
 		gtk_box_pack_start(GTK_BOX(hbox),pbview,TRUE,TRUE,0);
 		gtk_widget_show(pbview);
+
+
+		popupshown=false;
+		popup=gtk_window_new(GTK_WINDOW_POPUP);
+		gtk_window_set_default_size(GTK_WINDOW(popup),100,180);
+		gtk_window_set_transient_for(GTK_WINDOW(popup),GTK_WINDOW(window));
+//		GtkWidget *vbox=gtk_vbox_new(FALSE,0);
+//		gtk_widget_show(vbox);
+//		gtk_container_set_border_width(GTK_CONTAINER(popup),8);
+//		gtk_container_add(GTK_CONTAINER(popup),vbox);
+		g_signal_connect(G_OBJECT(popup),"delete-event",G_CALLBACK(deleteevent),this);
+
+		colsel=colorantselector_new(NULL);
+		gtk_signal_connect (GTK_OBJECT (colsel), "changed",
+			(GtkSignalFunc) ColorantsChanged, this);
+		gtk_container_add(GTK_CONTAINER(popup),colsel);
+//		gtk_box_pack_start(GTK_BOX(hbox),colsel,FALSE,FALSE,0);
+		gtk_widget_show(colsel);
+
 	}
 
 	~TestUI()
@@ -155,12 +171,51 @@ class TestUI : public ConfigFile
 		TestUI *ob=(TestUI *)userdata;
 		ob->Redraw();
 	}
+
+	static gboolean deleteevent(GtkWidget *wid,GdkEvent *ev,gpointer userdata)
+	{
+//		TestUI *ui=(TestUI *)userdata;
+		return(TRUE);	// Don't want the default deletion to happen as well!
+	}
+
+	static gboolean mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata)
+	{
+		TestUI *ui=(TestUI *)userdata;
+
+		int x,y;
+		GdkModifierType mods;
+		gdk_window_get_pointer (widget->window, &x, &y, &mods);
+		int w,h;
+		gtk_window_get_size(GTK_WINDOW(ui->window),&w,&h);
+
+		if(ui->popupshown && x<(w-w/20))
+		{
+			gtk_widget_hide_all(ui->popup);
+			ui->popupshown=false;
+		}
+
+		if(!ui->popupshown && x>(w-w/20))
+		{
+			int winx,winy;
+			int pw,ph;
+			gtk_window_get_position(GTK_WINDOW(ui->window),&winx,&winy);
+			gtk_window_get_size(GTK_WINDOW(ui->popup),&pw,&ph);
+			gtk_window_move(GTK_WINDOW(ui->popup),winx+w-pw,winy);
+			gtk_widget_show_all(ui->popup);
+			ui->popupshown=true;
+		}
+
+		return(FALSE);
+	}
+
 	protected:
 	ProfileManager profilemanager;
 	CMTransformFactory factory;
 	GtkWidget *window;
 	GtkWidget *colsel;
 	GtkWidget *pbview;
+	GtkWidget *popup;
+	bool popupshown;
 	CachedImage *image;
 	DeviceNColorantList *collist;
 };

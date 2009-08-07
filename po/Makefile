@@ -80,7 +80,7 @@ CATALOGS =
 # Makefile variables for PO directory in any package using GNU gettext.
 
 # Usually the message domain is the same as the package name.
-DOMAIN = BlackFiveImagingLibrary
+DOMAIN = CMYKTool
 
 # These two variables depend on the location of this directory.
 subdir = po
