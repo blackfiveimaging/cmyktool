@@ -98,10 +98,10 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 			argv[4] ? argv[4] : "",
 			argv[5] ? argv[5] : "",
 			argv[6] ? argv[6] : "",
-			argv[7] ? argv[7] : "");
+			argv[7] ? argv[7] : "",
 			argv[8] ? argv[8] : "",
-			argv[9] ? argv[9] : "");
-			argv[10] ? argv[10] : "",
+			argv[9] ? argv[9] : "",
+			argv[10] ? argv[10] : "");
 		cerr << "Using command " << cmd << endl;
 		system(cmd);
 #endif
