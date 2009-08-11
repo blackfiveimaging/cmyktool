@@ -2,7 +2,7 @@
 
 #include <gtk/gtk.h>
 
-#include "support/progresstext.h"
+#include "support/progressbar.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
 #include "imageutils/tiffsave.h"
@@ -96,10 +96,10 @@ class TestUI : public ConfigFile
 	~TestUI();
 	void AddImage(const char *filename);
 	static void ProcessImage(GtkWidget *wid,gpointer userdata);
+	GtkWidget *window;
 	protected:
 	ProfileManager profilemanager;
 	CMTransformFactory factory;
-	GtkWidget *window;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	friend class UITab;
@@ -235,10 +235,11 @@ UITab::UITab(TestUI &parent,const char *filename) : PTMutex(), parent(parent), c
 	gtk_widget_show_all(label);
 	
 	hbox=gtk_hbox_new(FALSE,0);
+	gtk_widget_show(GTK_WIDGET(hbox));
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
 	gtk_notebook_append_page(GTK_NOTEBOOK(parent.notebook),GTK_WIDGET(hbox),label);
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(parent.notebook),-1);
     gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(parent.notebook),hbox, TRUE, TRUE,GTK_PACK_START);
-	gtk_widget_show(GTK_WIDGET(hbox));
 
 	pbview=pixbufview_new(NULL,false);
 	gtk_box_pack_start(GTK_BOX(hbox),pbview,TRUE,TRUE,0);
@@ -333,19 +334,19 @@ gboolean UITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer user
 	int w,h;
 	gtk_window_get_size(GTK_WINDOW(ui->parent.window),&w,&h);
 
-	if(ui->popupshown && x<(w-w/20))
+	if(ui->popupshown && (x<(w-w/20) || y<(h/2)))
 	{
 		gtk_widget_hide_all(ui->popup);
 		ui->popupshown=false;
 	}
 
-	if(!ui->popupshown && x>(w-w/20))
+	if(!ui->popupshown && x>(w-w/20) && y>(h/2))
 	{
 		int winx,winy;
 		int pw,ph;
 		gtk_window_get_position(GTK_WINDOW(ui->parent.window),&winx,&winy);
 		gtk_window_get_size(GTK_WINDOW(ui->popup),&pw,&ph);
-		gtk_window_move(GTK_WINDOW(ui->popup),winx+w-pw,winy);
+		gtk_window_move(GTK_WINDOW(ui->popup),winx+w-pw,winy+h-ph);
 		gtk_widget_show_all(ui->popup);
 		ui->popupshown=true;
 	}
@@ -421,11 +422,16 @@ int main(int argc,char **argv)
 	{
 		TestUI ui;
 
+		ProgressBar *prog=new ProgressBar(_("Adding images..."),true,ui.window);
+
 		for(int i=1;i<argc;++i)
+		{
 			ui.AddImage(argv[i]);
-		cerr << "**********************" << endl;
-		cerr << "All images added " << endl;
-		cerr << "**********************" << endl;
+			if(!prog->DoProgress(i,argc))
+				i=argc;
+		}
+		delete prog;
+
 		gtk_main();
 
 	}
