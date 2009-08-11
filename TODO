@@ -37,9 +37,9 @@ Hold Grey
 Overprint Black
 
 The second pane of the notebook will contain a preview of the original image.
-The third pane of the notebook will contain a preview of the converted file.
-This will need a cached version of the transformed CMYK data, because we will need checkboxes
-for C, M, Y and K, so the plates can be dropped out for inspection of the result.
+| The third pane of the notebook will contain a preview of the converted file.
+| This will need a cached version of the transformed CMYK data, because we will need checkboxes
+| for C, M, Y and K, so the plates can be dropped out for inspection of the result.
 
 Also needs to support converting from CMYK to RGB.
 

@@ -11,6 +11,7 @@
 #include "imagesource/pixbuf_from_imagesource.h"
 #include "miscwidgets/pixbufview.h"
 #include "miscwidgets/colorantselector.h"
+#include "miscwidgets/imageselector.h"
 #include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
 
@@ -94,10 +95,12 @@ class TestUI : public ConfigFile
 	TestUI();
 	~TestUI();
 	void AddImage(const char *filename);
+	static void ProcessImage(GtkWidget *wid,gpointer userdata);
 	protected:
 	ProfileManager profilemanager;
 	CMTransformFactory factory;
 	GtkWidget *window;
+	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	friend class UITab;
 	friend class UITab_CacheThread;
@@ -105,15 +108,15 @@ class TestUI : public ConfigFile
 };
 
 
-class UITab : public RWMutex
+class UITab : public PTMutex
 {
 	public:
 	UITab(TestUI &parent,const char *filename);
 	~UITab();
 	void SetImage(const char *filename);
-	void Redraw();
 	static void ColorantsChanged(GtkWidget *wid,gpointer userdata);
 	static void deleteclicked(GtkWidget *wid,gpointer userdata);
+	static void setclosebuttonsize(GtkWidget *wid,GtkStyle *style,gpointer userdata);
 	static gboolean mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata);
 	protected:
 	TestUI &parent;
@@ -177,7 +180,7 @@ class UITab_RenderThread : public ThreadFunction
 	}
 	int Entry(Thread &t)
 	{
-		// The render thread doesn't need to block until the mutex is owned;
+		// The main thread doesn't need to block until the mutex is owned;
 		tab.ObtainMutex();
 
 		ImageSource *is=tab.image->GetImageSource();
@@ -215,23 +218,26 @@ class UITab_RenderThread : public ThreadFunction
 };
 
 
-UITab::UITab(TestUI &parent,const char *filename) : RWMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL)
+UITab::UITab(TestUI &parent,const char *filename) : PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL)
 {
 	label=gtk_hbox_new(FALSE,0);
 	GtkWidget *tmp=gtk_label_new(filename);
 	gtk_box_pack_start(GTK_BOX(label),tmp,TRUE,TRUE,0);
 
-	GtkWidget *closeimg=gtk_image_new_from_stock(GTK_STOCK_STOP,GTK_ICON_SIZE_MENU);
+	GtkWidget *closeimg=gtk_image_new_from_stock(GTK_STOCK_CLOSE,GTK_ICON_SIZE_MENU);
 	tmp=gtk_button_new();
+	gtk_widget_set_name(tmp,"tab-close-button");
 	gtk_button_set_image(GTK_BUTTON(tmp),closeimg);
 	gtk_button_set_relief(GTK_BUTTON(tmp),GTK_RELIEF_NONE);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(deleteclicked),this);
+	g_signal_connect(G_OBJECT(tmp),"style-set",G_CALLBACK(setclosebuttonsize),this);
 	gtk_box_pack_start(GTK_BOX(label),tmp,FALSE,FALSE,4);
 	gtk_widget_show_all(label);
 	
 	hbox=gtk_hbox_new(FALSE,0);
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
 	gtk_notebook_append_page(GTK_NOTEBOOK(parent.notebook),GTK_WIDGET(hbox),label);
+    gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(parent.notebook),hbox, TRUE, TRUE,GTK_PACK_START);
 	gtk_widget_show(GTK_WIDGET(hbox));
 
 	pbview=pixbufview_new(NULL,false);
@@ -250,6 +256,13 @@ UITab::UITab(TestUI &parent,const char *filename) : RWMutex(), parent(parent), c
 	gtk_container_add(GTK_CONTAINER(popup),colsel);
 	gtk_widget_show(colsel);
 
+	char *path;
+	char *pathrev;
+	unsigned int pathlen;
+
+	gtk_widget_path(tmp,&pathlen,&path,&pathrev);
+	cerr << "Path to button: " << path << endl;
+
 	SetImage(filename);
 }
 
@@ -263,6 +276,7 @@ UITab::~UITab()
 	if(image)
 		delete image;
 }
+
 
 void UITab::SetImage(const char *filename)
 {
@@ -282,42 +296,32 @@ void UITab::SetImage(const char *filename)
 
 	new UITab_CacheThread(*this,is);
 	new UITab_RenderThread(*this);
-//	ObtainMutex();
-//	ReleaseMutex();
-//	Redraw();
 }
 
-void UITab::Redraw()
-{
-	new UITab_RenderThread(*this);
-#if 0
-	ImageSource *is=image->GetImageSource();
-	is=new ImageSource_ColorantMask(is,collist);
-
-	CMSTransform *transform=parent.factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is->type);
-	if(transform)
-		is=new ImageSource_CMS(is,transform);
-	else
-		cerr << "Couldn't create transform" << endl;
-
-	GdkPixbuf *pb=pixbuf_from_imagesource(is);
-	pixbufview_set_pixbuf(PIXBUFVIEW(pbview),pb);
-	g_object_unref(G_OBJECT(pb));
-	delete is;
-#endif
-}
 
 void UITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 {
 	UITab *ob=(UITab *)userdata;
-	ob->Redraw();
+	new UITab_RenderThread(*ob);
 }
+
 
 void UITab::deleteclicked(GtkWidget *wid,gpointer userdata)
 {
 	UITab *ui=(UITab *)userdata;
 	delete ui;
 }
+
+
+void UITab::setclosebuttonsize(GtkWidget *wid,GtkStyle *style,gpointer userdata)
+{
+	UITab *ui=(UITab *)userdata;
+	GtkSettings *settings=gtk_widget_get_settings(wid);
+	int x,y;
+	gtk_icon_size_lookup_for_settings(settings,GTK_ICON_SIZE_MENU,&x,&y);
+	gtk_widget_set_size_request(wid,x+2,y+2);
+}
+
 
 gboolean UITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata)
 {
@@ -355,6 +359,16 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
 
+	gtk_rc_parse_string("style \"mystyle\"\n"
+						"{\n"
+						"	GtkWidget::focus-padding = 0\n"
+						"	GtkWidget::focus-line-width = 0\n"
+						"	xthickness = 0\n"
+						"	ythickness = 0\n"
+						"}\n"
+						"widget \"*.tab-close-button\" style \"mystyle\"\n");
+
+
 	window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(window),600,450);
 	gtk_window_set_title (GTK_WINDOW (window), _("TestUI"));
@@ -362,9 +376,20 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 		(GtkSignalFunc) gtk_main_quit, NULL);
 	gtk_widget_show(window);
 
+
+	GtkWidget *hbox=gtk_hbox_new(FALSE,0);
+	gtk_container_add(GTK_CONTAINER(window),hbox);
+	gtk_widget_show(hbox);
+
+	imgsel=imageselector_new(NULL,true,false);
+	gtk_signal_connect (GTK_OBJECT (imgsel), "double-clicked",
+		(GtkSignalFunc) ProcessImage,this);
+	gtk_box_pack_start(GTK_BOX(hbox),imgsel,FALSE,FALSE,0);
+	gtk_widget_show(imgsel);
+
 	notebook=gtk_notebook_new();
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
-	gtk_container_add(GTK_CONTAINER(window),notebook);
+	gtk_box_pack_start(GTK_BOX(hbox),notebook,TRUE,TRUE,0);
 	gtk_widget_show(GTK_WIDGET(notebook));
 }
 
@@ -372,9 +397,20 @@ TestUI::~TestUI()
 {
 }
 
+
+void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
+{
+	TestUI *ui=(TestUI *)userdata;
+	const char *fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel));
+	if(fn)
+		new UITab(*ui,fn);
+}
+
+
 void TestUI::AddImage(const char *filename)
 {
-	new UITab(*this,filename);
+//	new UITab(*this,filename);
+	imageselector_add_filename(IMAGESELECTOR(imgsel),filename);
 }
 
 
