@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "lcmswrapper.h"
+#include "imagesource_promote.h"
 #include "imagesource_cms.h"
 #include "imagesource_deflatten.h"
 #include "imagesource_mask.h"
@@ -164,6 +165,9 @@ int main(int argc, char **argv)
 		for(int i=optind;i<argc;++i)
 		{
 			src=ISLoadImage(argv[i]);
+			if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
+				src=new ImageSource_Promote(src,IS_TYPE_RGB);
+
 			src=new ImageSource_Deflatten(src,transform,opts.preserveblack,opts.overprintblack,opts.preservegrey);
 
 			char *filename=buildfilename(argv[i],"CMYK","tif");
