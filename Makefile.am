@@ -11,6 +11,8 @@ AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -
 noinst_LTLIBRARIES = libdeflatten.la
 
 libdeflatten_la_SOURCES = \
+	conversionopts.cpp \
+	conversionopts.h \
 	imagesource_deflatten.cpp	\
 	imagesource_deflatten.h \
 	imagesource_flatten.cpp	\
