@@ -186,7 +186,7 @@ class UITab_RenderThread : public ThreadFunction
 		ImageSource *is=tab.image->GetImageSource();
 		is=new ImageSource_ColorantMask(is,tab.collist);
 
-		CMSTransform *transform=tab.parent.factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is->type);
+		CMSTransform *transform=tab.parent.factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
 		if(transform)
 			is=new ImageSource_CMS(is,transform);
 		else
@@ -411,7 +411,36 @@ void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 void TestUI::AddImage(const char *filename)
 {
 //	new UITab(*this,filename);
-	imageselector_add_filename(IMAGESELECTOR(imgsel),filename);
+//	if(!imageselector_add_filename(IMAGESELECTOR(imgsel),filename))
+//	{
+//		cerr << "Adding failed - attempting to render thumbnail manually..." << endl;
+		try
+		{
+			ImageSource *is=ISLoadImage(filename);
+			if(is)
+			{
+				int h=128;
+				int w=(is->width*h)/is->height;
+				if(w>h)
+				{
+					w=128;
+					h=(is->height*w)/is->width;
+				}
+				is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
+
+				CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+				is=new ImageSource_CMS(is,transform);
+
+				GdkPixbuf *pb=pixbuf_from_imagesource(is);
+				if(pb)
+					imageselector_add_filename(IMAGESELECTOR(imgsel),filename,pb);
+			}
+		}
+		catch(const char *err)
+		{
+			cerr << "Error: " << err << endl;
+		}
+//	}
 }
 
 
