@@ -24,14 +24,55 @@ from which the description will be extracted.
 | opts.add(...
 | The list must be copied for the widget - otherwise a constructing function can't safely use a local SimpleComboOptions.
 
+
+
+Also need a ConversionOptions object - something which can be passed around and copied.
+
+enum CMYKConversionType
+{
+	CMYKCONVERSIONTYPE_NORMAL,
+	CMYKCONVERSIONTYPE_HOLDBLACK,
+	CMYKCONVERSIONTYPE_HOLDGREY,
+	CMYKCONVERSIONTYPE_OVERPRINT,
+};
+
+class CMYKConversionOptions
+{
+	public:
+	CMYKConversionOptions(const char *presetname=NULL);
+	CMYKConversionOptions(const CMYKConversionOptions &other);
+	~CMYKConversionOptions();
+	CMYKConversionOptions &operator=(const CMYKConversionOptions &other);
+
+	LCMSWrapper_Intent GetIntent();
+	CMYKConversionMode GetMode();
+	const char *GetInProfile();
+	const char *GetOutProfile();
+
+	void SetIntent(LCMSWrapper_Intent intent);
+	void SetMode(CMYKConversionMode mode);
+	void SetInProfile(const char *in);
+	void SetOutProfile(const char *out);
+
+	Save(const char *presetname);
+
+	ImageSource *Apply(ImageSource *src,ImageSource *mask=NULL);
+
+	protected:
+	char *inprofile;
+	char *outprofile;
+	LCMSWrapper_Intent intent;
+	CMYKConversionMode mode;
+};
+
+
 The UI would have a panel on the left containing the list of files to be processed, then a notebook.
 The first page of the notebook will contain a drop-down with the list of presets, the last of which will be "New..."
 When a preset is selected, the values from that preset will be loaded into the widgets beneath the combo.
-Any change to these values must change the Combo's value to "New..."
+Any change to these values must change the Combo's value to "New..." (Or maybe just make a "Save" button sensitive.)
 
 Need a better solution for the channel selectors - maybe a column of togglebuttons each with the squiggle icon
 in a different colour.
-
 The widgets beneath will allow In and Out profiles to be selected, along with a rendering intent.
 If the Out profile is CMYK, a combo box with the following options will be available:
 Normal
@@ -52,6 +93,9 @@ Also needs to support converting from CMYK to RGB.
 Need to separate rendering and temp file tracking.
 
 | Need an ImageBuffer of some kind - something that can hold an image for further processing.
+
+
+Need to support multi-selection in the ImageSelector!
 
 
 -------------------------------------
