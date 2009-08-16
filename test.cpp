@@ -429,7 +429,8 @@ void TestUI::AddImage(const char *filename)
 				is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
 
 				CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
-				is=new ImageSource_CMS(is,transform);
+				if(transform)
+					is=new ImageSource_CMS(is,transform);
 
 				GdkPixbuf *pb=pixbuf_from_imagesource(is);
 				if(pb)
