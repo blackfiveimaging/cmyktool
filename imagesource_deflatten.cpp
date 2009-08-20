@@ -137,7 +137,12 @@ ISDataType *ImageSource_Deflatten::GetRow(int row)
 ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp,CMSProfile *outp,bool preserveblack,bool overprintblack,bool preservegrey)
 	: ImageSource(source), source(source), preserveblack(preserveblack), overprintblack(overprintblack), preservegrey(preservegrey)
 {
-	transform=new CMSTransform(inp,outp);
+	CMSProfile *emb=new CMSProfile(*outp);
+	SetEmbeddedProfile(emb,true);
+	if(inp->IsDeviceLink())
+		transform=new CMSTransform(inp);
+	else
+		transform=new CMSTransform(inp,outp);
 	disposetransform=true;
 
 	Init();
@@ -147,6 +152,7 @@ ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp
 ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,bool preserveblack,bool overprintblack,bool preservegrey)
 	: ImageSource(source), source(source), transform(transform), preserveblack(preserveblack), overprintblack(overprintblack), preservegrey(preservegrey)
 {
+	SetEmbeddedProfile(NULL);
 	disposetransform=false;
 
 	Init();
@@ -170,6 +176,7 @@ void ImageSource_Deflatten::Init()
 
 	if(transform->GetInputColourSpace()!=STRIP_ALPHA(source->type))
 	{
+		cerr << "Error: source colourspace is " << transform->GetInputColourSpace() << ", but image's type is " << source->type << endl;
 		throw "Source image must match source profile!";
 	}
 
@@ -191,6 +198,7 @@ void ImageSource_Deflatten::Init()
 	cerr << "tmpsourcespp: " << tmpsourcespp << endl;
 	cerr << "tmpdestspp: " << tmpdestspp << endl;
 	cerr << "samplesperpixel: " << samplesperpixel << endl;
+	cerr << "type: " << type << endl;
 
 	MakeRowBuffer();
 }

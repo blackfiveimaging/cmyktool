@@ -3,6 +3,12 @@
 
 #include "support/util.h"
 #include "conversionopts.h"
+#include "imagesource_promote.h"
+#include "imagesource_cms.h"
+#include "imagesource_deflatten.h"
+#include "imagesource_mask.h"
+#include "imagesource_montage.h"
+#include "imagesource_flatten.h"
 
 using namespace std;
 
@@ -116,5 +122,27 @@ void CMYKConversionOptions::Save(const char *presetname)
 
 ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask)
 {
+	if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
+		src=new ImageSource_Promote(src,IS_TYPE_RGB);
+
+	CMSTransform *transform=NULL;
+	cerr << "Opening profile: " << inprofile << endl;
+	CMSProfile in(inprofile);
+	CMSProfile *inprof;
+	if(!(inprof=src->GetEmbeddedProfile()))
+		inprof=&in;
+
+	if(inprof->IsDeviceLink())
+	{
+		cerr << "Using DeviceLink profile" << endl;
+		src=new ImageSource_Deflatten(src,inprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+	}
+	else
+	{
+		cerr << "Opening profile: " << outprofile << endl;
+		CMSProfile out(outprofile);
+		src=new ImageSource_Deflatten(src,inprof,&out,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+	}
+	return(src);
 }
 

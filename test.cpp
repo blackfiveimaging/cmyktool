@@ -12,8 +12,11 @@
 #include "miscwidgets/pixbufview.h"
 #include "miscwidgets/colorantselector.h"
 #include "miscwidgets/imageselector.h"
+#include "miscwidgets/generaldialogs.h"
 #include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
+
+#include "conversionopts.h"
 
 #include "config.h"
 #include "gettext.h"
@@ -171,7 +174,7 @@ class UITab_CacheThread : public ThreadFunction
 class UITab_RenderThread : public ThreadFunction
 {
 	public:
-	UITab_RenderThread(UITab &tab) : ThreadFunction(), tab(tab), thread(this)
+	UITab_RenderThread(UITab &tab) : ThreadFunction(), tab(tab), thread(this), pixbuf(NULL)
 	{
 		thread.Start();
 	}
@@ -183,18 +186,24 @@ class UITab_RenderThread : public ThreadFunction
 		// The main thread doesn't need to block until the mutex is owned;
 		tab.ObtainMutex();
 
-		ImageSource *is=tab.image->GetImageSource();
-		is=new ImageSource_ColorantMask(is,tab.collist);
+		try
+		{
+			ImageSource *is=tab.image->GetImageSource();
+			is=new ImageSource_ColorantMask(is,tab.collist);
 
-		CMSTransform *transform=tab.parent.factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
-		if(transform)
-			is=new ImageSource_CMS(is,transform);
-		else
-			cerr << "Couldn't create transform" << endl;
+			CMSTransform *transform=tab.parent.factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+			if(transform)
+				is=new ImageSource_CMS(is,transform);
+			else
+				cerr << "Couldn't create transform" << endl;
 
-		pixbuf=pixbuf_from_imagesource(is);
-		delete is;
-
+			pixbuf=pixbuf_from_imagesource(is);
+			delete is;
+		}
+		catch(const char *err)
+		{
+			cerr << "Error: " << err << endl;
+		}
 		tab.ReleaseMutex();
 
 		g_timeout_add(1,CleanupFunc,this);
@@ -204,9 +213,11 @@ class UITab_RenderThread : public ThreadFunction
 	{
 		UITab_RenderThread *t=(UITab_RenderThread *)ud;
 
-		pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf);
-		g_object_unref(G_OBJECT(t->pixbuf));
-
+		if(t->pixbuf)
+		{
+			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf);
+			g_object_unref(G_OBJECT(t->pixbuf));
+		}
 		delete t;
 		return(FALSE);
 	}
@@ -290,13 +301,46 @@ void UITab::SetImage(const char *filename)
 	collist=NULL;
 	ReleaseMutex();
 
-	ImageSource *is=ISLoadImage(filename);
+	try
+	{
+		ImageSource *is=ISLoadImage(filename);
 
-	collist=new DeviceNColorantList(is->type);
-	colorantselector_set_colorants(COLORANTSELECTOR(colsel),collist);
+		CMYKConversionOptions opts;
+		char *p;
+		if(STRIP_ALPHA(is->type)==IS_TYPE_RGB)
+		{
+			if((p=parent.profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
+			{
+				opts.SetInProfile(p);
+				free(p);
+			}
+		}
+		else
+		{
+			if((p=parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
+			{
+				opts.SetInProfile(p);
+				free(p);
+			}
+		}
+		if((p=parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
+		{
+			opts.SetOutProfile(p);
+			free(p);
+		}
 
-	new UITab_CacheThread(*this,is);
-	new UITab_RenderThread(*this);
+		is=opts.Apply(is);
+
+		collist=new DeviceNColorantList(is->type);
+		colorantselector_set_colorants(COLORANTSELECTOR(colsel),collist);
+
+		new UITab_CacheThread(*this,is);
+		new UITab_RenderThread(*this);
+	}
+	catch (const char *err)
+	{
+		ErrorMessage_Dialog(err,parent.window);
+	}
 }
 
 
