@@ -95,7 +95,7 @@ Need to separate rendering and temp file tracking.
 | Need an ImageBuffer of some kind - something that can hold an image for further processing.
 
 
-Need to support multi-selection in the ImageSelector!
+| Need to support multi-selection in the ImageSelector!
 
 
 -------------------------------------
@@ -110,5 +110,26 @@ will pop up asking for RIP options - which amounts to:
 * Text anti-aliasing (generally turned off) -dTextAlphaBits=4
 * Graphics anti-aliasing (generally turned on) -dGraphicsAlphaBits=4
 
+Need to consider thread pooling.  If you select a dozen images at once, you don't want to be running them all simultaneously.
 
+Perhaps some mutex-variation which uses a counter, similar to the RWMutex - would allow n threads to hold it at once,
+but make any further threads wait until the counter had diminished again.
+
+Better would be a work queue, and a small number of worker threads.
+Dispatcher thread in charge of launching worker threads?
+
+class JobQueue_Dispatcher : public Thread
+{
+	// Main loop will consist of waiting for a condition variable,
+	// Checking to see whether the number of allowed threads has been exceeded
+	// Dispatching a new thread if need be.
+	// Use a multex
+};
+
+class JobQueue_Worker : public Thread
+{
+
+}
+
+NOTE JobQueue destructor needs to unlink the job from the JobQueue.
 

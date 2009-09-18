@@ -1,10 +1,12 @@
 #include <iostream>
 
+#include <libgen.h>
 #include <gtk/gtk.h>
 
 #include "support/progressbar.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
+#include "support/util.h"
 #include "imageutils/tiffsave.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
@@ -204,13 +206,15 @@ class UITab_RenderThread : public ThreadFunction
 		{
 			cerr << "Error: " << err << endl;
 		}
-		tab.ReleaseMutex();
 
 		g_timeout_add(1,CleanupFunc,this);
+		t.WaitSync();
+		tab.ReleaseMutex();
 		return(0);
 	}
 	static gboolean CleanupFunc(gpointer ud)
 	{
+		// FIXME - it's currently possible for the main thread to delete a tab in between this being triggered and it actually happening.
 		UITab_RenderThread *t=(UITab_RenderThread *)ud;
 
 		if(t->pixbuf)
@@ -218,6 +222,7 @@ class UITab_RenderThread : public ThreadFunction
 			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf);
 			g_object_unref(G_OBJECT(t->pixbuf));
 		}
+		t->thread.SendSync();
 		delete t;
 		return(FALSE);
 	}
@@ -232,7 +237,9 @@ class UITab_RenderThread : public ThreadFunction
 UITab::UITab(TestUI &parent,const char *filename) : PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL)
 {
 	label=gtk_hbox_new(FALSE,0);
-	GtkWidget *tmp=gtk_label_new(filename);
+	char *fn=SafeStrdup(filename);
+	GtkWidget *tmp=gtk_label_new(basename(fn));
+	free(fn);
 	gtk_box_pack_start(GTK_BOX(label),tmp,TRUE,TRUE,0);
 
 	GtkWidget *closeimg=gtk_image_new_from_stock(GTK_STOCK_CLOSE,GTK_ICON_SIZE_MENU);
@@ -280,7 +287,12 @@ UITab::UITab(TestUI &parent,const char *filename) : PTMutex(), parent(parent), c
 
 UITab::~UITab()
 {
-	ObtainMutex();
+	// Need to do this in an Attempt / event pump loop, so that the idle-func of a thread
+	// can execute and cause the mutex to be released.
+	while(!AttemptMutex())
+	{
+		gtk_main_iteration_do(TRUE);
+	}
 	int page=gtk_notebook_page_num(GTK_NOTEBOOK(parent.notebook),hbox);
 	gtk_notebook_remove_page(GTK_NOTEBOOK(parent.notebook),page);
 	if(collist)
@@ -354,6 +366,9 @@ void UITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 void UITab::deleteclicked(GtkWidget *wid,gpointer userdata)
 {
 	UITab *ui=(UITab *)userdata;
+	// Disable the close button here in case it gets clicked again while we're
+	// waiting for thread termination.
+	gtk_widget_set_sensitive(wid,FALSE);
 	delete ui;
 }
 
@@ -426,7 +441,7 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_container_add(GTK_CONTAINER(window),hbox);
 	gtk_widget_show(hbox);
 
-	imgsel=imageselector_new(NULL,true,false);
+	imgsel=imageselector_new(NULL,GTK_SELECTION_MULTIPLE,false);
 	gtk_signal_connect (GTK_OBJECT (imgsel), "double-clicked",
 		(GtkSignalFunc) ProcessImage,this);
 	gtk_box_pack_start(GTK_BOX(hbox),imgsel,FALSE,FALSE,0);
@@ -454,38 +469,33 @@ void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 
 void TestUI::AddImage(const char *filename)
 {
-//	new UITab(*this,filename);
-//	if(!imageselector_add_filename(IMAGESELECTOR(imgsel),filename))
-//	{
-//		cerr << "Adding failed - attempting to render thumbnail manually..." << endl;
-		try
+	try
+	{
+		ImageSource *is=ISLoadImage(filename);
+		if(is)
 		{
-			ImageSource *is=ISLoadImage(filename);
-			if(is)
+			int h=128;
+			int w=(is->width*h)/is->height;
+			if(w>h)
 			{
-				int h=128;
-				int w=(is->width*h)/is->height;
-				if(w>h)
-				{
-					w=128;
-					h=(is->height*w)/is->width;
-				}
-				is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
-
-				CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
-				if(transform)
-					is=new ImageSource_CMS(is,transform);
-
-				GdkPixbuf *pb=pixbuf_from_imagesource(is);
-				if(pb)
-					imageselector_add_filename(IMAGESELECTOR(imgsel),filename,pb);
+				w=128;
+				h=(is->height*w)/is->width;
 			}
+			is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
+
+			CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+			if(transform)
+				is=new ImageSource_CMS(is,transform);
+
+			GdkPixbuf *pb=pixbuf_from_imagesource(is);
+			if(pb)
+				imageselector_add_filename(IMAGESELECTOR(imgsel),filename,pb);
 		}
-		catch(const char *err)
-		{
-			cerr << "Error: " << err << endl;
-		}
-//	}
+	}
+	catch(const char *err)
+	{
+		cerr << "Error: " << err << endl;
+	}
 }
 
 

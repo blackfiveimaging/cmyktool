@@ -29,6 +29,9 @@ libdeflatten_la_SOURCES = \
 
 bin_PROGRAMS = deflatten recombine decompose psrip test
 
+check_PROGRAMS = queuetest
+
+queuetest_SOURCES = queuetest.cpp
 recombine_SOURCES = recombine.cpp
 decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp

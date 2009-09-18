@@ -126,7 +126,7 @@ PSRipUI::PSRipUI() : SearchPathHandler(), window(NULL), imgsel(NULL), pbview(NUL
 	gtk_container_add(GTK_CONTAINER(window),hbox);
 	gtk_widget_show(GTK_WIDGET(hbox));
 
-	imgsel=imageselector_new(NULL,true,false);
+	imgsel=imageselector_new(NULL,GTK_SELECTION_SINGLE,false);
 	gtk_box_pack_start(GTK_BOX(hbox),imgsel,FALSE,FALSE,0);
 	gtk_widget_show(imgsel);
 
