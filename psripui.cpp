@@ -50,7 +50,7 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		session->Event.Subscribe();
 		sync.ObtainMutex();
 		SendSync();
-		sync.Wait();
+		sync.WaitCondition();
 		sync.ReleaseMutex();
 		g_timeout_add(100,pulse,this);
 		while(!session->TestFinished())
