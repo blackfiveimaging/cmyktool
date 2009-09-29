@@ -11,6 +11,19 @@
 
 using namespace std;
 
+class TestWorker : public Worker
+{
+	public:
+	TestWorker(JobQueue &queue,const char *name) : Worker(queue), name(name)
+	{
+	}
+	virtual ~TestWorker()
+	{
+	}
+	const char *name;
+};
+
+
 class TestJob : public Job
 {
 	public:
@@ -20,15 +33,16 @@ class TestJob : public Job
 	virtual ~TestJob()
 	{
 	}
-	virtual void Run()
+	virtual void Run(Worker *w)
 	{
+		TestWorker *tw=(TestWorker *)w;
 		double delay=RandomSeeded(20)+1;
 #ifdef WIN32
 		Sleep(delay*10);
 #else
 		usleep(delay*100000);
 #endif
-		std::cout << i << std::endl;
+		std::cout << i << " from " << tw->name << std::endl;
 		delete this;
 	}
 	protected:
@@ -38,7 +52,12 @@ class TestJob : public Job
 
 int main ()
 {
-	JobDispatcher jd(3);
+	JobDispatcher jd(0);
+
+	jd.AddWorker(new TestWorker(jd,"Thread 1"));
+	jd.AddWorker(new TestWorker(jd,"Thread 2"));
+	jd.AddWorker(new TestWorker(jd,"Thread 3"));
+
 	jd.PushJob(new TestJob(10));
 	jd.PushJob(new TestJob(35));
 	jd.PushJob(new TestJob(7));
