@@ -117,11 +117,8 @@ Need to consider thread pooling.  If you select a dozen images at once, you don'
 | Perhaps some mutex-variation which uses a counter, similar to the RWMutex - would allow n threads to hold it at once,
 | but make any further threads wait until the counter had diminished again.  (Multex)
 
-Better would be a work queue, and a small number of worker threads.
-Dispatcher thread in charge of launching worker threads?
-Better, track worker threads and re-use them.  Requires message passing mechanism.  ThreadEvents?
-Give each worker thread its own JobQueue (or make each worker thread a subclass of JobQueue)
-The Dispatcher will scan the thread list for the thread with the shortest queue and add the job to that.
+| Better would be a work queue, and a small number of worker threads.
+| Better, track worker threads and re-use them.  Requires message passing mechanism.  ThreadEvents? (Used Mutexes)
 
-NOTE JobQueue destructor needs to unlink the job from the JobQueue.
+Make SearchPath thread-safe.  (Needs a perseparate iterator which tracks open directories.)
 

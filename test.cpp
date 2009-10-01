@@ -133,6 +133,7 @@ class UITab : public PTMutex
 	bool popupshown;
 	CachedImage *image;
 	DeviceNColorantList *collist;
+	CMYKConversionOptions convopts;
 	friend class UITab_CacheThread;
 	friend class UITab_RenderThread;
 };
@@ -234,7 +235,8 @@ class UITab_RenderThread : public ThreadFunction
 };
 
 
-UITab::UITab(TestUI &parent,const char *filename) : PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL)
+UITab::UITab(TestUI &parent,const char *filename)
+	: PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL), convopts(parent.profilemanager)
 {
 	label=gtk_hbox_new(FALSE,0);
 	char *fn=SafeStrdup(filename);
@@ -317,13 +319,12 @@ void UITab::SetImage(const char *filename)
 	{
 		ImageSource *is=ISLoadImage(filename);
 
-		CMYKConversionOptions opts;
 		char *p;
 		if(STRIP_ALPHA(is->type)==IS_TYPE_RGB)
 		{
 			if((p=parent.profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
 			{
-				opts.SetInProfile(p);
+				convopts.SetInProfile(p);
 				free(p);
 			}
 		}
@@ -331,17 +332,17 @@ void UITab::SetImage(const char *filename)
 		{
 			if((p=parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
 			{
-				opts.SetInProfile(p);
+				convopts.SetInProfile(p);
 				free(p);
 			}
 		}
 		if((p=parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
 		{
-			opts.SetOutProfile(p);
+			convopts.SetOutProfile(p);
 			free(p);
 		}
 
-		is=opts.Apply(is);
+		is=convopts.Apply(is,NULL,&parent.factory);
 
 		collist=new DeviceNColorantList(is->type);
 		colorantselector_set_colorants(COLORANTSELECTOR(colsel),collist);

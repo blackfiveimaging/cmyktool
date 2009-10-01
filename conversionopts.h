@@ -1,8 +1,10 @@
 #ifndef CONVERSIONOPTS_H
 #define CONVERSIONOPTS_H
 
+#include <string>
+
 #include "imagesource/imagesource.h"
-#include "profilemanager/lcmswrapper.h"
+#include "profilemanager/profilemanager.h"
 
 
 enum CMYKConversionMode
@@ -16,7 +18,7 @@ enum CMYKConversionMode
 class CMYKConversionOptions
 {
 	public:
-	CMYKConversionOptions(const char *presetname=NULL);
+	CMYKConversionOptions(ProfileManager &pm,const char *presetname=NULL);
 	CMYKConversionOptions(const CMYKConversionOptions &other);
 	~CMYKConversionOptions();
 	CMYKConversionOptions &operator=(const CMYKConversionOptions &other);
@@ -33,11 +35,12 @@ class CMYKConversionOptions
 
 	void Save(const char *presetname);
 
-	ImageSource *Apply(ImageSource *src,ImageSource *mask=NULL);
+	ImageSource *Apply(ImageSource *src,ImageSource *mask=NULL,CMTransformFactory *factory=NULL);
 
 	protected:
-	char *inprofile;
-	char *outprofile;
+	ProfileManager &profilemanager;
+	std::string inprofile;
+	std::string outprofile;
 	LCMSWrapper_Intent intent;
 	CMYKConversionMode mode;
 };

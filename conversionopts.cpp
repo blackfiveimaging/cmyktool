@@ -12,29 +12,20 @@
 
 using namespace std;
 
-CMYKConversionOptions::CMYKConversionOptions(const char *presetname)
-	: inprofile(NULL), outprofile(NULL), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL)
+CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm,const char *presetname)
+	: profilemanager(pm), inprofile("sRGB Color Space Profile.icm"), outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL)
 {
-
 }
 
 
 CMYKConversionOptions::CMYKConversionOptions(const CMYKConversionOptions &other)
-	: inprofile(NULL), outprofile(NULL), intent(other.intent), mode(other.mode)
+	: profilemanager(other.profilemanager), inprofile(other.inprofile), outprofile(other.outprofile), intent(other.intent), mode(other.mode)
 {
-	if(other.inprofile)
-		inprofile=strdup(other.inprofile);
-	if(other.outprofile)
-		outprofile=strdup(other.outprofile);
 }
 
 
 CMYKConversionOptions::~CMYKConversionOptions()
 {
-	if(inprofile)
-		free(inprofile);
-	if(outprofile)
-		free(outprofile);
 }
 
 
@@ -42,18 +33,8 @@ CMYKConversionOptions &CMYKConversionOptions::operator=(const CMYKConversionOpti
 {
 	mode=other.mode;
 	intent=other.intent;
-
-	if(inprofile)
-		free(inprofile);
-	inprofile=NULL;
-	if(outprofile)
-		free(outprofile);
-	outprofile=NULL;
-
-	if(other.inprofile)
-		inprofile=strdup(other.inprofile);
-	if(other.outprofile)
-		outprofile=strdup(other.outprofile);
+	inprofile=other.inprofile;
+	outprofile=other.outprofile;
 }
 
 
@@ -71,13 +52,13 @@ CMYKConversionMode CMYKConversionOptions::GetMode()
 
 const char *CMYKConversionOptions::GetInProfile()
 {
-	return(inprofile);
+	return(inprofile.c_str());
 }
 
 
 const char *CMYKConversionOptions::GetOutProfile()
 {
-	return(outprofile);
+	return(outprofile.c_str());
 }
 
 
@@ -95,23 +76,15 @@ void CMYKConversionOptions::SetMode(CMYKConversionMode mode)
 
 void CMYKConversionOptions::SetInProfile(const char *in)
 {
-	if(inprofile)
-		free(inprofile);
-	inprofile=NULL;
-
 	if(in)
-		inprofile=strdup(in);
+		inprofile=string(in);
 }
 
 
 void CMYKConversionOptions::SetOutProfile(const char *out)
 {
-	if(outprofile)
-		free(outprofile);
-	outprofile=NULL;
-
 	if(out)
-		outprofile=strdup(out);
+		outprofile=string(out);
 }
 
 
@@ -120,29 +93,50 @@ void CMYKConversionOptions::Save(const char *presetname)
 }
 
 
-ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask)
+ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMTransformFactory *factory)
 {
 	if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
 		src=new ImageSource_Promote(src,IS_TYPE_RGB);
 
-	CMSTransform *transform=NULL;
 	cerr << "Opening profile: " << inprofile << endl;
-	CMSProfile in(inprofile);
-	CMSProfile *inprof;
-	if(!(inprof=src->GetEmbeddedProfile()))
-		inprof=&in;
+
+	bool freeinprof=false;
+	CMSProfile *inprof=src->GetEmbeddedProfile();
+	if(!inprof)
+	{
+		freeinprof=true;
+		inprof=profilemanager.GetProfile(inprofile.c_str());
+	}
 
 	if(inprof->IsDeviceLink())
 	{
 		cerr << "Using DeviceLink profile" << endl;
-		src=new ImageSource_Deflatten(src,inprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		if(factory)
+		{
+			CMSTransform *trans=factory->GetTransform(NULL,inprof,intent);
+			src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		}
+		else
+			src=new ImageSource_Deflatten(src,inprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
 	}
 	else
 	{
 		cerr << "Opening profile: " << outprofile << endl;
-		CMSProfile out(outprofile);
-		src=new ImageSource_Deflatten(src,inprof,&out,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		CMSProfile *out=profilemanager.GetProfile(outprofile.c_str());
+		if(factory)
+		{
+			CMSTransform *trans=factory->GetTransform(out,inprof,intent);
+			src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		}
+		else
+			src=new ImageSource_Deflatten(src,inprof,out,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		if(out)
+			delete out;
 	}
+
+	if(freeinprof)
+		delete inprof;
+
 	return(src);
 }
 
