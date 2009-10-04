@@ -106,6 +106,8 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	{
 		freeinprof=true;
 		inprof=profilemanager.GetProfile(inprofile.c_str());
+		if(!inprof)
+			throw "Can't open input profile";
 	}
 
 	if(inprof->IsDeviceLink())
@@ -123,6 +125,8 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	{
 		cerr << "Opening profile: " << outprofile << endl;
 		CMSProfile *out=profilemanager.GetProfile(outprofile.c_str());
+		if(!out)
+			throw "Can't open output profile";
 		if(factory)
 		{
 			CMSTransform *trans=factory->GetTransform(out,inprof,intent);

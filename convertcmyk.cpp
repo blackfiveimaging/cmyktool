@@ -123,21 +123,27 @@ class ConversionJob : public Job
 	{
 		ConversionWorker *tw=(ConversionWorker *)w;
 
-		ImageSource *src=ISLoadImage(filename);
-		src=opts.Apply(src,NULL,tw->factory);
-
-		char *outfilename=BuildFilename(filename,"-CMYK","tif");
-
-		cerr << "Saving " << outfilename << endl;
+		try
 		{
-			Progress p;
-			TIFFSaver ts(outfilename,src);
-			ts.SetProgress(&p);
-			ts.Save();
-		}
-		delete src;
-		free(outfilename);
+			ImageSource *src=ISLoadImage(filename);
+			src=opts.Apply(src,NULL,tw->factory);
 
+			char *outfilename=BuildFilename(filename,"-CMYK","tif");
+
+			cerr << "Saving " << outfilename << endl;
+			{
+				Progress p;
+				TIFFSaver ts(outfilename,src);
+				ts.SetProgress(&p);
+				ts.Save();
+			}
+			delete src;
+			free(outfilename);
+		}
+		catch(const char *err)
+		{
+			cerr << "Error: " << err << endl;
+		}
 		delete this;
 	}
 	protected:
