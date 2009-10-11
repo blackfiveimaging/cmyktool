@@ -120,5 +120,5 @@ Need to consider thread pooling.  If you select a dozen images at once, you don'
 | Better would be a work queue, and a small number of worker threads.
 | Better, track worker threads and re-use them.  Requires message passing mechanism.  ThreadEvents? (Used Mutexes)
 
-Make SearchPath thread-safe.  (Needs a perseparate iterator which tracks open directories.)
+| Make SearchPath thread-safe.  (Needs a perseparate iterator which tracks open directories.)
 
