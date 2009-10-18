@@ -119,7 +119,6 @@ class ConversionWorker : public Worker
 
 
 class UITab;
-class UITab_CacheThread;
 class UITab_RenderThread;
 
 class TestUI : public ConfigFile
@@ -137,8 +136,7 @@ class TestUI : public ConfigFile
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	friend class ImgUITab;
-	friend class UITab_CacheJob;
-	friend class UITab_RenderThread;
+	friend class UITab_RenderJob;
 };
 
 
@@ -161,7 +159,7 @@ class ImgUITab : public UITab, public PTMutex
 	DeviceNColorantList *collist;
 	CMYKConversionOptions convopts;
 	friend class UITab_CacheJob;
-	friend class UITab_RenderThread;
+	friend class UITab_RenderJob;
 };
 
 
@@ -178,8 +176,10 @@ class UITab_CacheJob : public Job
 	}
 	void Run(Worker *w)
 	{
+		ConversionWorker *cw=(ConversionWorker *)w;
+
 		tab.ObtainMutex();
-		CMYKConversionOptions convopts(tab.parent.profilemanager);
+		CMYKConversionOptions convopts(cw->profilemanager);
 		try
 		{
 			ImageSource *is=ISLoadImage(filename);
@@ -187,7 +187,7 @@ class UITab_CacheJob : public Job
 			char *p;
 			if(STRIP_ALPHA(is->type)==IS_TYPE_RGB)
 			{
-				if((p=tab.parent.profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
+				if((p=cw->profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
 				{
 					convopts.SetInProfile(p);
 					free(p);
@@ -195,19 +195,19 @@ class UITab_CacheJob : public Job
 			}
 			else
 			{
-				if((p=tab.parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
+				if((p=cw->profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
 				{
 					tab.convopts.SetInProfile(p);
 					free(p);
 				}
 			}
-			if((p=tab.parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
+			if((p=cw->profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
 			{
 				tab.convopts.SetOutProfile(p);
 				free(p);
 			}
 
-			is=tab.convopts.Apply(is,NULL,&tab.parent.factory);
+			is=tab.convopts.Apply(is,NULL,cw->factory);
 
 			tab.image=new CachedImage(is);
 		}
@@ -225,27 +225,33 @@ class UITab_CacheJob : public Job
 };
 
 
-class UITab_RenderThread : public ThreadFunction
+class UITab_RenderJob : public Job, public ThreadSync
 {
 	public:
-	UITab_RenderThread(ImgUITab &tab) : ThreadFunction(), tab(tab), thread(this), pixbuf(NULL)
-	{
-		thread.Start();
-	}
-	~UITab_RenderThread()
+	UITab_RenderJob(ImgUITab &tab) : Job(), ThreadSync(), tab(tab), pixbuf(NULL)
 	{
 	}
-	int Entry(Thread &t)
+	~UITab_RenderJob()
 	{
-		// The main thread doesn't need to block until the mutex is owned;
+	}
+	void Run(Worker *w)
+	{
+		ConversionWorker *cw=(ConversionWorker *)w;
+
 		tab.ObtainMutex();
+		while(!tab.image)
+		{
+			tab.ReleaseMutex();
+			sleep(1);
+			tab.ObtainMutex();
+		}
 
 		try
 		{
 			ImageSource *is=tab.image->GetImageSource();
 			is=new ImageSource_ColorantMask(is,tab.collist);
 
-			CMSTransform *transform=tab.parent.factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+			CMSTransform *transform=cw->factory->GetTransform(CM_COLOURDEVICE_DISPLAY,is);
 			if(transform)
 				is=new ImageSource_CMS(is,transform);
 			else
@@ -260,27 +266,27 @@ class UITab_RenderThread : public ThreadFunction
 		}
 
 		g_timeout_add(1,CleanupFunc,this);
-		t.WaitSync();
+		WaitCondition();
 		tab.ReleaseMutex();
-		return(0);
+
+		delete this;
 	}
 	static gboolean CleanupFunc(gpointer ud)
 	{
 		// FIXME - it's currently possible for the main thread to delete a tab in between this being triggered and it actually happening.
-		UITab_RenderThread *t=(UITab_RenderThread *)ud;
+		UITab_RenderJob *t=(UITab_RenderJob *)ud;
 
 		if(t->pixbuf)
 		{
 			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf);
 			g_object_unref(G_OBJECT(t->pixbuf));
+			t->pixbuf=NULL;
 		}
-		t->thread.SendSync();
-		delete t;
+		t->Broadcast();
 		return(FALSE);
 	}
 	protected:
 	ImgUITab &tab;
-	Thread thread;
 	ImageSource *src;
 	GdkPixbuf *pixbuf;
 };
@@ -349,7 +355,7 @@ void ImgUITab::SetImage(const char *filename)
 		free(fn);
 
 		parent.dispatcher.PushJob(new UITab_CacheJob(*this,filename));
-		new UITab_RenderThread(*this);
+		parent.dispatcher.PushJob(new UITab_RenderJob(*this));
 	}
 	catch (const char *err)
 	{
@@ -361,7 +367,7 @@ void ImgUITab::SetImage(const char *filename)
 void ImgUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 {
 	ImgUITab *ob=(ImgUITab *)userdata;
-	new UITab_RenderThread(*ob);
+	ob->parent.dispatcher.PushJob(new UITab_RenderJob(*ob));
 }
 
 
