@@ -3,6 +3,7 @@
 #include <libgen.h>
 #include <gtk/gtk.h>
 
+#include "support/jobqueue.h"
 #include "support/progressbar.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
@@ -28,6 +29,8 @@
 
 using namespace std;
 
+
+////////////// ImageSource to filter by colorant mask //////////////
 
 class ImageSource_ColorantMask : public ImageSource
 {
@@ -91,6 +94,30 @@ class ImageSource_ColorantMask : public ImageSource
 };
 
 
+//////////////  Conversion Worker Thread - ///////////////
+
+
+class ConversionWorker : public Worker
+{
+	public:
+	ConversionWorker(JobQueue &queue,ProfileManager &pm) : Worker(queue), profilemanager(pm)
+	{
+		factory=profilemanager.GetTransformFactory();
+	}
+	virtual ~ConversionWorker()
+	{
+		WaitCompletion();
+		if(factory)
+			delete factory;
+	}
+	ProfileManager &profilemanager;
+	CMTransformFactory *factory;
+};
+
+
+///////////////////////  User interface /////////////////////////
+
+
 class UITab;
 class UITab_CacheThread;
 class UITab_RenderThread;
@@ -105,11 +132,12 @@ class TestUI : public ConfigFile
 	GtkWidget *window;
 	protected:
 	ProfileManager profilemanager;
+	JobDispatcher dispatcher;
 	CMTransformFactory factory;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	friend class ImgUITab;
-	friend class UITab_CacheThread;
+	friend class UITab_CacheJob;
 	friend class UITab_RenderThread;
 };
 
@@ -132,43 +160,68 @@ class ImgUITab : public UITab, public PTMutex
 	CachedImage *image;
 	DeviceNColorantList *collist;
 	CMYKConversionOptions convopts;
-	friend class UITab_CacheThread;
+	friend class UITab_CacheJob;
 	friend class UITab_RenderThread;
 };
 
 
-class UITab_CacheThread : public ThreadFunction
+class UITab_CacheJob : public Job
 {
 	public:
-	UITab_CacheThread(ImgUITab &tab,ImageSource *src) : ThreadFunction(), tab(tab), thread(this), src(src)
+	UITab_CacheJob(ImgUITab &tab,const char *filename) : Job(), tab(tab), filename(NULL)
 	{
-		thread.Start();
-		thread.WaitSync();
+		this->filename=SafeStrdup(filename);
 	}
-	~UITab_CacheThread()
+	~UITab_CacheJob()
 	{
+		free(filename);
 	}
-	int Entry(Thread &t)
+	void Run(Worker *w)
 	{
 		tab.ObtainMutex();
-		thread.SendSync();
+		CMYKConversionOptions convopts(tab.parent.profilemanager);
+		try
+		{
+			ImageSource *is=ISLoadImage(filename);
 
-		tab.image=new CachedImage(src);
+			char *p;
+			if(STRIP_ALPHA(is->type)==IS_TYPE_RGB)
+			{
+				if((p=tab.parent.profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
+				{
+					convopts.SetInProfile(p);
+					free(p);
+				}
+			}
+			else
+			{
+				if((p=tab.parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
+				{
+					tab.convopts.SetInProfile(p);
+					free(p);
+				}
+			}
+			if((p=tab.parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
+			{
+				tab.convopts.SetOutProfile(p);
+				free(p);
+			}
+
+			is=tab.convopts.Apply(is,NULL,&tab.parent.factory);
+
+			tab.image=new CachedImage(is);
+		}
+		catch(const char *err)
+		{
+			cerr << "Error: " << err << endl;
+		}
 		tab.ReleaseMutex();
 
-		g_timeout_add(1,CleanupFunc,this);
-		return(0);
-	}
-	static gboolean CleanupFunc(gpointer ud)
-	{
-		UITab_CacheThread *t=(UITab_CacheThread *)ud;
-		delete t;
-		return(FALSE);
+		delete this;
 	}
 	protected:
 	ImgUITab &tab;
-	Thread thread;
-	ImageSource *src;
+	char *filename;
 };
 
 
@@ -234,7 +287,7 @@ class UITab_RenderThread : public ThreadFunction
 
 
 ImgUITab::ImgUITab(TestUI &parent,const char *filename)
-	: UITab(parent.notebook,filename), PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL), convopts(parent.profilemanager)
+	: UITab(parent.notebook), PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL), convopts(parent.profilemanager)
 {
 	hbox=GetBox();
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
@@ -288,37 +341,14 @@ void ImgUITab::SetImage(const char *filename)
 
 	try
 	{
-		ImageSource *is=ISLoadImage(filename);
-
-		char *p;
-		if(STRIP_ALPHA(is->type)==IS_TYPE_RGB)
-		{
-			if((p=parent.profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
-			{
-				convopts.SetInProfile(p);
-				free(p);
-			}
-		}
-		else
-		{
-			if((p=parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
-			{
-				convopts.SetInProfile(p);
-				free(p);
-			}
-		}
-		if((p=parent.profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
-		{
-			convopts.SetOutProfile(p);
-			free(p);
-		}
-
-		is=convopts.Apply(is,NULL,&parent.factory);
-
-		collist=new DeviceNColorantList(is->type);
+		collist=new DeviceNColorantList(IS_TYPE_CMYK);
 		colorantselector_set_colorants(COLORANTSELECTOR(colsel),collist);
 
-		new UITab_CacheThread(*this,is);
+		char *fn=SafeStrdup(filename);
+		SetText(basename(fn));
+		free(fn);
+
+		parent.dispatcher.PushJob(new UITab_CacheJob(*this,filename));
 		new UITab_RenderThread(*this);
 	}
 	catch (const char *err)
@@ -367,18 +397,13 @@ gboolean ImgUITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer u
 
 
 TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
-	factory(profilemanager), notebook(NULL)
+	dispatcher(0), factory(profilemanager), notebook(NULL)
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
 
-	gtk_rc_parse_string("style \"mystyle\"\n"
-						"{\n"
-						"	GtkWidget::focus-padding = 0\n"
-						"	GtkWidget::focus-line-width = 0\n"
-						"	xthickness = 0\n"
-						"	ythickness = 0\n"
-						"}\n"
-						"widget \"*.tab-close-button\" style \"mystyle\"\n");
+	dispatcher.AddWorker(new ConversionWorker(dispatcher,profilemanager));
+	dispatcher.AddWorker(new ConversionWorker(dispatcher,profilemanager));
+	dispatcher.AddWorker(new ConversionWorker(dispatcher,profilemanager));
 
 
 	window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
