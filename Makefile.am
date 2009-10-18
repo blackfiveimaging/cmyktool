@@ -27,7 +27,7 @@ libdeflatten_la_SOURCES = \
 	psripui.h	\
 	gettext.h
 
-bin_PROGRAMS = deflatten recombine decompose psrip test
+bin_PROGRAMS = deflatten recombine decompose psrip test tabui
 
 check_PROGRAMS = queuetest convertcmyk
 
@@ -38,6 +38,7 @@ decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
 test_SOURCES = test.cpp
+tabui_SOURCES = tabui.cpp
 
 LDADD = \
 	libdeflatten.la \
