@@ -15,6 +15,7 @@
 #include "miscwidgets/colorantselector.h"
 #include "miscwidgets/imageselector.h"
 #include "miscwidgets/generaldialogs.h"
+#include "miscwidgets/uitab.h"
 #include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
 
@@ -107,26 +108,23 @@ class TestUI : public ConfigFile
 	CMTransformFactory factory;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
-	friend class UITab;
+	friend class ImgUITab;
 	friend class UITab_CacheThread;
 	friend class UITab_RenderThread;
 };
 
 
-class UITab : public PTMutex
+class ImgUITab : public UITab, public PTMutex
 {
 	public:
-	UITab(TestUI &parent,const char *filename);
-	~UITab();
+	ImgUITab(TestUI &parent,const char *filename);
+	~ImgUITab();
 	void SetImage(const char *filename);
 	static void ColorantsChanged(GtkWidget *wid,gpointer userdata);
-	static void deleteclicked(GtkWidget *wid,gpointer userdata);
-	static void setclosebuttonsize(GtkWidget *wid,GtkStyle *style,gpointer userdata);
 	static gboolean mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata);
 	protected:
 	TestUI &parent;
 	GtkWidget *hbox;
-	GtkWidget *label;
 	GtkWidget *colsel;
 	GtkWidget *pbview;
 	GtkWidget *popup;
@@ -142,7 +140,7 @@ class UITab : public PTMutex
 class UITab_CacheThread : public ThreadFunction
 {
 	public:
-	UITab_CacheThread(UITab &tab,ImageSource *src) : ThreadFunction(), tab(tab), thread(this), src(src)
+	UITab_CacheThread(ImgUITab &tab,ImageSource *src) : ThreadFunction(), tab(tab), thread(this), src(src)
 	{
 		thread.Start();
 		thread.WaitSync();
@@ -168,7 +166,7 @@ class UITab_CacheThread : public ThreadFunction
 		return(FALSE);
 	}
 	protected:
-	UITab &tab;
+	ImgUITab &tab;
 	Thread thread;
 	ImageSource *src;
 };
@@ -177,7 +175,7 @@ class UITab_CacheThread : public ThreadFunction
 class UITab_RenderThread : public ThreadFunction
 {
 	public:
-	UITab_RenderThread(UITab &tab) : ThreadFunction(), tab(tab), thread(this), pixbuf(NULL)
+	UITab_RenderThread(ImgUITab &tab) : ThreadFunction(), tab(tab), thread(this), pixbuf(NULL)
 	{
 		thread.Start();
 	}
@@ -228,38 +226,18 @@ class UITab_RenderThread : public ThreadFunction
 		return(FALSE);
 	}
 	protected:
-	UITab &tab;
+	ImgUITab &tab;
 	Thread thread;
 	ImageSource *src;
 	GdkPixbuf *pixbuf;
 };
 
 
-UITab::UITab(TestUI &parent,const char *filename)
-	: PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL), convopts(parent.profilemanager)
+ImgUITab::ImgUITab(TestUI &parent,const char *filename)
+	: UITab(parent.notebook,filename), PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL), convopts(parent.profilemanager)
 {
-	label=gtk_hbox_new(FALSE,0);
-	char *fn=SafeStrdup(filename);
-	GtkWidget *tmp=gtk_label_new(basename(fn));
-	free(fn);
-	gtk_box_pack_start(GTK_BOX(label),tmp,TRUE,TRUE,0);
-
-	GtkWidget *closeimg=gtk_image_new_from_stock(GTK_STOCK_CLOSE,GTK_ICON_SIZE_MENU);
-	tmp=gtk_button_new();
-	gtk_widget_set_name(tmp,"tab-close-button");
-	gtk_button_set_image(GTK_BUTTON(tmp),closeimg);
-	gtk_button_set_relief(GTK_BUTTON(tmp),GTK_RELIEF_NONE);
-	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(deleteclicked),this);
-	g_signal_connect(G_OBJECT(tmp),"style-set",G_CALLBACK(setclosebuttonsize),this);
-	gtk_box_pack_start(GTK_BOX(label),tmp,FALSE,FALSE,4);
-	gtk_widget_show_all(label);
-	
-	hbox=gtk_hbox_new(FALSE,0);
-	gtk_widget_show(GTK_WIDGET(hbox));
+	hbox=GetBox();
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
-	gtk_notebook_append_page(GTK_NOTEBOOK(parent.notebook),GTK_WIDGET(hbox),label);
-	gtk_notebook_set_current_page(GTK_NOTEBOOK(parent.notebook),-1);
-    gtk_notebook_set_tab_label_packing(GTK_NOTEBOOK(parent.notebook),hbox, TRUE, TRUE,GTK_PACK_START);
 
 	pbview=pixbufview_new(NULL,false);
 	gtk_box_pack_start(GTK_BOX(hbox),pbview,TRUE,TRUE,0);
@@ -277,17 +255,10 @@ UITab::UITab(TestUI &parent,const char *filename)
 	gtk_container_add(GTK_CONTAINER(popup),colsel);
 	gtk_widget_show(colsel);
 
-	char *path;
-	char *pathrev;
-	unsigned int pathlen;
-
-	gtk_widget_path(tmp,&pathlen,&path,&pathrev);
-	cerr << "Path to button: " << path << endl;
-
 	SetImage(filename);
 }
 
-UITab::~UITab()
+ImgUITab::~ImgUITab()
 {
 	// Need to do this in an Attempt / event pump loop, so that the idle-func of a thread
 	// can execute and cause the mutex to be released.
@@ -304,7 +275,7 @@ UITab::~UITab()
 }
 
 
-void UITab::SetImage(const char *filename)
+void ImgUITab::SetImage(const char *filename)
 {
 	ObtainMutex();
 	if(image)
@@ -357,36 +328,16 @@ void UITab::SetImage(const char *filename)
 }
 
 
-void UITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
+void ImgUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 {
-	UITab *ob=(UITab *)userdata;
+	ImgUITab *ob=(ImgUITab *)userdata;
 	new UITab_RenderThread(*ob);
 }
 
 
-void UITab::deleteclicked(GtkWidget *wid,gpointer userdata)
+gboolean ImgUITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata)
 {
-	UITab *ui=(UITab *)userdata;
-	// Disable the close button here in case it gets clicked again while we're
-	// waiting for thread termination.
-	gtk_widget_set_sensitive(wid,FALSE);
-	delete ui;
-}
-
-
-void UITab::setclosebuttonsize(GtkWidget *wid,GtkStyle *style,gpointer userdata)
-{
-	UITab *ui=(UITab *)userdata;
-	GtkSettings *settings=gtk_widget_get_settings(wid);
-	int x,y;
-	gtk_icon_size_lookup_for_settings(settings,GTK_ICON_SIZE_MENU,&x,&y);
-	gtk_widget_set_size_request(wid,x+2,y+2);
-}
-
-
-gboolean UITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata)
-{
-	UITab *ui=(UITab *)userdata;
+	ImgUITab *ui=(ImgUITab *)userdata;
 
 	int x,y;
 	GdkModifierType mods;
@@ -464,7 +415,7 @@ void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 	TestUI *ui=(TestUI *)userdata;
 	const char *fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel));
 	if(fn)
-		new UITab(*ui,fn);
+		new ImgUITab(*ui,fn);
 }
 
 
