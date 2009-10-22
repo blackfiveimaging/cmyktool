@@ -95,6 +95,8 @@ class ImageSource_ColorantMask : public ImageSource
 
 
 //////////////  Conversion Worker Thread - ///////////////
+// A subclass of the generic worker thread which has a
+// thread-specific TransformFactory, to dodge LCMS's thread safety issues.
 
 
 class ConversionWorker : public Worker
@@ -158,6 +160,8 @@ class ImgUITab : public UITab, public PTMutex
 	CachedImage *image;
 	DeviceNColorantList *collist;
 	CMYKConversionOptions convopts;
+	Job *cachejob;
+	Job *renderjob;
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
 };
@@ -293,7 +297,8 @@ class UITab_RenderJob : public Job, public ThreadSync
 
 
 ImgUITab::ImgUITab(TestUI &parent,const char *filename)
-	: UITab(parent.notebook), PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL), convopts(parent.profilemanager)
+	: UITab(parent.notebook), PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
+	convopts(parent.profilemanager), cachejob(NULL), renderjob(NULL)
 {
 	hbox=GetBox();
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
@@ -317,20 +322,25 @@ ImgUITab::ImgUITab(TestUI &parent,const char *filename)
 	SetImage(filename);
 }
 
+
 ImgUITab::~ImgUITab()
 {
+	// NULL or stale pointers are harmless here.
+	parent.dispatcher.CancelJob(cachejob);
+	parent.dispatcher.CancelJob(renderjob);
+
 	// Need to do this in an Attempt / event pump loop, so that the idle-func of a thread
 	// can execute and cause the mutex to be released.
 	while(!AttemptMutex())
 	{
 		gtk_main_iteration_do(TRUE);
 	}
-	int page=gtk_notebook_page_num(GTK_NOTEBOOK(parent.notebook),hbox);
-	gtk_notebook_remove_page(GTK_NOTEBOOK(parent.notebook),page);
 	if(collist)
 		delete collist;
 	if(image)
 		delete image;
+
+	ReleaseMutex();
 }
 
 
@@ -354,8 +364,8 @@ void ImgUITab::SetImage(const char *filename)
 		SetText(basename(fn));
 		free(fn);
 
-		parent.dispatcher.PushJob(new UITab_CacheJob(*this,filename));
-		parent.dispatcher.PushJob(new UITab_RenderJob(*this));
+		parent.dispatcher.PushJob(cachejob=new UITab_CacheJob(*this,filename));
+		parent.dispatcher.PushJob(renderjob=new UITab_RenderJob(*this));
 	}
 	catch (const char *err)
 	{

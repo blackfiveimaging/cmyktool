@@ -122,3 +122,13 @@ Need to consider thread pooling.  If you select a dozen images at once, you don'
 
 | Make SearchPath thread-safe.  (Needs a perseparate iterator which tracks open directories.)
 
+Need a way of handling job deletion - needs to be tracked by the UITab, but has to be able to self-delete, too.
+Will have to be mutex-protected.  Reference counting?
+The scenario that causes the problem is this:
+If the main thread queues a job A, which references object B, it's possible for the main thread to delete
+B before job A is run, and there's no way, currently, of robustly cancelling job A.
+The most elegant solution to this is probably to build a second queue, so there's a waiting and a running queue, then
+provide a Cancel() method to the jobdispatcher which takes a Job pointer as an argument.
+The dispatcher will then search both queues, and if found, delete the job.  If the job is not found in either queue, then 
+it's either finished and self-destructed, or about to be so.
+
