@@ -9,6 +9,8 @@
 #include "support/multex.h"
 #include "support/util.h"
 
+#include "support/debug.h"
+
 using namespace std;
 
 class TestWorker : public Worker
@@ -43,7 +45,7 @@ class TestJob : public Job
 		usleep(delay*100000);
 #endif
 		std::cout << i << " from " << tw->name << std::endl;
-		delete this;
+//		delete this;
 	}
 	protected:
 	int i;
@@ -52,30 +54,31 @@ class TestJob : public Job
 
 int main ()
 {
+	Debug.SetLevel(TRACE);
 	JobDispatcher jd(0);
 
 	jd.AddWorker(new TestWorker(jd,"Thread 1"));
 	jd.AddWorker(new TestWorker(jd,"Thread 2"));
 	jd.AddWorker(new TestWorker(jd,"Thread 3"));
 
-	jd.PushJob(new TestJob(10));
-	jd.PushJob(new TestJob(35));
-	jd.PushJob(new TestJob(7));
-	jd.PushJob(new TestJob(4));
-	jd.PushJob(new TestJob(42));
-	jd.PushJob(new TestJob(7));
-	jd.PushJob(new TestJob(10));
-	jd.PushJob(new TestJob(35));
-	jd.PushJob(new TestJob(7));
-	jd.PushJob(new TestJob(4));
-	jd.PushJob(new TestJob(42));
-	jd.PushJob(new TestJob(7));
-	jd.PushJob(new TestJob(10));
-	jd.PushJob(new TestJob(35));
-	jd.PushJob(new TestJob(7));
-	jd.PushJob(new TestJob(4));
-	jd.PushJob(new TestJob(42));
-	jd.PushJob(new TestJob(7));
+	jd.AddJob(new TestJob(10));
+	jd.AddJob(new TestJob(35));
+	jd.AddJob(new TestJob(7));
+	jd.AddJob(new TestJob(4));
+	jd.AddJob(new TestJob(42));
+	jd.AddJob(new TestJob(7));
+	jd.AddJob(new TestJob(10));
+	jd.AddJob(new TestJob(35));
+	jd.AddJob(new TestJob(7));
+	jd.AddJob(new TestJob(4));
+	jd.AddJob(new TestJob(42));
+	jd.AddJob(new TestJob(7));
+	jd.AddJob(new TestJob(10));
+	jd.AddJob(new TestJob(35));
+	jd.AddJob(new TestJob(7));
+	jd.AddJob(new TestJob(4));
+	jd.AddJob(new TestJob(42));
+	jd.AddJob(new TestJob(7));
 
 	jd.WaitCompletion();
 

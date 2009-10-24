@@ -3,6 +3,7 @@
 #include <libgen.h>
 #include <gtk/gtk.h>
 
+#include "support/debug.h"
 #include "support/jobqueue.h"
 #include "support/progressbar.h"
 #include "support/rwmutex.h"
@@ -138,11 +139,12 @@ class TestUI : public ConfigFile
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	friend class ImgUITab;
+	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
 };
 
 
-class ImgUITab : public UITab, public PTMutex
+class ImgUITab : public UITab
 {
 	public:
 	ImgUITab(TestUI &parent,const char *filename);
@@ -160,72 +162,8 @@ class ImgUITab : public UITab, public PTMutex
 	CachedImage *image;
 	DeviceNColorantList *collist;
 	CMYKConversionOptions convopts;
-	Job *cachejob;
-	Job *renderjob;
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
-};
-
-
-class UITab_CacheJob : public Job
-{
-	public:
-	UITab_CacheJob(ImgUITab &tab,const char *filename) : Job(), tab(tab), filename(NULL)
-	{
-		this->filename=SafeStrdup(filename);
-	}
-	~UITab_CacheJob()
-	{
-		free(filename);
-	}
-	void Run(Worker *w)
-	{
-		ConversionWorker *cw=(ConversionWorker *)w;
-
-		tab.ObtainMutex();
-		CMYKConversionOptions convopts(cw->profilemanager);
-		try
-		{
-			ImageSource *is=ISLoadImage(filename);
-
-			char *p;
-			if(STRIP_ALPHA(is->type)==IS_TYPE_RGB)
-			{
-				if((p=cw->profilemanager.SearchPaths("sRGB Color Space Profile.icm")));
-				{
-					convopts.SetInProfile(p);
-					free(p);
-				}
-			}
-			else
-			{
-				if((p=cw->profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
-				{
-					tab.convopts.SetInProfile(p);
-					free(p);
-				}
-			}
-			if((p=cw->profilemanager.SearchPaths("USWebCoatedSWOP.icc")));
-			{
-				tab.convopts.SetOutProfile(p);
-				free(p);
-			}
-
-			is=tab.convopts.Apply(is,NULL,cw->factory);
-
-			tab.image=new CachedImage(is);
-		}
-		catch(const char *err)
-		{
-			cerr << "Error: " << err << endl;
-		}
-		tab.ReleaseMutex();
-
-		delete this;
-	}
-	protected:
-	ImgUITab &tab;
-	char *filename;
 };
 
 
@@ -234,6 +172,7 @@ class UITab_RenderJob : public Job, public ThreadSync
 	public:
 	UITab_RenderJob(ImgUITab &tab) : Job(), ThreadSync(), tab(tab), pixbuf(NULL)
 	{
+		tab.Ref();
 	}
 	~UITab_RenderJob()
 	{
@@ -241,14 +180,6 @@ class UITab_RenderJob : public Job, public ThreadSync
 	void Run(Worker *w)
 	{
 		ConversionWorker *cw=(ConversionWorker *)w;
-
-		tab.ObtainMutex();
-		while(!tab.image)
-		{
-			tab.ReleaseMutex();
-			sleep(1);
-			tab.ObtainMutex();
-		}
 
 		try
 		{
@@ -259,26 +190,24 @@ class UITab_RenderJob : public Job, public ThreadSync
 			if(transform)
 				is=new ImageSource_CMS(is,transform);
 			else
-				cerr << "Couldn't create transform" << endl;
+				Debug[WARN] << "RenderJob: Couldn't create transform" << endl;
 
 			pixbuf=pixbuf_from_imagesource(is);
 			delete is;
 		}
 		catch(const char *err)
 		{
-			cerr << "Error: " << err << endl;
+			Debug[ERROR] << "Error: " << err << endl;
 		}
-
+		Debug[TRACE] << "Triggering cleanup function" << endl;
 		g_timeout_add(1,CleanupFunc,this);
 		WaitCondition();
-		tab.ReleaseMutex();
-
-		delete this;
 	}
 	static gboolean CleanupFunc(gpointer ud)
 	{
-		// FIXME - it's currently possible for the main thread to delete a tab in between this being triggered and it actually happening.
 		UITab_RenderJob *t=(UITab_RenderJob *)ud;
+
+		Debug[TRACE] << "In cleanup function - drawing pixbuf" << endl;
 
 		if(t->pixbuf)
 		{
@@ -286,6 +215,8 @@ class UITab_RenderJob : public Job, public ThreadSync
 			g_object_unref(G_OBJECT(t->pixbuf));
 			t->pixbuf=NULL;
 		}
+		gtk_widget_set_sensitive(t->tab.colsel,TRUE);
+		t->tab.UnRef();
 		t->Broadcast();
 		return(FALSE);
 	}
@@ -296,9 +227,48 @@ class UITab_RenderJob : public Job, public ThreadSync
 };
 
 
+class UITab_CacheJob : public Job
+{
+	public:
+	UITab_CacheJob(ImgUITab &tab,const char *filename) : Job(), tab(tab), filename(NULL)
+	{
+		tab.Ref();
+		this->filename=SafeStrdup(filename);
+	}
+	~UITab_CacheJob()
+	{
+		free(filename);
+	}
+	void Run(Worker *w)
+	{
+		ConversionWorker *cw=(ConversionWorker *)w;
+
+		try
+		{
+			ImageSource *is=ISLoadImage(filename);
+
+			is=tab.convopts.Apply(is,NULL,cw->factory);
+
+			tab.image=new CachedImage(is);
+
+			UITab_RenderJob renderjob(tab);
+			renderjob.Run(w);
+		}
+		catch(const char *err)
+		{
+			cerr << "Error: " << err << endl;
+		}
+		tab.UnRef();
+	}
+	protected:
+	ImgUITab &tab;
+	char *filename;
+};
+
+
 ImgUITab::ImgUITab(TestUI &parent,const char *filename)
-	: UITab(parent.notebook), PTMutex(), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(parent.profilemanager), cachejob(NULL), renderjob(NULL)
+	: UITab(parent.notebook),  parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
+	convopts(parent.profilemanager)
 {
 	hbox=GetBox();
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
@@ -325,35 +295,21 @@ ImgUITab::ImgUITab(TestUI &parent,const char *filename)
 
 ImgUITab::~ImgUITab()
 {
-	// NULL or stale pointers are harmless here.
-	parent.dispatcher.CancelJob(cachejob);
-	parent.dispatcher.CancelJob(renderjob);
-
-	// Need to do this in an Attempt / event pump loop, so that the idle-func of a thread
-	// can execute and cause the mutex to be released.
-	while(!AttemptMutex())
-	{
-		gtk_main_iteration_do(TRUE);
-	}
 	if(collist)
 		delete collist;
 	if(image)
 		delete image;
-
-	ReleaseMutex();
 }
 
 
 void ImgUITab::SetImage(const char *filename)
 {
-	ObtainMutex();
 	if(image)
 		delete image;
 	image=NULL;
 	if(collist)
 		delete collist;
 	collist=NULL;
-	ReleaseMutex();
 
 	try
 	{
@@ -364,8 +320,7 @@ void ImgUITab::SetImage(const char *filename)
 		SetText(basename(fn));
 		free(fn);
 
-		parent.dispatcher.PushJob(cachejob=new UITab_CacheJob(*this,filename));
-		parent.dispatcher.PushJob(renderjob=new UITab_RenderJob(*this));
+		parent.dispatcher.AddJob(new UITab_CacheJob(*this,filename));
 	}
 	catch (const char *err)
 	{
@@ -377,7 +332,8 @@ void ImgUITab::SetImage(const char *filename)
 void ImgUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 {
 	ImgUITab *ob=(ImgUITab *)userdata;
-	ob->parent.dispatcher.PushJob(new UITab_RenderJob(*ob));
+	gtk_widget_set_sensitive(ob->colsel,FALSE);
+	ob->parent.dispatcher.AddJob(new UITab_RenderJob(*ob));
 }
 
 
@@ -446,6 +402,7 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_widget_show(GTK_WIDGET(notebook));
 }
 
+
 TestUI::~TestUI()
 {
 }
@@ -462,6 +419,7 @@ void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 
 void TestUI::AddImage(const char *filename)
 {
+	Debug.SetLevel(TRACE);
 	try
 	{
 		ImageSource *is=ISLoadImage(filename);

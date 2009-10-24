@@ -144,7 +144,6 @@ class ConversionJob : public Job
 		{
 			cerr << "Error: " << err << endl;
 		}
-		delete this;
 	}
 	protected:
 	CMYKConversionOptions opts;
@@ -170,7 +169,7 @@ int main(int argc, char **argv)
 		
 		for(int i=optind;i<argc;++i)
 		{
-			jd.PushJob(new ConversionJob(opts,argv[i]));
+			jd.AddJob(new ConversionJob(opts,argv[i]));
 		}
 
 		jd.WaitCompletion();

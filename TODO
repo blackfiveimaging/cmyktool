@@ -71,8 +71,8 @@ The first page of the notebook will contain a drop-down with the list of presets
 When a preset is selected, the values from that preset will be loaded into the widgets beneath the combo.
 Any change to these values must change the Combo's value to "New..." (Or maybe just make a "Save" button sensitive.)
 
-Need a better solution for the channel selectors - maybe a column of togglebuttons each with the squiggle icon
-in a different colour.
+Need a better solution for the channel selectors - maybe a row of togglebuttons each with the squiggle icon
+in a different colour.  -  or maybe checkboxes with a coloured squiggle as a label?
 The widgets beneath will allow In and Out profiles to be selected, along with a rendering intent.
 If the Out profile is CMYK, a combo box with the following options will be available:
 Normal
