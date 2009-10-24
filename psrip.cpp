@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdio>
+#include <cstring>
 
 #include <gtk/gtk.h>
 
@@ -10,6 +11,7 @@
 #include "miscwidgets/generaldialogs.h"
 #include "support/progressbar.h"
 #include "support/progresstext.h"
+#include "support/util.h"
 #include "psripui.h"
 
 #include "config.h"
@@ -23,24 +25,38 @@ int main(int argc,char *argv[])
 {
 	gtk_init(&argc,&argv);
 
-	if(argc>1)
+	try
 	{
-		try
-		{
 //			PSRipOptions opts;
 //			PSRip ripper;
 //			ripper.Rip(argv[1],opts);
 
+		PSRipUI ripper;
 
-			PSRipUI ripper;
-			ripper.Rip(argv[1]);
-
-			gtk_main();
-		}
-		catch(const char *err)
+		if(argc>1)
 		{
-			cerr << "Error: " << err << endl;
+			char *filename;
+
+#ifdef WIN32
+			if(argv[1][1]!=':' && argv[1][0]!='/')
+				filename=BuildAbsoluteFilename(argv[1]);
+			else
+				filename=strdup(argv[1]);
+#else
+			if(argv[1][0]!='/')
+				filename=BuildAbsoluteFilename(argv[1]);
+			else
+				filename=strdup(argv[1]);
+#endif
+			ripper.Rip(filename);
+			free(filename);
 		}
+
+		gtk_main();
+	}
+	catch(const char *err)
+	{
+		cerr << "Error: " << err << endl;
 	}
 	return(0);
 }
