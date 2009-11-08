@@ -110,8 +110,7 @@ class ConversionWorker : public Worker
 	virtual ~ConversionWorker()
 	{
 		WaitCompletion();
-		if(factory)
-			delete factory;
+		delete factory;
 	}
 	ProfileManager &profilemanager;
 	CMTransformFactory *factory;
