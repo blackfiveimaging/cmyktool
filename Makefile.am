@@ -13,6 +13,8 @@ noinst_LTLIBRARIES = libdeflatten.la
 libdeflatten_la_SOURCES = \
 	conversionopts.cpp \
 	conversionopts.h \
+	conversionoptsdialog.cpp \
+	conversionoptsdialog.h \
 	imagesource_deflatten.cpp	\
 	imagesource_deflatten.h \
 	imagesource_flatten.cpp	\

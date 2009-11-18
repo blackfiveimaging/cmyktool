@@ -22,6 +22,7 @@
 #include "cachedimage.h"
 
 #include "conversionopts.h"
+#include "conversionoptsdialog.h"
 
 #include "config.h"
 #include "gettext.h"
@@ -130,6 +131,7 @@ class TestUI : public ConfigFile
 	~TestUI();
 	void AddImage(const char *filename);
 	static void ProcessImage(GtkWidget *wid,gpointer userdata);
+	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
 	GtkWidget *window;
 	protected:
 	ProfileManager profilemanager;
@@ -137,6 +139,7 @@ class TestUI : public ConfigFile
 	CMTransformFactory factory;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
+	CMYKConversionOptions convopts;
 	friend class ImgUITab;
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
@@ -265,9 +268,12 @@ class UITab_CacheJob : public Job
 };
 
 
+////// ImgUITab member functions ///////
+
+
 ImgUITab::ImgUITab(TestUI &parent,const char *filename)
 	: UITab(parent.notebook),  parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(parent.profilemanager)
+	convopts(parent.convopts)
 {
 	hbox=GetBox();
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
@@ -368,7 +374,7 @@ gboolean ImgUITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer u
 
 
 TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
-	dispatcher(0), factory(profilemanager), notebook(NULL)
+	dispatcher(0), factory(profilemanager), notebook(NULL), convopts(profilemanager)
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
 
@@ -389,11 +395,20 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_container_add(GTK_CONTAINER(window),hbox);
 	gtk_widget_show(hbox);
 
+	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
+	gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE,FALSE,0);
+	gtk_widget_show(vbox);
+
 	imgsel=imageselector_new(NULL,GTK_SELECTION_MULTIPLE,false);
 	gtk_signal_connect (GTK_OBJECT (imgsel), "double-clicked",
 		(GtkSignalFunc) ProcessImage,this);
-	gtk_box_pack_start(GTK_BOX(hbox),imgsel,FALSE,FALSE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),imgsel,TRUE,TRUE,0);
 	gtk_widget_show(imgsel);
+
+	GtkWidget *tmp=gtk_button_new_with_label("Conversion Options...");
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showconversiondialog),this);
+	gtk_widget_show(tmp);
 
 	notebook=gtk_notebook_new();
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
@@ -413,6 +428,13 @@ void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 	const char *fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel));
 	if(fn)
 		new ImgUITab(*ui,fn);
+}
+
+
+void TestUI::showconversiondialog(GtkWidget *wid,gpointer userdata)
+{
+	TestUI *ui=(TestUI *)userdata;
+	CMYKConversionOptions_Dialog(ui->convopts,ui->window);
 }
 
 

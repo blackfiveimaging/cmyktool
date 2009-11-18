@@ -15,6 +15,7 @@ enum CMYKConversionMode
 	CMYKCONVERSIONMODE_OVERPRINT,
 };
 
+
 class CMYKConversionOptions
 {
 	public:
@@ -37,8 +38,8 @@ class CMYKConversionOptions
 
 	ImageSource *Apply(ImageSource *src,ImageSource *mask=NULL,CMTransformFactory *factory=NULL);
 
-	protected:
 	ProfileManager &profilemanager;
+	protected:
 	std::string inprofile;
 	std::string outprofile;
 	LCMSWrapper_Intent intent;
