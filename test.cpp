@@ -131,6 +131,7 @@ class TestUI : public ConfigFile
 	~TestUI();
 	void AddImage(const char *filename);
 	static void ProcessImage(GtkWidget *wid,gpointer userdata);
+	static void batchprocess(GtkWidget *wid,gpointer userdata);
 	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
 	GtkWidget *window;
 	protected:
@@ -399,16 +400,25 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE,FALSE,0);
 	gtk_widget_show(vbox);
 
+
 	imgsel=imageselector_new(NULL,GTK_SELECTION_MULTIPLE,false);
 	gtk_signal_connect (GTK_OBJECT (imgsel), "double-clicked",
 		(GtkSignalFunc) ProcessImage,this);
 	gtk_box_pack_start(GTK_BOX(vbox),imgsel,TRUE,TRUE,0);
 	gtk_widget_show(imgsel);
 
+
 	GtkWidget *tmp=gtk_button_new_with_label("Conversion Options...");
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showconversiondialog),this);
 	gtk_widget_show(tmp);
+
+
+	tmp=gtk_button_new_with_label("Batch Process...");
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(batchprocess),this);
+	gtk_widget_show(tmp);
+
 
 	notebook=gtk_notebook_new();
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
@@ -425,9 +435,26 @@ TestUI::~TestUI()
 void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 {
 	TestUI *ui=(TestUI *)userdata;
-	const char *fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel));
-	if(fn)
+
+	int idx=0;
+	const char *fn;
+
+	while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
 		new ImgUITab(*ui,fn);
+}
+
+
+void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
+{
+	TestUI *ui=(TestUI *)userdata;
+	int idx=0;
+	const char *fn=NULL;
+	while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
+	{
+		cerr << "Batch Process: Got filename " << fn << endl;
+		new ImgUITab(*ui,fn);
+	}
+	cerr << "Batch Process: processed " << idx << " filenames" << endl;
 }
 
 
@@ -474,6 +501,9 @@ void TestUI::AddImage(const char *filename)
 int main(int argc,char **argv)
 {
 	gtk_init(&argc,&argv);
+
+	Debug.SetLevel(WARN);
+
 	try
 	{
 		TestUI ui;
