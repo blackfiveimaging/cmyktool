@@ -8,13 +8,12 @@ AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -
 	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail \
 	$(LCMS_CFLAGS) $(GTK2_CFLAGS)
 
-noinst_LTLIBRARIES = libdeflatten.la
+noinst_LTLIBRARIES = libdeflatten.la libdeflattenui.la
 
 libdeflatten_la_SOURCES = \
 	conversionopts.cpp \
 	conversionopts.h \
-	conversionoptsdialog.cpp \
-	conversionoptsdialog.h \
+	cmtransformworker.h	\
 	imagesource_deflatten.cpp	\
 	imagesource_deflatten.h \
 	imagesource_flatten.cpp	\
@@ -25,9 +24,16 @@ libdeflatten_la_SOURCES = \
 	imagesource_extractchannel.h	\
 	psrip_core.cpp	\
 	psrip_core.h	\
-	psripui.cpp	\
-	psripui.h	\
 	gettext.h
+
+
+libdeflattenui_la_SOURCES = \
+	cmykuitab.cpp	\
+	cmykuitab.h	\
+	conversionoptsdialog.cpp \
+	conversionoptsdialog.h \
+	psripui.cpp	\
+	psripui.h
 
 bin_PROGRAMS = deflatten recombine decompose psrip test tabui
 
@@ -43,6 +49,7 @@ test_SOURCES = test.cpp
 tabui_SOURCES = tabui.cpp
 
 LDADD = \
+	libdeflattenui.la \
 	libdeflatten.la \
 	imageutils/libimageutils.la	\
 	miscwidgets/libmiscwidgets.la	\
