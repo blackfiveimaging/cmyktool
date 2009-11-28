@@ -14,7 +14,7 @@
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/pixbuf_from_imagesource.h"
 #include "miscwidgets/pixbufview.h"
-#include "miscwidgets/colorantselector.h"
+#include "miscwidgets/coloranttoggle.h"
 #include "miscwidgets/imageselector.h"
 #include "miscwidgets/generaldialogs.h"
 #include "miscwidgets/uitab.h"
@@ -206,26 +206,51 @@ class UITab_CacheJob : public Job
 
 CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename)
 	: UITab(notebook),  parent(parent), dispatcher(dispatcher), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(opts)
+	convopts(opts), filename(NULL)
 {
 	hbox=GetBox();
-	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
+//	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
+
+	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
+	gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,0);
+	gtk_widget_show(vbox);
 
 	pbview=pixbufview_new(NULL,false);
-	gtk_box_pack_start(GTK_BOX(hbox),pbview,TRUE,TRUE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),pbview,TRUE,TRUE,0);
 	gtk_widget_show(pbview);
 
+	GtkWidget *hbox2=gtk_hbox_new(FALSE,0);
+	gtk_box_pack_start(GTK_BOX(vbox),hbox2,FALSE,FALSE,0);
+	gtk_widget_show(hbox2);
 
+	colsel=coloranttoggle_new(NULL);
+	gtk_signal_connect (GTK_OBJECT (colsel), "changed",
+		(GtkSignalFunc) ColorantsChanged, this);
+	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
+	gtk_widget_show(colsel);
+
+	GtkWidget *tmp=gtk_hbox_new(FALSE,0);
+	gtk_box_pack_start(GTK_BOX(hbox2),tmp,TRUE,TRUE,0);
+	gtk_widget_show(tmp);
+
+
+	GtkWidget *savebutton=gtk_button_new_with_label(_("Save..."));
+	g_signal_connect(G_OBJECT(savebutton),"clicked",G_CALLBACK(Save),this);
+	gtk_box_pack_start(GTK_BOX(hbox2),savebutton,FALSE,FALSE,0);
+	gtk_widget_show(savebutton);
+	
+#if 0
 	popupshown=false;
 	popup=gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_window_set_default_size(GTK_WINDOW(popup),100,180);
 	gtk_window_set_transient_for(GTK_WINDOW(popup),GTK_WINDOW(parent));
 
-	colsel=colorantselector_new(NULL);
+	colsel=coloranttoggle_new(NULL);
 	gtk_signal_connect (GTK_OBJECT (colsel), "changed",
 		(GtkSignalFunc) ColorantsChanged, this);
 	gtk_container_add(GTK_CONTAINER(popup),colsel);
 	gtk_widget_show(colsel);
+#endif
 
 	SetImage(filename);
 }
@@ -237,10 +262,12 @@ CMYKUITab::~CMYKUITab()
 		delete collist;
 	if(image)
 		delete image;
+	if(filename)
+		free(filename);
 }
 
 
-void CMYKUITab::SetImage(const char *filename)
+void CMYKUITab::SetImage(const char *fname)
 {
 	if(image)
 		delete image;
@@ -248,13 +275,18 @@ void CMYKUITab::SetImage(const char *filename)
 	if(collist)
 		delete collist;
 	collist=NULL;
+	if(filename)
+		free(filename);
+	filename=NULL;
 
 	try
 	{
-		collist=new DeviceNColorantList(IS_TYPE_CMYK);
-		colorantselector_set_colorants(COLORANTSELECTOR(colsel),collist);
+		filename=SafeStrdup(fname);
 
-		char *fn=SafeStrdup(filename);
+		collist=new DeviceNColorantList(IS_TYPE_CMYK);
+		coloranttoggle_set_colorants(COLORANTTOGGLE(colsel),collist);
+
+		char *fn=SafeStrdup(fname);
 		SetText(basename(fn));
 		free(fn);
 
@@ -272,6 +304,25 @@ void CMYKUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 	CMYKUITab *ob=(CMYKUITab *)userdata;
 	gtk_widget_set_sensitive(ob->colsel,FALSE);
 	ob->dispatcher.AddJob(new UITab_RenderJob(*ob));
+}
+
+
+void CMYKUITab::Save(GtkWidget *widget,gpointer userdata)
+{
+	CMYKUITab *ob=(CMYKUITab *)userdata;
+	char *tmpfn=BuildFilename(ob->filename,"-CMYK","tif");	
+	char *newfn=File_Save_Dialog(_("Save image - please choose filename"),tmpfn,ob->parent);
+	if(newfn)
+	{
+		ProgressBar p(_("Saving"),true,ob->parent);
+		ImageSource *is=ob->image->GetImageSource();
+		TIFFSaver t(newfn,is);
+		t.SetProgress(&p);
+		t.Save();
+		delete is;
+		free(newfn);
+	}
+	free(tmpfn);
 }
 
 

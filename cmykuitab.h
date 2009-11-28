@@ -15,6 +15,7 @@ class CMYKUITab : public UITab
 	~CMYKUITab();
 	void SetImage(const char *filename);
 	static void ColorantsChanged(GtkWidget *wid,gpointer userdata);
+	static void Save(GtkWidget *widget,gpointer userdata);
 	static gboolean mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata);
 	protected:
 	GtkWidget *parent;
@@ -27,6 +28,7 @@ class CMYKUITab : public UITab
 	CachedImage *image;
 	DeviceNColorantList *collist;
 	CMYKConversionOptions convopts;
+	char *filename;
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
 };

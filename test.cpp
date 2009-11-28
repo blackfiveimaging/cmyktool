@@ -41,9 +41,12 @@ class TestUI : public ConfigFile
 	TestUI();
 	~TestUI();
 	void AddImage(const char *filename);
-	static void ProcessImage(GtkWidget *wid,gpointer userdata);
+	void ProcessImage(const char *filename);
+	static void processsingle(GtkWidget *wid,gpointer userdata);
 	static void batchprocess(GtkWidget *wid,gpointer userdata);
 	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
+	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
+				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
 	GtkWidget *window;
 	protected:
 	ProfileManager profilemanager;
@@ -53,6 +56,52 @@ class TestUI : public ConfigFile
 	GtkWidget *notebook;
 	CMYKConversionOptions convopts;
 };
+
+
+#define TARGET_URI_LIST 1
+
+static GtkTargetEntry dnd_file_drop_types[] = {
+	{ "text/uri-list", 0, TARGET_URI_LIST }
+};
+static gint dnd_file_drop_types_count = 1;
+
+void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
+				     gint x, gint y,
+				     GtkSelectionData *selection_data, guint info,
+				     guint time, gpointer data)
+{
+	gchar *urilist=g_strdup((const gchar *)selection_data->data);
+
+	TestUI *ui=(TestUI *)data;
+
+	while(*urilist)
+	{
+		if(strncmp(urilist,"file:",5))
+		{
+			g_print("Warning: only local files (file://) are currently supported\n");
+			while(*urilist && *urilist!='\n' && *urilist!='\r')
+				++urilist;
+			while(*urilist=='\n' || *urilist=='\r')
+				*urilist++;
+		}
+		else
+		{
+			gchar *uri=urilist;
+			while(*urilist && *urilist!='\n' && *urilist!='\r')
+				++urilist;
+			if(*urilist)
+			{
+				while(*urilist=='\n' || *urilist=='\r')
+					*urilist++=0;
+				gchar *filename=g_filename_from_uri(uri,NULL,NULL);
+
+				ui->AddImage(filename);
+				ui->ProcessImage(filename);
+			}
+		}
+	}
+}
+
 
 
 TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
@@ -77,6 +126,16 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_container_add(GTK_CONTAINER(window),hbox);
 	gtk_widget_show(hbox);
 
+	gtk_drag_dest_set(GTK_WIDGET(hbox),
+			  GtkDestDefaults(GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_DROP),
+			  dnd_file_drop_types, dnd_file_drop_types_count,
+                          GdkDragAction(GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK));
+	g_signal_connect(G_OBJECT(hbox), "drag_data_received",
+			 G_CALLBACK(get_dnd_data), this);
+
+
+	// Leftmost column - imageselector + buttons
+
 	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE,FALSE,0);
 	gtk_widget_show(vbox);
@@ -84,7 +143,7 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 
 	imgsel=imageselector_new(NULL,GTK_SELECTION_MULTIPLE,false);
 	gtk_signal_connect (GTK_OBJECT (imgsel), "double-clicked",
-		(GtkSignalFunc) ProcessImage,this);
+		(GtkSignalFunc) processsingle,this);
 	gtk_box_pack_start(GTK_BOX(vbox),imgsel,TRUE,TRUE,0);
 	gtk_widget_show(imgsel);
 
@@ -101,6 +160,9 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_widget_show(tmp);
 
 
+	// Notebook
+
+
 	notebook=gtk_notebook_new();
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
 	gtk_box_pack_start(GTK_BOX(hbox),notebook,TRUE,TRUE,0);
@@ -113,7 +175,13 @@ TestUI::~TestUI()
 }
 
 
-void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
+void TestUI::ProcessImage(const char *filename)
+{
+	new CMYKUITab(window,notebook,convopts,dispatcher,filename);
+}
+
+
+void TestUI::processsingle(GtkWidget *wid,gpointer userdata)
 {
 	TestUI *ui=(TestUI *)userdata;
 
@@ -121,7 +189,7 @@ void TestUI::ProcessImage(GtkWidget *wid,gpointer userdata)
 	const char *fn;
 
 	while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
-		new CMYKUITab(ui->window,ui->notebook,ui->convopts,ui->dispatcher,fn);
+		ui->ProcessImage(fn);
 }
 
 
