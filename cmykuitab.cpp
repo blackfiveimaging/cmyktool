@@ -209,7 +209,7 @@ CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOption
 	convopts(opts), filename(NULL)
 {
 	hbox=GetBox();
-//	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
+	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
 
 	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,0);
@@ -223,11 +223,11 @@ CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOption
 	gtk_box_pack_start(GTK_BOX(vbox),hbox2,FALSE,FALSE,0);
 	gtk_widget_show(hbox2);
 
-	colsel=coloranttoggle_new(NULL);
-	gtk_signal_connect (GTK_OBJECT (colsel), "changed",
-		(GtkSignalFunc) ColorantsChanged, this);
-	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
-	gtk_widget_show(colsel);
+//	colsel=coloranttoggle_new(NULL);
+//	gtk_signal_connect (GTK_OBJECT (colsel), "changed",
+//		(GtkSignalFunc) ColorantsChanged, this);
+//	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
+//	gtk_widget_show(colsel);
 
 	GtkWidget *tmp=gtk_hbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox2),tmp,TRUE,TRUE,0);
@@ -239,10 +239,9 @@ CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOption
 	gtk_box_pack_start(GTK_BOX(hbox2),savebutton,FALSE,FALSE,0);
 	gtk_widget_show(savebutton);
 	
-#if 0
 	popupshown=false;
 	popup=gtk_window_new(GTK_WINDOW_POPUP);
-	gtk_window_set_default_size(GTK_WINDOW(popup),100,180);
+	gtk_window_set_default_size(GTK_WINDOW(popup),10,10);
 	gtk_window_set_transient_for(GTK_WINDOW(popup),GTK_WINDOW(parent));
 
 	colsel=coloranttoggle_new(NULL);
@@ -250,7 +249,6 @@ CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOption
 		(GtkSignalFunc) ColorantsChanged, this);
 	gtk_container_add(GTK_CONTAINER(popup),colsel);
 	gtk_widget_show(colsel);
-#endif
 
 	SetImage(filename);
 }
@@ -333,22 +331,26 @@ gboolean CMYKUITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer 
 	int x,y;
 	GdkModifierType mods;
 	gdk_window_get_pointer (widget->window, &x, &y, &mods);
+	x-=widget->allocation.x;
+	y-=widget->allocation.y;
 	int w,h;
-	gtk_window_get_size(GTK_WINDOW(ui->parent),&w,&h);
+//	gtk_window_get_size(GTK_WINDOW(ui->parent),&w,&h);
+	w=widget->allocation.width;
+	h=widget->allocation.height;
 
-	if(ui->popupshown && (x<(w-w/20) || y<(h/2)))
+	if(ui->popupshown && (x>(w/2) || y<((7*h)/8)))
 	{
 		gtk_widget_hide_all(ui->popup);
 		ui->popupshown=false;
 	}
 
-	if(!ui->popupshown && x>(w-w/20) && y>(h/2))
+	if(!ui->popupshown && x<(w/2) && y>((7*h)/8))
 	{
 		int winx,winy;
 		int pw,ph;
 		gtk_window_get_position(GTK_WINDOW(ui->parent),&winx,&winy);
 		gtk_window_get_size(GTK_WINDOW(ui->popup),&pw,&ph);
-		gtk_window_move(GTK_WINDOW(ui->popup),winx+w-pw,winy+h-ph);
+		gtk_window_move(GTK_WINDOW(ui->popup),winx+widget->allocation.x,winy+widget->allocation.y+h-ph);
 		gtk_widget_show_all(ui->popup);
 		ui->popupshown=true;
 	}
