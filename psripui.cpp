@@ -8,7 +8,7 @@
 #include "miscwidgets/imageselector.h"
 #include "miscwidgets/pixbufview.h"
 #include "miscwidgets/generaldialogs.h"
-#include "support/progressbar.h"
+#include "progressbar.h"
 #include "support/progresstext.h"
 #include "support/thread.h"
 #include "psripui.h"

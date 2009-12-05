@@ -5,21 +5,26 @@
 
 #include "support/debug.h"
 #include "support/jobqueue.h"
-#include "support/progressbar.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
 #include "support/util.h"
+
 #include "imageutils/tiffsave.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/pixbuf_from_imagesource.h"
+#include "cachedimage.h"
+
 #include "miscwidgets/pixbufview.h"
 #include "miscwidgets/coloranttoggle.h"
 #include "miscwidgets/imageselector.h"
 #include "miscwidgets/generaldialogs.h"
+#include "miscwidgets/errordialogqueue.h"
 #include "miscwidgets/uitab.h"
+#include "progressbar.h"
+
 #include "profilemanager/profilemanager.h"
-#include "cachedimage.h"
+
 
 #include "conversionopts.h"
 #include "cmtransformworker.h"
@@ -133,6 +138,7 @@ class UITab_RenderJob : public Job, public ThreadSync
 		catch(const char *err)
 		{
 			Debug[ERROR] << "Error: " << err << endl;
+			ErrorDialogs.AddMessage(err);
 		}
 		Debug[TRACE] << "Triggering cleanup function" << endl;
 		g_timeout_add(1,CleanupFunc,this);
@@ -191,9 +197,11 @@ class UITab_CacheJob : public Job
 		}
 		catch(const char *err)
 		{
-			cerr << "Error: " << err << endl;
+			Debug[ERROR] << "Error: " << err << endl;
+			ErrorDialogs.AddMessage(err);
+			tab.UnRef();	// If we encountered an error, delete the tab.
 		}
-		tab.UnRef();
+		tab.UnRef();	// Release the reference obtained when the job was created.
 	}
 	protected:
 	CMYKUITab &tab;
@@ -292,7 +300,7 @@ void CMYKUITab::SetImage(const char *fname)
 	}
 	catch (const char *err)
 	{
-		ErrorMessage_Dialog(err,parent);
+		ErrorDialogs.AddMessage(err);
 	}
 }
 

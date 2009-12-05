@@ -33,11 +33,13 @@ libdeflattenui_la_SOURCES = \
 	conversionoptsdialog.cpp \
 	conversionoptsdialog.h \
 	psripui.cpp	\
-	psripui.h
+	psripui.h	\
+	dialogs.cpp	\
+	dialogs.h
 
 bin_PROGRAMS = deflatten recombine decompose psrip test tabui
 
-check_PROGRAMS = queuetest convertcmyk
+check_PROGRAMS = queuetest convertcmyk errorqueuetest
 
 convertcmyk_SOURCES = convertcmyk.cpp
 queuetest_SOURCES = queuetest.cpp
@@ -47,6 +49,7 @@ deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
 test_SOURCES = test.cpp
 tabui_SOURCES = tabui.cpp
+errorqueuetest_SOURCES = errorqueuetest.cpp
 
 LDADD = \
 	libdeflattenui.la \

@@ -5,7 +5,6 @@
 
 #include "support/debug.h"
 #include "support/jobqueue.h"
-#include "support/progressbar.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
 #include "imageutils/tiffsave.h"
@@ -16,9 +15,12 @@
 #include "miscwidgets/colorantselector.h"
 #include "miscwidgets/imageselector.h"
 #include "miscwidgets/generaldialogs.h"
+#include "miscwidgets/errordialogqueue.h"
 #include "miscwidgets/uitab.h"
+#include "progressbar.h"
 #include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
+#include "dialogs.h"
 
 #include "conversionopts.h"
 #include "cmtransformworker.h"
@@ -167,6 +169,8 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
 	gtk_box_pack_start(GTK_BOX(hbox),notebook,TRUE,TRUE,0);
 	gtk_widget_show(GTK_WIDGET(notebook));
+
+	PreferencesDialog(GTK_WINDOW(window),profilemanager);
 }
 
 
@@ -183,27 +187,41 @@ void TestUI::ProcessImage(const char *filename)
 
 void TestUI::processsingle(GtkWidget *wid,gpointer userdata)
 {
-	TestUI *ui=(TestUI *)userdata;
+	try
+	{
+		TestUI *ui=(TestUI *)userdata;
 
-	int idx=0;
-	const char *fn;
+		int idx=0;
+		const char *fn;
 
-	while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
-		ui->ProcessImage(fn);
+		while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
+			ui->ProcessImage(fn);
+	}
+	catch (const char *err)
+	{
+		ErrorDialogs.AddMessage(err);
+	}
 }
 
 
 void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
 {
-	TestUI *ui=(TestUI *)userdata;
-	int idx=0;
-	const char *fn=NULL;
-	while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
+	try
 	{
-		cerr << "Batch Process: Got filename " << fn << endl;
-		new CMYKUITab(ui->window,ui->notebook,ui->convopts,ui->dispatcher,fn);
+		TestUI *ui=(TestUI *)userdata;
+		int idx=0;
+		const char *fn=NULL;
+		while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
+		{
+			cerr << "Batch Process: Got filename " << fn << endl;
+			new CMYKUITab(ui->window,ui->notebook,ui->convopts,ui->dispatcher,fn);
+		}
+		cerr << "Batch Process: processed " << idx << " filenames" << endl;
 	}
-	cerr << "Batch Process: processed " << idx << " filenames" << endl;
+	catch (const char *err)
+	{
+		ErrorDialogs.AddMessage(err);
+	}
 }
 
 
@@ -242,7 +260,7 @@ void TestUI::AddImage(const char *filename)
 	}
 	catch(const char *err)
 	{
-		cerr << "Error: " << err << endl;
+		ErrorDialogs.AddMessage(err);
 	}
 }
 

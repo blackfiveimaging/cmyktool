@@ -132,3 +132,17 @@ provide a Cancel() method to the jobdispatcher which takes a Job pointer as an a
 The dispatcher will then search both queues, and if found, delete the job.  If the job is not found in either queue, then 
 it's either finished and self-destructed, or about to be so.
 
+--------------------
+
+| Error message handling
+
+| Needs to be some way of propogating error messages to the main thread for display to the user.
+| It's not safe on Win32 for subthreads to pop up dialogs, so such a task must be deferred to the main
+| thread by means of an idle/timeout handler.
+
+| Need to maintain a queue of error messages.  It should be possible to merge them into a single message and display
+| them in a single dialog - adding them to an existing dialog if it's open.
+
+| Error message display code will be implemented as a global instance which will be informed of the top-level window
+| when the program initializes - thus eliminating the need to pass around a parent window handle.
+
