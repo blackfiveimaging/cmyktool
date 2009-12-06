@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 
 #include <libgen.h>
 #include <gtk/gtk.h>
@@ -7,17 +8,24 @@
 #include "support/jobqueue.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
+#include "support/pathsupport.h"
+#include "support/dirtreewalker.h"
+#include "support/util.h"
+
 #include "imageutils/tiffsave.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/pixbuf_from_imagesource.h"
+
 #include "miscwidgets/pixbufview.h"
 #include "miscwidgets/colorantselector.h"
 #include "miscwidgets/imageselector.h"
 #include "miscwidgets/generaldialogs.h"
 #include "miscwidgets/errordialogqueue.h"
 #include "miscwidgets/uitab.h"
+#include "miscwidgets/simplecombo.h"
 #include "progressbar.h"
+
 #include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
 #include "dialogs.h"
@@ -32,6 +40,8 @@
 #include "gettext.h"
 #define _(x) gettext(x)
 
+#define PRESET_OTHER_ESCAPE "<other>"
+#define PRESET_PREVIOUS_ESCAPE "previous"
 
 using namespace std;
 
@@ -42,8 +52,10 @@ class TestUI : public ConfigFile
 	public:
 	TestUI();
 	~TestUI();
+	void BuildComboOpts(SimpleComboOptions &opts);
 	void AddImage(const char *filename);
 	void ProcessImage(const char *filename);
+	static void combochanged(GtkWidget *wid,gpointer userdata);
 	static void processsingle(GtkWidget *wid,gpointer userdata);
 	static void batchprocess(GtkWidget *wid,gpointer userdata);
 	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
@@ -56,6 +68,7 @@ class TestUI : public ConfigFile
 	CMTransformFactory factory;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
+	GtkWidget *combo;
 	CMYKConversionOptions convopts;
 };
 
@@ -105,7 +118,6 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 }
 
 
-
 TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	dispatcher(0), factory(profilemanager), notebook(NULL), convopts(profilemanager)
 {
@@ -150,13 +162,23 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_widget_show(imgsel);
 
 
-	GtkWidget *tmp=gtk_button_new_with_label("Conversion Options...");
-	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
-	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showconversiondialog),this);
-	gtk_widget_show(tmp);
+	// Presets
+
+	SimpleComboOptions opts;
+	BuildComboOpts(opts);
+	combo=simplecombo_new(opts);
+	gtk_box_pack_start(GTK_BOX(vbox),combo,FALSE,FALSE,0);
+	simplecombo_set(SIMPLECOMBO(combo),PRESET_PREVIOUS_ESCAPE);
+	g_signal_connect(G_OBJECT(combo),"changed",G_CALLBACK(combochanged),this);
+	gtk_widget_show(combo);
+
+//	GtkWidget *tmp=gtk_button_new_with_label("Conversion Options...");
+//	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+//	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showconversiondialog),this);
+//	gtk_widget_show(tmp);
 
 
-	tmp=gtk_button_new_with_label("Batch Process...");
+	GtkWidget *tmp=gtk_button_new_with_label("Batch Process...");
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(batchprocess),this);
 	gtk_widget_show(tmp);
@@ -169,11 +191,41 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
 	gtk_box_pack_start(GTK_BOX(hbox),notebook,TRUE,TRUE,0);
 	gtk_widget_show(GTK_WIDGET(notebook));
+
+	// Force loading of the "previous" preset...
+	const char *key=simplecombo_get(SIMPLECOMBO(combo));
+	if(strcmp(key,PRESET_OTHER_ESCAPE)!=0)
+		combochanged(combo,this);
 }
 
 
 TestUI::~TestUI()
 {
+	CMYKConversionPreset p;
+	p.Store(convopts);
+	p.SetString("DisplayName",_("Previous settings"));
+	p.Save(PRESET_PREVIOUS_ESCAPE);
+}
+
+
+void TestUI::BuildComboOpts(SimpleComboOptions &opts)
+{
+	char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
+	DirTreeWalker dtw(configdir);
+	const char *fn;
+
+	while((fn=dtw.NextFile()))
+	{
+		CMYKConversionPreset p;
+		p.Load(fn);
+		const char *dn=p.FindString("DisplayName");
+		if(!(dn && strlen(dn)>0))
+			dn=_("<unknown>");
+		opts.Add(fn,dn,fn);
+	}
+	free(configdir);
+
+	opts.Add(PRESET_OTHER_ESCAPE,_("Other..."),_("Create a new preset"),true);
 }
 
 
@@ -194,6 +246,30 @@ void TestUI::processsingle(GtkWidget *wid,gpointer userdata)
 
 		while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
 			ui->ProcessImage(fn);
+	}
+	catch (const char *err)
+	{
+		ErrorDialogs.AddMessage(err);
+	}
+}
+
+
+void TestUI::combochanged(GtkWidget *wid,gpointer userdata)
+{
+	try
+	{
+		TestUI *ui=(TestUI *)userdata;
+		const char *key=simplecombo_get(SIMPLECOMBO(ui->combo));
+		if(strcmp(key,PRESET_OTHER_ESCAPE)==0)
+		{
+			CMYKConversionOptions_Dialog(ui->convopts,ui->window);
+		}
+		else
+		{
+			CMYKConversionPreset p;
+			p.Load(key);
+			p.Retrieve(ui->convopts);
+		}
 	}
 	catch (const char *err)
 	{
@@ -269,6 +345,10 @@ int main(int argc,char **argv)
 
 	Debug.SetLevel(WARN);
 
+	char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
+	CreateDirIfNeeded(configdir);
+	free(configdir);
+
 	try
 	{
 		TestUI ui;
@@ -284,7 +364,6 @@ int main(int argc,char **argv)
 		delete prog;
 
 		gtk_main();
-
 	}
 	catch(const char *err)
 	{

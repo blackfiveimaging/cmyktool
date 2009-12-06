@@ -2,6 +2,8 @@
 #include <cstdlib>
 
 #include "support/util.h"
+#include "support/pathsupport.h"
+#include "support/configdb.h"
 #include "conversionopts.h"
 #include "imagesource_promote.h"
 #include "imagesource_cms.h"
@@ -11,6 +13,19 @@
 #include "imagesource_flatten.h"
 
 using namespace std;
+
+
+
+ConfigTemplate CMYKConversionPreset::Template[]=
+{
+	ConfigTemplate("DisplayName","unnamed preset"),
+	ConfigTemplate("InProfile",BUILTINSRGB_ESCAPESTRING),
+	ConfigTemplate("OutProfile","USWebCoatedSWOP.icc"),
+	ConfigTemplate("Intent",0),
+	ConfigTemplate("Mode",0),
+	ConfigTemplate()
+};
+
 
 CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm,const char *presetname)
 	: profilemanager(pm), inprofile("sRGB Color Space Profile.icm"), outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL)
@@ -35,6 +50,7 @@ CMYKConversionOptions &CMYKConversionOptions::operator=(const CMYKConversionOpti
 	intent=other.intent;
 	inprofile=other.inprofile;
 	outprofile=other.outprofile;
+	return(*this);
 }
 
 
