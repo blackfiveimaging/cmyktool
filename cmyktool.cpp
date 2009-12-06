@@ -169,8 +169,6 @@ TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
 	gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook),true);
 	gtk_box_pack_start(GTK_BOX(hbox),notebook,TRUE,TRUE,0);
 	gtk_widget_show(GTK_WIDGET(notebook));
-
-	PreferencesDialog(GTK_WINDOW(window),profilemanager);
 }
 
 

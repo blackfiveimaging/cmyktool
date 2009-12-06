@@ -37,7 +37,7 @@ libdeflattenui_la_SOURCES = \
 	dialogs.cpp	\
 	dialogs.h
 
-bin_PROGRAMS = deflatten recombine decompose psrip test tabui
+bin_PROGRAMS = deflatten recombine decompose psrip cmyktool
 
 check_PROGRAMS = queuetest convertcmyk errorqueuetest
 
@@ -47,7 +47,7 @@ recombine_SOURCES = recombine.cpp
 decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
-test_SOURCES = test.cpp
+cmyktool_SOURCES = cmyktool.cpp
 tabui_SOURCES = tabui.cpp
 errorqueuetest_SOURCES = errorqueuetest.cpp
 
