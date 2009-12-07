@@ -107,10 +107,10 @@ class ImageSource_ColorantMask : public ImageSource
 
 
 
-class UITab_RenderJob : public Job, public ThreadSync
+class UITab_RenderJob : public Job, public ThreadSync, public Progress
 {
 	public:
-	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), tab(tab), pixbuf(NULL)
+	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), pixbuf(NULL)
 	{
 		tab.Ref();
 	}
@@ -132,7 +132,7 @@ class UITab_RenderJob : public Job, public ThreadSync
 			else
 				Debug[WARN] << "RenderJob: Couldn't create transform" << endl;
 
-			pixbuf=pixbuf_from_imagesource(is);
+			pixbuf=pixbuf_from_imagesource(is,255,255,255,this);
 			delete is;
 		}
 		catch(const char *err)
@@ -140,9 +140,12 @@ class UITab_RenderJob : public Job, public ThreadSync
 			Debug[ERROR] << "Error: " << err << endl;
 			ErrorDialogs.AddMessage(err);
 		}
-		Debug[TRACE] << "Triggering cleanup function" << endl;
-		g_timeout_add(1,CleanupFunc,this);
-		WaitCondition();
+		if(pixbuf)
+		{
+			Debug[TRACE] << "Triggering cleanup function" << endl;
+			g_timeout_add(1,CleanupFunc,this);
+			WaitCondition();
+		}
 	}
 	static gboolean CleanupFunc(gpointer ud)
 	{
@@ -156,10 +159,14 @@ class UITab_RenderJob : public Job, public ThreadSync
 			g_object_unref(G_OBJECT(t->pixbuf));
 			t->pixbuf=NULL;
 		}
-		gtk_widget_set_sensitive(t->tab.colsel,TRUE);
+//		gtk_widget_set_sensitive(t->tab.colsel,TRUE);
 		t->tab.UnRef();
 		t->Broadcast();
 		return(FALSE);
+	}
+	bool DoProgress(int i, int maxi)
+	{
+		return(GetJobStatus()!=JOBSTATUS_CANCELLED);
 	}
 	protected:
 	CMYKUITab &tab;
@@ -308,8 +315,14 @@ void CMYKUITab::SetImage(const char *fname)
 void CMYKUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 {
 	CMYKUITab *ob=(CMYKUITab *)userdata;
-	gtk_widget_set_sensitive(ob->colsel,FALSE);
-	ob->dispatcher.AddJob(new UITab_RenderJob(*ob));
+//	gtk_widget_set_sensitive(ob->colsel,FALSE);
+
+	// Cancel existing render job.  This is harmless if the job's completed already,
+	// even if the object's been deleted
+	if(ob->renderjob)
+		ob->dispatcher.CancelJob(ob->renderjob);
+
+	ob->dispatcher.AddJob(ob->renderjob=new UITab_RenderJob(*ob));
 }
 
 

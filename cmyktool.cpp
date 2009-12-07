@@ -47,7 +47,37 @@ using namespace std;
 
 class UITab_RenderThread;
 
-class TestUI : public ConfigFile
+class CMYKTool_Core : public ConfigFile
+{
+	public:
+	CMYKTool_Core() : ConfigFile(), profilemanager(this,"[ColourManagement]"), dispatcher(0),factory(profilemanager), convopts(profilemanager)
+	{
+		profilemanager.SetInt("DefaultCMYKProfileActive",1);
+
+		char *fn=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool/cmyktool.conf");
+		ParseConfigFile(fn);
+		free(fn);
+
+		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+	}
+	~CMYKTool_Core()
+	{
+	}
+	void ProcessImage(const char *filename)
+	{
+		cerr << "*** Processing image" << endl;
+	}
+	protected:
+	ProfileManager profilemanager;
+	JobDispatcher dispatcher;
+	CMTransformFactory factory;
+	CMYKConversionOptions convopts;
+};
+
+
+class TestUI : public CMYKTool_Core
 {
 	public:
 	TestUI();
@@ -63,13 +93,13 @@ class TestUI : public ConfigFile
 				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
 	GtkWidget *window;
 	protected:
-	ProfileManager profilemanager;
-	JobDispatcher dispatcher;
-	CMTransformFactory factory;
+//	ProfileManager profilemanager;
+//	JobDispatcher dispatcher;
+//	CMTransformFactory factory;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	GtkWidget *combo;
-	CMYKConversionOptions convopts;
+//	CMYKConversionOptions convopts;
 };
 
 
@@ -118,8 +148,7 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 }
 
 
-TestUI::TestUI() : ConfigFile(), profilemanager(this,"[ColourManagement]"),
-	dispatcher(0), factory(profilemanager), notebook(NULL), convopts(profilemanager)
+TestUI::TestUI()
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
 
@@ -288,7 +317,7 @@ void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
 		while((fn=imageselector_get_filename(IMAGESELECTOR(ui->imgsel),idx++)))
 		{
 			cerr << "Batch Process: Got filename " << fn << endl;
-			new CMYKUITab(ui->window,ui->notebook,ui->convopts,ui->dispatcher,fn);
+			ui->ProcessImage(fn);
 		}
 		cerr << "Batch Process: processed " << idx << " filenames" << endl;
 	}
@@ -345,7 +374,10 @@ int main(int argc,char **argv)
 
 	Debug.SetLevel(WARN);
 
-	char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
+	char *configdir=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool");
+	CreateDirIfNeeded(configdir);
+	free(configdir);
+	configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
 	CreateDirIfNeeded(configdir);
 	free(configdir);
 

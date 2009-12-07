@@ -29,6 +29,7 @@ class CMYKUITab : public UITab
 	DeviceNColorantList *collist;
 	CMYKConversionOptions convopts;
 	char *filename;
+	Job *renderjob;
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
 };

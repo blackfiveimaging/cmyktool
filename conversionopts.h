@@ -8,7 +8,7 @@
 #include "imagesource/imagesource.h"
 #include "profilemanager/profilemanager.h"
 
-#define CMYKCONVERSIONOPTS_PRESET_PATH "$XDG_CONFIG_HOME/cmyktool"
+#define CMYKCONVERSIONOPTS_PRESET_PATH "$XDG_CONFIG_HOME/cmyktool/presets"
 
 enum CMYKConversionMode
 {
