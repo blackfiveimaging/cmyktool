@@ -146,6 +146,10 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			g_timeout_add(1,CleanupFunc,this);
 			WaitCondition();
 		}
+		else
+		{
+			tab.UnRef();
+		}
 	}
 	static gboolean CleanupFunc(gpointer ud)
 	{

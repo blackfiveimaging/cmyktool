@@ -47,15 +47,18 @@ using namespace std;
 
 class UITab_RenderThread;
 
-class CMYKTool_Core : public ConfigFile
+class CMYKTool_Core : public ConfigFile, public ConfigDB
 {
 	public:
-	CMYKTool_Core() : ConfigFile(), profilemanager(this,"[ColourManagement]"), dispatcher(0),factory(profilemanager), convopts(profilemanager)
+	CMYKTool_Core() : ConfigFile(), ConfigDB(Template), profilemanager(this,"[ColourManagement]"),
+		dispatcher(0),factory(profilemanager), convopts(profilemanager)
 	{
+		new ConfigDBHandler(this,"[CMYKTool]",this);
 		profilemanager.SetInt("DefaultCMYKProfileActive",1);
 
 		char *fn=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool/cmyktool.conf");
 		ParseConfigFile(fn);
+		confname=fn;
 		free(fn);
 
 		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
@@ -69,11 +72,27 @@ class CMYKTool_Core : public ConfigFile
 	{
 		cerr << "*** Processing image" << endl;
 	}
+	void SaveConfig()
+	{
+		SaveConfigFile(confname.c_str());
+	}
 	protected:
 	ProfileManager profilemanager;
 	JobDispatcher dispatcher;
 	CMTransformFactory factory;
 	CMYKConversionOptions convopts;
+	string confname;
+	static ConfigTemplate Template[];
+};
+
+
+ConfigTemplate CMYKTool_Core::Template[]=
+{
+	ConfigTemplate("Win_X",20),
+	ConfigTemplate("Win_Y",20),
+	ConfigTemplate("Win_W",600),
+	ConfigTemplate("Win_H",400),
+	ConfigTemplate()
 };
 
 
@@ -93,13 +112,9 @@ class TestUI : public CMYKTool_Core
 				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
 	GtkWidget *window;
 	protected:
-//	ProfileManager profilemanager;
-//	JobDispatcher dispatcher;
-//	CMTransformFactory factory;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	GtkWidget *combo;
-//	CMYKConversionOptions convopts;
 };
 
 
