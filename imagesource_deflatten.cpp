@@ -167,8 +167,14 @@ void ImageSource_Deflatten::Init()
 		case IS_TYPE_CMYK:
 			samplesperpixel=4;
 			break;
+		case IS_TYPE_RGB:
+			samplesperpixel=3;
+			preserveblack=false;
+			preservegrey=false;
+			overprintblack=false;
+			break;
 		default:
-			throw "Deflatten only supports CMYK output";
+			throw "Deflatten only supports CMYK output (and RGB without special black features)";
 			break;
 	}
 

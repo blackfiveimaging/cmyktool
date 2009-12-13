@@ -32,6 +32,7 @@ class CMYKConversionOptions
 	CMYKConversionMode GetMode();
 	const char *GetInProfile();
 	const char *GetOutProfile();
+	IS_TYPE GetOutputType();
 
 	void SetIntent(LCMSWrapper_Intent intent);
 	void SetMode(CMYKConversionMode mode);

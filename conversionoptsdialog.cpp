@@ -49,7 +49,7 @@ class CMYKConversionOptsDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,0,1);
 		gtk_widget_show(label);
 
-		ps = profileselector_new(&opts.profilemanager,IS_TYPE_CMYK);
+		ps = profileselector_new(&opts.profilemanager);
 		g_signal_connect(ps,"changed",G_CALLBACK(profile_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),ps,1,2,0,1);
 		gtk_widget_show(ps);
@@ -95,12 +95,17 @@ class CMYKConversionOptsDialog
 		intentselector_setintent(INTENTSELECTOR(is),opts.GetIntent());
 
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
+		SetSensitive();
 
 		gtk_dialog_run(GTK_DIALOG(window));
 	}
 	~CMYKConversionOptsDialog()
 	{
 		gtk_widget_destroy(window);
+	}
+	void SetSensitive()
+	{
+		gtk_widget_set_sensitive(GTK_WIDGET(combo),opts.GetOutputType()==IS_TYPE_CMYK);
 	}
 	private:
 	CMYKConversionOptions &opts;
@@ -111,7 +116,7 @@ class CMYKConversionOptsDialog
 
 	static void	profile_changed(GtkWidget *widget,gpointer user_data)
 	{
-		cerr << "Received changed signal from ProfileSelector" << endl;
+		Debug[TRACE] << "Received changed signal from ProfileSelector" << endl;
 		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
 		ProfileSelector *c=PROFILESELECTOR(dlg->ps);
 		const char *val=profileselector_get_filename(c);
@@ -119,6 +124,7 @@ class CMYKConversionOptsDialog
 		{
 			dlg->opts.SetOutProfile(val);
 			Debug[TRACE] << "Selected: " << val << endl;
+			dlg->SetSensitive();
 		}
 		else
 			Debug[WARN] << "No profile selected... " << endl;

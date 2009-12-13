@@ -109,6 +109,19 @@ void CMYKConversionOptions::Save(const char *presetname)
 }
 
 
+IS_TYPE CMYKConversionOptions::GetOutputType()
+{
+	IS_TYPE type;
+	CMSProfile *p=profilemanager.GetProfile(outprofile.c_str());
+	if(p->IsDeviceLink())
+		type=p->GetDeviceLinkOutputSpace();
+	else
+		type=p->GetColourSpace();
+	delete p;
+	return(type);
+}
+
+
 ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMTransformFactory *factory)
 {
 	if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)

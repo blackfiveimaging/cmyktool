@@ -173,7 +173,9 @@ TestUI::TestUI()
 
 
 	window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_default_size(GTK_WINDOW(window),600,450);
+	gtk_window_set_default_size(GTK_WINDOW(window),FindInt("Win_W"),FindInt("Win_H"));
+	gtk_window_move(GTK_WINDOW(window),FindInt("Win_X"),FindInt("Win_Y"));
+
 	gtk_window_set_title (GTK_WINDOW (window), _("TestUI"));
 	gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 		(GtkSignalFunc) gtk_main_quit, NULL);

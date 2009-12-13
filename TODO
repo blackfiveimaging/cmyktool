@@ -25,7 +25,9 @@ from which the description will be extracted.
 | The list must be copied for the widget - otherwise a constructing function can't safely use a local SimpleComboOptions.
 
 
-Need a "core" object which will contain paths for colour profiles and other miscellaneous settings.
+| Need a "core" object which will contain paths for colour profiles and other miscellaneous settings.
+
+Need menus, and a dialog for setting core options.
 
 
 | Also need a ConversionOptions object - something which can be passed around and copied.
@@ -77,17 +79,17 @@ Need to consider thread pooling.  If you select a dozen images at once, you don'
 
 | Make SearchPath thread-safe.  (Needs a perseparate iterator which tracks open directories.)
 
-Need a way of handling job deletion - needs to be tracked by the UITab, but has to be able to self-delete, too.
-Will have to be mutex-protected.  Reference counting?
-The scenario that causes the problem is this:
-If the main thread queues a job A, which references object B, it's possible for the main thread to delete
-B before job A is run, and there's no way, currently, of robustly cancelling job A.
-The most elegant solution to this is probably to build a second queue, so there's a waiting and a running queue, then
-provide a Cancel() method to the jobdispatcher which takes a Job pointer as an argument.
-The dispatcher will then search both queues, and if found, delete the job.  If the job is not found in either queue, then 
-it's either finished and self-destructed, or about to be so.
+| Need a way of handling job deletion - needs to be tracked by the UITab, but has to be able to self-delete, too.
+| Will have to be mutex-protected.  Reference counting?
+| The scenario that causes the problem is this:
+| If the main thread queues a job A, which references object B, it's possible for the main thread to delete
+| B before job A is run, and there's no way, currently, of robustly cancelling job A.
+| The most elegant solution to this is probably to build a second queue, so there's a waiting and a running queue, then
+| provide a Cancel() method to the jobdispatcher which takes a Job pointer as an argument.
+| The dispatcher will then search both queues, and if found, delete the job.  If the job is not found in either queue, then 
+| it's either finished and self-destructed, or about to be so.
 
-Needs to be possible to interrupt redraw if the selected colorants changes.
+| Needs to be possible to interrupt redraw if the selected colorants changes.
 
 --------------------
 
@@ -102,4 +104,12 @@ Needs to be possible to interrupt redraw if the selected colorants changes.
 
 | Error message display code will be implemented as a global instance which will be informed of the top-level window
 | when the program initializes - thus eliminating the need to pass around a parent window handle.
+
+Add support to pixbufview for page flipping.  This will allow imagetarget functionality to be folded into cmyktool.
+(Would use "normal", "normal proof" and "devicelink" optiosn on a combo, so they could be swapped with the mousewheel.)
+Will need to store a list of pixbufs, and have support for setting a page number.
+pixbufview_set_image() will clear the image list, and set the provided image as a first page.
+pixbufview_add_page(PixbufView *pb,GdkPixbuf *pb);
+pixbufview_set_page(PixbufView *pb,int page);
+pixbufview_clear_pages(PixbufView *pb);
 

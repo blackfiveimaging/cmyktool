@@ -300,7 +300,7 @@ void CMYKUITab::SetImage(const char *fname)
 	{
 		filename=SafeStrdup(fname);
 
-		collist=new DeviceNColorantList(IS_TYPE_CMYK);
+		collist=new DeviceNColorantList(convopts.GetOutputType());
 		coloranttoggle_set_colorants(COLORANTTOGGLE(colsel),collist);
 
 		char *fn=SafeStrdup(fname);
@@ -333,7 +333,11 @@ void CMYKUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 void CMYKUITab::Save(GtkWidget *widget,gpointer userdata)
 {
 	CMYKUITab *ob=(CMYKUITab *)userdata;
-	char *tmpfn=BuildFilename(ob->filename,"-CMYK","tif");	
+	char *tmpfn;
+	if(ob->convopts.GetOutputType()==IS_TYPE_CMYK)
+		tmpfn=BuildFilename(ob->filename,"-CMYK","tif");
+	else
+		tmpfn=BuildFilename(ob->filename,"-RGB","tif");
 	char *newfn=File_Save_Dialog(_("Save image - please choose filename"),tmpfn,ob->parent);
 	if(newfn)
 	{
