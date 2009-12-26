@@ -18,6 +18,8 @@
 
 using namespace std;
 
+#define RESPONSE_SAVE 1
+
 
 class CMYKConversionOptsDialog
 {
@@ -26,6 +28,7 @@ class CMYKConversionOptsDialog
 	{
 		window=gtk_dialog_new_with_buttons(_("Colour conversion options"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
+			GTK_STOCK_SAVE,RESPONSE_SAVE,
 			GTK_STOCK_OK,GTK_RESPONSE_OK,
 			NULL);
 
@@ -97,7 +100,20 @@ class CMYKConversionOptsDialog
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
 		SetSensitive();
 
-		gtk_dialog_run(GTK_DIALOG(window));
+		gint result=gtk_dialog_run(GTK_DIALOG(window));
+		switch(result)
+		{
+			case RESPONSE_SAVE:
+				{
+					CMYKConversionPreset p;
+					p.Store(opts);
+					p.SetString("DisplayName",_("New preset"));
+					p.Save(PRESET_NEW_ESCAPE);
+				}
+				break;
+			default:
+				break;
+		}
 	}
 	~CMYKConversionOptsDialog()
 	{

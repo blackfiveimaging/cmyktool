@@ -27,7 +27,8 @@ from which the description will be extracted.
 
 | Need a "core" object which will contain paths for colour profiles and other miscellaneous settings.
 
-Need menus, and a dialog for setting core options.
+Need menus,
+| and a dialog for setting core options.
 
 
 | Also need a ConversionOptions object - something which can be passed around and copied.
@@ -42,7 +43,7 @@ The second pane of the notebook will contain a preview of the original image.
 | This will need a cached version of the transformed CMYK data, because we will need checkboxes
 | for C, M, Y and K, so the plates can be dropped out for inspection of the result.
 
-Also needs to support converting from CMYK to RGB.
+| Also needs to support converting from CMYK to RGB.
 
 | Need to improve support for GhostScript backend.  Colourspace can be set using the input profile's colourspace.
 | Temp files?  Lifetimes?  Multiple pages?
@@ -69,7 +70,7 @@ will pop up asking for RIP options - which amounts to:
 
 ------------------------------------------
 
-Need to consider thread pooling.  If you select a dozen images at once, you don't want to be running them all simultaneously.
+| Need to consider thread pooling.  If you select a dozen images at once, you don't want to be running them all simultaneously.
 
 | Perhaps some mutex-variation which uses a counter, similar to the RWMutex - would allow n threads to hold it at once,
 | but make any further threads wait until the counter had diminished again.  (Multex)
@@ -105,11 +106,11 @@ Need to consider thread pooling.  If you select a dozen images at once, you don'
 | Error message display code will be implemented as a global instance which will be informed of the top-level window
 | when the program initializes - thus eliminating the need to pass around a parent window handle.
 
-Add support to pixbufview for page flipping.  This will allow imagetarget functionality to be folded into cmyktool.
-(Would use "normal", "normal proof" and "devicelink" optiosn on a combo, so they could be swapped with the mousewheel.)
-Will need to store a list of pixbufs, and have support for setting a page number.
-pixbufview_set_image() will clear the image list, and set the provided image as a first page.
-pixbufview_add_page(PixbufView *pb,GdkPixbuf *pb);
-pixbufview_set_page(PixbufView *pb,int page);
-pixbufview_clear_pages(PixbufView *pb);
+| Add support to pixbufview for page flipping.  This will allow imagetarget functionality to be folded into cmyktool.
+| (Would use "normal", "normal proof" and "devicelink" optiosn on a combo, so they could be swapped with the mousewheel.)
+| Will need to store a list of pixbufs, and have support for setting a page number.
+| pixbufview_set_image() will clear the image list, and set the provided image as a first page.
+| pixbufview_add_page(PixbufView *pb,GdkPixbuf *pb);
+| pixbufview_set_page(PixbufView *pb,int page);
+| pixbufview_clear_pages(PixbufView *pb);
 

@@ -2,13 +2,19 @@
 #define CONVERSIONOPTS_H
 
 #include <string>
+#include <cstring>
 
 #include "support/configdb.h"
 #include "support/pathsupport.h"
 #include "imagesource/imagesource.h"
 #include "profilemanager/profilemanager.h"
+#include "support/md5.h"
+#include "support/util.h"
 
 #define CMYKCONVERSIONOPTS_PRESET_PATH "$XDG_CONFIG_HOME/cmyktool/presets"
+
+#define PRESET_PREVIOUS_ESCAPE "previous"
+#define PRESET_NEW_ESCAPE ""
 
 enum CMYKConversionMode
 {
@@ -61,17 +67,45 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 	}
 	void Load(const char *filename)
 	{
-		presetname=filename;
-		ParseConfigFile(presetname.c_str());
+		ParseConfigFile(filename);
 	}
-	void Save(const char *filename=NULL)
+	void Save(const char *presetid=NULL)
 	{
-		if(filename)
+		// If a presetid is provided we store it, otherwise retrieve the existing one
+		if(presetid)
+			SetString("PresetID",presetid);
+		else
+			presetid=FindString("PresetID");
+
+		char *path=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
+
+		// If the presetid is an empty string (as opposed to a NULL pointer) we create a new ID
+		if(presetid && strlen(presetid)<1)
 		{
-			char *path=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
-			presetname=path + std::string("/") + filename;
+			// Generate new presetid here
+			// Yeah, using an MD5 digest of a random buffer is over-engineering, but it should work...
+			std::string presetname;
+			char buf[32];
+			MD5Digest dig;
+			do
+			{
+				for(int i=0;i<32;++i)
+				{
+					buf[i]=char(RandomSeeded(255));
+					dig.Update(buf,32);
+				}
+				presetname=path + std::string("/") + dig.GetPrintableDigest();
+			} while(CheckFileExists(presetname.c_str()));
+			SetString("PresetID",dig.GetPrintableDigest());
+			presetid=FindString("PresetID");
 		}
-		SaveConfigFile(presetname.c_str());
+		if(presetid)
+		{
+			std::string presetname=path + std::string("/") + presetid;
+			SaveConfigFile(presetname.c_str());
+		}
+
+		free(path);
 	}
 	void Store(CMYKConversionOptions &opts)
 	{
@@ -89,7 +123,6 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 	}
 	protected:
 	static ConfigTemplate Template[];
-	std::string presetname;
 };
 
 #endif

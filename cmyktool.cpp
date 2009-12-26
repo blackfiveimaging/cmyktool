@@ -41,7 +41,6 @@
 #define _(x) gettext(x)
 
 #define PRESET_OTHER_ESCAPE "<other>"
-#define PRESET_PREVIOUS_ESCAPE "previous"
 
 using namespace std;
 

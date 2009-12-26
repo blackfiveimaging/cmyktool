@@ -18,6 +18,7 @@ using namespace std;
 
 ConfigTemplate CMYKConversionPreset::Template[]=
 {
+	ConfigTemplate("PresetID",PRESET_PREVIOUS_ESCAPE),
 	ConfigTemplate("DisplayName","unnamed preset"),
 	ConfigTemplate("InProfile",BUILTINSRGB_ESCAPESTRING),
 	ConfigTemplate("OutProfile","USWebCoatedSWOP.icc"),
