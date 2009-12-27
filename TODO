@@ -1,29 +1,18 @@
+Need to change the preset combo's position - it currently causes the image list to expand...
+
+RGB images are not currently being proofed back to the monitor colour space.
+
+
 Need a tool for converting RGB images to CMYK.
 
-Needs to be able to store conversion presets.  The presets will have names, and be presented in a "SimpleCombo":
+| Needs to be able to store conversion presets.  The presets will have names, and be presented in a "SimpleCombo":
 
-ConfigTemplate ConversionPreset::Template[]=
-{
-	ConfigTemplate("Description",""),
-	ConfigTemplate("InProfile",""),
-	ConfigTemplate("OutProfile",""),
-	ConfigTemplate("Intent",""),
-	ConfigTemplate("HoldBlack",int(0)),
-	ConfigTemplate("HoldGrey",int(0)),
-	ConfigTemplate("Overprint",int(0)),
-	ConfigTemplate()
-};
-
-These options will be saved in $XDG_CONFIG_HOME/cmyktool/
-On startup this directory will be scanned, and each file loaded in turn into a dummy ConfigDB
-from which the description will be extracted.
+|These options will be saved in $XDG_CONFIG_HOME/cmyktool/
+|On startup this directory will be scanned, and each file loaded in turn into a dummy ConfigDB
+|from which the description will be extracted.
 |(Can SimpleComboOption be changed so instead of a static array it builds a list?)
 
-| SimpleComboOptions opts;
-| opts.add("Shortname",_("User-visible name"));
-| opts.add(...
-| The list must be copied for the widget - otherwise a constructing function can't safely use a local SimpleComboOptions.
-
+Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
 
 | Need a "core" object which will contain paths for colour profiles and other miscellaneous settings.
 

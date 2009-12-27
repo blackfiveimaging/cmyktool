@@ -105,10 +105,37 @@ class CMYKConversionOptsDialog
 		{
 			case RESPONSE_SAVE:
 				{
-					CMYKConversionPreset p;
-					p.Store(opts);
-					p.SetString("DisplayName",_("New preset"));
-					p.Save(PRESET_NEW_ESCAPE);
+					GtkWidget *savedlg=gtk_dialog_new_with_buttons(_("Choose a name for this preset..."),
+						GTK_WINDOW(window),GtkDialogFlags(0),
+						GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+						GTK_STOCK_OK,GTK_RESPONSE_OK,
+						NULL);
+
+					GtkWidget *vbox = GTK_DIALOG(savedlg)->vbox;
+
+					GtkWidget *hbox = gtk_hbox_new(FALSE,8);
+					gtk_box_pack_start(GTK_BOX(vbox),hbox,TRUE,TRUE,8);
+					gtk_widget_show(hbox);
+
+					GtkWidget *entry = gtk_entry_new();
+					gtk_box_pack_start(GTK_BOX(hbox),entry,TRUE,TRUE,8);
+					gtk_widget_show(entry);
+
+					gint result=gtk_dialog_run(GTK_DIALOG(savedlg));
+					switch(result)
+					{
+						case GTK_RESPONSE_OK:
+							{
+								CMYKConversionPreset p;
+								p.Store(opts);
+								p.SetString("DisplayName",gtk_entry_get_text(GTK_ENTRY(entry)));
+								p.Save(PRESET_NEW_ESCAPE);
+							}
+							break;
+						default:
+							break;
+					}
+					gtk_widget_destroy(savedlg);
 				}
 				break;
 			default:
