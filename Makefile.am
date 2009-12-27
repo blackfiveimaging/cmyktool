@@ -39,7 +39,7 @@ libdeflattenui_la_SOURCES = \
 
 bin_PROGRAMS = deflatten recombine decompose psrip cmyktool
 
-check_PROGRAMS = queuetest convertcmyk errorqueuetest
+check_PROGRAMS = queuetest convertcmyk
 
 convertcmyk_SOURCES = convertcmyk.cpp
 queuetest_SOURCES = queuetest.cpp
@@ -49,7 +49,6 @@ deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
 cmyktool_SOURCES = cmyktool.cpp
 tabui_SOURCES = tabui.cpp
-errorqueuetest_SOURCES = errorqueuetest.cpp
 
 LDADD = \
 	libdeflattenui.la \
