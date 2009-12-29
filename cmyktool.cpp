@@ -253,6 +253,8 @@ TestUI::~TestUI()
 }
 
 
+#define PRESET_MAXCHARS 17
+
 void TestUI::BuildComboOpts(SimpleComboOptions &opts)
 {
 	char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
@@ -266,7 +268,18 @@ void TestUI::BuildComboOpts(SimpleComboOptions &opts)
 		const char *dn=p.FindString("DisplayName");
 		if(!(dn && strlen(dn)>0))
 			dn=_("<unknown>");
-		opts.Add(fn,dn,fn);
+
+		if(strlen(dn)<=PRESET_MAXCHARS)
+			opts.Add(fn,dn,dn);
+		else
+		{
+			char buf[PRESET_MAXCHARS+4];
+			char *p=buf;
+			strncpy(p,dn,PRESET_MAXCHARS);
+			p[PRESET_MAXCHARS]=p[PRESET_MAXCHARS+1]=p[PRESET_MAXCHARS+2]='.';
+			p[PRESET_MAXCHARS+3]=0;
+			opts.Add(fn,p,dn);
+		}
 	}
 	free(configdir);
 
