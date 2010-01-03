@@ -112,13 +112,16 @@ void CMYKConversionOptions::Save(const char *presetname)
 
 IS_TYPE CMYKConversionOptions::GetOutputType()
 {
-	IS_TYPE type;
+	IS_TYPE type=IS_TYPE_RGB;
 	CMSProfile *p=profilemanager.GetProfile(outprofile.c_str());
-	if(p->IsDeviceLink())
-		type=p->GetDeviceLinkOutputSpace();
-	else
-		type=p->GetColourSpace();
-	delete p;
+	if(p)
+	{
+		if(p->IsDeviceLink())
+			type=p->GetDeviceLinkOutputSpace();
+		else
+			type=p->GetColourSpace();
+		delete p;
+	}
 	return(type);
 }
 
