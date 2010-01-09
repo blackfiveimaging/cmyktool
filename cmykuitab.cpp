@@ -166,6 +166,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf);
 			g_object_unref(G_OBJECT(t->pixbuf));
 			t->pixbuf=NULL;
+			t->tab.SetView(t->tab.view);
 		}
 //		gtk_widget_set_sensitive(t->tab.colsel,TRUE);
 		t->tab.UnRef();
@@ -243,14 +244,30 @@ static GdkPixbuf *GetPixbuf(const guint8 *data,size_t len)
 }
 
 
-static void callbacktest(GtkWidget *widget,gpointer userdata)
+static void setlinkedview(GtkWidget *widget,gpointer userdata)
 {
+	CMYKUITab_View *view=(CMYKUITab_View *)userdata;
 	GQuark quark=g_quark_from_static_string("TabPointer");
 	gpointer qdata=g_object_get_qdata(G_OBJECT(widget),quark);
 	if(qdata)
 	{
 		CMYKUITab *tab=(CMYKUITab *)qdata;
-		cerr << "Tab linked state" << tab->GetLinked() << endl;
+		if(tab!=view->source && tab->GetLinked())
+			tab->SetView(*view);
+	}
+}
+
+
+void CMYKUITab::ViewChanged(GtkWidget *widget,gpointer userdata)
+{
+	CMYKUITab *tab=(CMYKUITab *)userdata;
+	if(!tab->GetLinked())
+		return;
+
+	if(tab->image)
+	{
+		CMYKUITab_View view=tab->GetView();
+		gtk_container_foreach(GTK_CONTAINER(tab->notebook),setlinkedview,&view);
 	}
 }
 
@@ -263,8 +280,6 @@ void CMYKUITab::LinkToggled(GtkWidget *widget,gpointer userdata)
 		gtk_button_set_image(GTK_BUTTON(tab->linkbutton),tab->chain1);
 	else
 		gtk_button_set_image(GTK_BUTTON(tab->linkbutton),tab->chain2);
-
-	gtk_container_foreach(GTK_CONTAINER(tab->notebook),callbacktest,tab);
 }
 
 
@@ -303,6 +318,7 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 
 	pbview=pixbufview_new(NULL,false);
 	gtk_box_pack_start(GTK_BOX(vbox),pbview,TRUE,TRUE,0);
+	g_signal_connect(G_OBJECT(pbview),"changed",G_CALLBACK(ViewChanged),this);
 	gtk_widget_show(pbview);
 
 	GtkWidget *hbox2=gtk_hbox_new(FALSE,0);
@@ -337,6 +353,8 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	gtk_widget_show(colsel);
 
 	SetImage(filename);
+
+	SetLinked(true);
 }
 
 
@@ -361,8 +379,30 @@ bool CMYKUITab::GetLinked()
 }
 
 
+static void attemptlinkedview(GtkWidget *widget,gpointer userdata)
+{
+	CMYKUITab *tab=(CMYKUITab *)userdata;
+	GQuark quark=g_quark_from_static_string("TabPointer");
+	gpointer qdata=g_object_get_qdata(G_OBJECT(widget),quark);
+	if(qdata)
+	{
+		CMYKUITab *othertab=(CMYKUITab *)qdata;
+		if(othertab->GetLinked())
+		{
+			CMYKUITab_View view=othertab->GetView();
+			tab->SetView(view);
+		}
+	}
+}
+
+
 void CMYKUITab::SetLinked(bool linked)
 {
+	if(linked)
+	{
+		// Cycle through the tabs looking for one with a compatible view...
+		gtk_container_foreach(GTK_CONTAINER(notebook),attemptlinkedview,this);
+	}
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linkbutton),linked);
 }
 
@@ -470,4 +510,40 @@ gboolean CMYKUITab::mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer 
 	return(FALSE);
 }
 
+
+void CMYKUITab::SetView(CMYKUITab_View &view)
+{
+	if(image)
+	{
+		ImageSource *is=image->GetImageSource();
+
+		if(is->width==view.w && is->height==view.h)
+		{
+			pixbufview_set_offset(PIXBUFVIEW(pbview),view.xpan,view.ypan);
+			pixbufview_set_scale(PIXBUFVIEW(pbview),view.zoom);
+		}
+		delete is;
+		this->view=CMYKUITab_View();
+	}
+	else
+		this->view=view;
+}
+
+
+CMYKUITab_View CMYKUITab::GetView()
+{
+	if(image)
+	{
+		int x=pixbufview_get_xoffset(PIXBUFVIEW(pbview));
+		int y=pixbufview_get_yoffset(PIXBUFVIEW(pbview));
+		bool zoom=pixbufview_get_scale(PIXBUFVIEW(pbview));
+		ImageSource *is=image->GetImageSource();
+
+		CMYKUITab_View view(this,is->width,is->height,x,y,zoom);
+		delete is;
+		return(view);
+	}
+	else
+		return(CMYKUITab_View());
+}
 
