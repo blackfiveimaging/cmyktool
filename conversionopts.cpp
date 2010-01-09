@@ -23,12 +23,12 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 	ConfigTemplate("InProfile",BUILTINSRGB_ESCAPESTRING),
 	ConfigTemplate("OutProfile","USWebCoatedSWOP.icc"),
 	ConfigTemplate("Intent",0),
-	ConfigTemplate("Mode",0),
+	ConfigTemplate("Mode",1),
 	ConfigTemplate()
 };
 
 
-CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm,const char *presetname)
+CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm)
 	: profilemanager(pm), inprofile("sRGB Color Space Profile.icm"), outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL)
 {
 }
@@ -113,6 +113,8 @@ void CMYKConversionOptions::Save(const char *presetname)
 IS_TYPE CMYKConversionOptions::GetOutputType()
 {
 	IS_TYPE type=IS_TYPE_RGB;
+	if(GetMode()==CMYKCONVERSIONMODE_NONE)
+		return(type);
 	CMSProfile *p=profilemanager.GetProfile(outprofile.c_str());
 	if(p)
 	{
@@ -128,6 +130,9 @@ IS_TYPE CMYKConversionOptions::GetOutputType()
 
 ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMTransformFactory *factory)
 {
+	if(mode==CMYKCONVERSIONMODE_NONE)
+		return(src);
+
 	if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
 		src=new ImageSource_Promote(src,IS_TYPE_RGB);
 
@@ -169,8 +174,9 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 		}
 		else
 			src=new ImageSource_Deflatten(src,inprof,out,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
-		if(out)
-			delete out;
+		src->SetEmbeddedProfile(out,true);
+//		if(out)
+//			delete out;
 	}
 
 	if(freeinprof)

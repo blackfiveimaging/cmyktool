@@ -13,6 +13,7 @@
 
 #define CMYKCONVERSIONOPTS_PRESET_PATH "$XDG_CONFIG_HOME/cmyktool/presets"
 
+#define PRESET_NONE_ESCAPE "none"
 #define PRESET_PREVIOUS_ESCAPE "previous"
 #define PRESET_NEW_ESCAPE ""
 
@@ -22,6 +23,7 @@ enum CMYKConversionMode
 	CMYKCONVERSIONMODE_HOLDBLACK,
 	CMYKCONVERSIONMODE_HOLDGREY,
 	CMYKCONVERSIONMODE_OVERPRINT,
+	CMYKCONVERSIONMODE_NONE,
 	CMYKCONVERSIONMODE_MAX
 };
 
@@ -29,7 +31,7 @@ enum CMYKConversionMode
 class CMYKConversionOptions
 {
 	public:
-	CMYKConversionOptions(ProfileManager &pm,const char *presetname=NULL);
+	CMYKConversionOptions(ProfileManager &pm);
 	CMYKConversionOptions(const CMYKConversionOptions &other);
 	~CMYKConversionOptions();
 	CMYKConversionOptions &operator=(const CMYKConversionOptions &other);
@@ -67,7 +69,10 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 	}
 	void Load(const char *filename)
 	{
-		ParseConfigFile(filename);
+		if(strcmp(filename,PRESET_NONE_ESCAPE)==0)
+			SetInt("Mode",CMYKCONVERSIONMODE_NONE);
+		else
+			ParseConfigFile(filename);
 	}
 	void Save(const char *presetid=NULL)
 	{

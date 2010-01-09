@@ -2,6 +2,7 @@
 
 #include <libgen.h>
 #include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixdata.h>
 
 #include "support/debug.h"
 #include "support/jobqueue.h"
@@ -30,6 +31,9 @@
 #include "cmtransformworker.h"
 
 #include "cmykuitab.h"
+
+#include "gfx/chain1.cpp"
+#include "gfx/chain2.cpp"
 
 #include "config.h"
 #include "gettext.h"
@@ -223,12 +227,75 @@ class UITab_CacheJob : public Job
 ////// CMYKUITab member functions ///////
 
 
-CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename)
-	: UITab(notebook),  parent(parent), dispatcher(dispatcher), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(opts), filename(NULL)
+static GdkPixbuf *GetPixbuf(const guint8 *data,size_t len)
 {
+	GdkPixdata pd;
+	GdkPixbuf *result;
+	GError *err;
+
+	if(!gdk_pixdata_deserialize(&pd,len,data,&err))
+		throw(err->message);
+
+	if(!(result=gdk_pixbuf_from_pixdata(&pd,false,&err)))
+		throw(err->message);
+
+	return(result);
+}
+
+
+static void callbacktest(GtkWidget *widget,gpointer userdata)
+{
+	GQuark quark=g_quark_from_static_string("TabPointer");
+	gpointer qdata=g_object_get_qdata(G_OBJECT(widget),quark);
+	if(qdata)
+	{
+		CMYKUITab *tab=(CMYKUITab *)qdata;
+		cerr << "Tab linked state" << tab->GetLinked() << endl;
+	}
+}
+
+
+void CMYKUITab::LinkToggled(GtkWidget *widget,gpointer userdata)
+{
+	CMYKUITab *tab=(CMYKUITab *)userdata;
+	int val=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tab->linkbutton));
+	if(val)
+		gtk_button_set_image(GTK_BUTTON(tab->linkbutton),tab->chain1);
+	else
+		gtk_button_set_image(GTK_BUTTON(tab->linkbutton),tab->chain2);
+
+	gtk_container_foreach(GTK_CONTAINER(tab->notebook),callbacktest,tab);
+}
+
+
+CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename)
+	: UITab(notebook),  parent(parent), dispatcher(dispatcher), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
+	convopts(opts), filename(NULL), chain1(NULL), chain2(NULL)
+{
+	// Get pixbufs for chain icon...
+	GdkPixbuf *chain1pb=GetPixbuf(chain1_data,sizeof(chain1_data));
+	GdkPixbuf *chain2pb=GetPixbuf(chain2_data,sizeof(chain2_data));
+
+	chain1=gtk_image_new_from_pixbuf(chain1pb);
+	chain2=gtk_image_new_from_pixbuf(chain2pb);
+
+	g_object_ref(G_OBJECT(chain1));
+	g_object_ref(G_OBJECT(chain2));
+
+	linkbutton=gtk_toggle_button_new();
+	g_signal_connect(G_OBJECT(linkbutton),"toggled",G_CALLBACK(LinkToggled),this);
+	gtk_button_set_image(GTK_BUTTON(linkbutton),chain2);
+	gtk_widget_show(chain1);
+
+	AddTabButton(linkbutton);
+
 	hbox=GetBox();
 	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
+
+	// Add a quark to the tab, which we can use to retrieve a pointer to this tab
+	// if we want to make other tabs match the view of this one.
+	GQuark quark=g_quark_from_static_string("TabPointer");
+	g_object_set_qdata(G_OBJECT(hbox),quark,this);
 
 	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,0);
@@ -275,12 +342,28 @@ CMYKUITab::	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOption
 
 CMYKUITab::~CMYKUITab()
 {
+	if(chain1)
+		g_object_unref(G_OBJECT(chain1));
+	if(chain2)
+		g_object_unref(G_OBJECT(chain2));
 	if(collist)
 		delete collist;
 	if(image)
 		delete image;
 	if(filename)
 		free(filename);
+}
+
+
+bool CMYKUITab::GetLinked()
+{
+	return(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(linkbutton)));
+}
+
+
+void CMYKUITab::SetLinked(bool linked)
+{
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(linkbutton),linked);
 }
 
 
@@ -304,7 +387,7 @@ void CMYKUITab::SetImage(const char *fname)
 		coloranttoggle_set_colorants(COLORANTTOGGLE(colsel),collist);
 
 		char *fn=SafeStrdup(fname);
-		SetText(basename(fn));
+		SetTabText(basename(fn));
 		free(fn);
 
 		dispatcher.AddJob(new UITab_CacheJob(*this,filename));

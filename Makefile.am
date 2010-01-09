@@ -1,6 +1,6 @@
 # Makefile.am
 
-SUBDIRS = po support imagesource imageutils miscwidgets profilemanager pixbufthumbnail
+SUBDIRS = po support imagesource imageutils miscwidgets profilemanager pixbufthumbnail gfx
 
 localedir=$(datadir)/locale
 

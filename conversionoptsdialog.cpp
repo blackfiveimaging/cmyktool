@@ -77,7 +77,8 @@ class CMYKConversionOptsDialog
 		gtk_widget_show(label);
 
 		SimpleComboOptions scopts;
-		scopts.Add("",_("Normal"),_("A regular conversion to CMYK."));
+		scopts.Add("",_("None"),_("No conversion"));
+		scopts.Add("",_("Normal"),_("A regular conversion from source to destination profile"));
 		scopts.Add("",_("Hold Black"),_("Maps pure black input to CMYK (0,0,0,100)"));
 		scopts.Add("",_("Hold Grey"),_("Maps grey input (R=G=B) to K channel only"));
 		scopts.Add("",_("Overprint"),_("Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most recent non-black pixel."));
@@ -203,8 +204,10 @@ class CMYKConversionOptsDialog
 	static CMYKConversionMode convmodes[];
 };
 
+
 CMYKConversionMode CMYKConversionOptsDialog::convmodes[]=
 {
+	CMYKCONVERSIONMODE_NONE,
 	CMYKCONVERSIONMODE_NORMAL,
 	CMYKCONVERSIONMODE_HOLDBLACK,
 	CMYKCONVERSIONMODE_HOLDGREY,

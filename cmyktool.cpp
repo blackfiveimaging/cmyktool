@@ -261,6 +261,8 @@ void TestUI::BuildComboOpts(SimpleComboOptions &opts)
 	DirTreeWalker dtw(configdir);
 	const char *fn;
 
+	opts.Add(PRESET_NONE_ESCAPE,_("None"),_("No conversion"),true);
+
 	while((fn=dtw.NextFile()))
 	{
 		CMYKConversionPreset p;
