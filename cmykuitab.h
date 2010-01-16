@@ -52,6 +52,7 @@ class CMYKUITab : public UITab
 	void SetImage(const char *filename);
 	void SetView(CMYKUITab_View &view);
 	CMYKUITab_View GetView();
+	void SetDisplayMode(CMYKTabDisplayMode mode);
 	protected:
 	static void ColorantsChanged(GtkWidget *wid,gpointer userdata);
 	static void Save(GtkWidget *widget,gpointer userdata);

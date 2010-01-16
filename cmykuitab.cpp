@@ -117,17 +117,13 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	public:
 	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), pixbuf(NULL), page(0)
 	{
-		Debug[TRACE] << endl << "Adding reference from RenderJob constructor" << endl;
-
 		tab.Ref();
 		unrefondelete=true;	// We need to be sure the reference will be released if the job gets cancelled before running.
 
-		int page=tab.view.displaymode;
+		page=tab.view.displaymode;
 	}
 	~UITab_RenderJob()
 	{
-		Debug[TRACE] << endl << "Remove reference from RenderJob destructor" << endl;
-
 		if(unrefondelete)
 			tab.UnRef();
 	}
@@ -182,13 +178,12 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 		}
 		if(pixbuf)
 		{
-			Debug[TRACE] << "Triggering cleanup function" << endl;
 			g_timeout_add(1,CleanupFunc,this);
 			WaitCondition();
 		}
 		else
 		{
-			Debug[TRACE] << endl << "Removing reference from RenderJob Run method - no pixbuf created" << endl;
+			Debug[TRACE] << endl << "Adding reference from RenderJob Run() - no pixbuf created" << endl;
 			tab.UnRef();
 		}
 	}
@@ -347,11 +342,7 @@ void CMYKUITab::DisplayModeChanged(GtkWidget *widget,gpointer userdata)
 
 	Debug[TRACE] << "Setting displaymode to " << mode << endl;
 
-	// We only need to trigger a redraw here if there's no image on the selected page already.
-	if(!pixbufview_get_pixbuf(PIXBUFVIEW(tab->pbview),mode))
-		tab->Redraw();
-	else
-		pixbufview_set_page(PIXBUFVIEW(tab->pbview),mode);
+	tab->SetDisplayMode(mode);
 
 	ViewChanged(widget,userdata);
 }
@@ -629,8 +620,7 @@ void CMYKUITab::SetView(CMYKUITab_View &view)
 			{
 				simplecombo_set_index(SIMPLECOMBO(displaymode),view.displaymode);
 				Debug[TRACE] << endl << "Copying displaymode of " << view.displaymode << endl;
-				this->view.displaymode=view.displaymode;
-				Redraw();
+				SetDisplayMode(view.displaymode);
 			}
 			else
 				Debug[TRACE] << endl << "Already have displaymode of " << view.displaymode << endl;
@@ -658,5 +648,21 @@ CMYKUITab_View CMYKUITab::GetView()
 	}
 	else
 		return(CMYKUITab_View(this));
+}
+
+
+void CMYKUITab::SetDisplayMode(CMYKTabDisplayMode mode)
+{
+	// We only need to trigger a redraw here if there's no image on the selected page already.
+	if(!pixbufview_get_pixbuf(PIXBUFVIEW(pbview),mode))
+	{
+		Debug[TRACE] << "Can't find image on page " << mode << " - creating" << endl;
+		Redraw();
+	}
+	else
+	{
+		Debug[TRACE] << "Found image on page " << mode << endl;
+		pixbufview_set_page(PIXBUFVIEW(pbview),mode);
+	}
 }
 

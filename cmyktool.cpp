@@ -61,8 +61,8 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB
 		free(fn);
 
 		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-//		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-//		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
 	}
 	~CMYKTool_Core()
 	{
@@ -163,14 +163,9 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 }
 
 
-TestUI::TestUI()
+TestUI::TestUI() : CMYKTool_Core()
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
-
-	dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-	dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-	dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-
 
 	window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(window),FindInt("Win_W"),FindInt("Win_H"));
@@ -214,8 +209,9 @@ TestUI::TestUI()
 	BuildComboOpts(opts);
 	combo=simplecombo_new(opts);
 	gtk_box_pack_start(GTK_BOX(vbox),combo,FALSE,FALSE,0);
-	simplecombo_set(SIMPLECOMBO(combo),PRESET_PREVIOUS_ESCAPE);
 	g_signal_connect(G_OBJECT(combo),"changed",G_CALLBACK(combochanged),this);
+	simplecombo_set_index(SIMPLECOMBO(combo),1);
+	combochanged(combo,this);	// Load previous settings.
 	gtk_widget_show(combo);
 
 	GtkWidget *tmp=gtk_button_new_with_label("Preferences...");
