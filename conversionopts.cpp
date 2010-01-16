@@ -110,9 +110,8 @@ void CMYKConversionOptions::Save(const char *presetname)
 }
 
 
-IS_TYPE CMYKConversionOptions::GetOutputType()
+IS_TYPE CMYKConversionOptions::GetOutputType(IS_TYPE type)
 {
-	IS_TYPE type=IS_TYPE_RGB;
 	if(GetMode()==CMYKCONVERSIONMODE_NONE)
 		return(type);
 	CMSProfile *p=profilemanager.GetProfile(outprofile.c_str());

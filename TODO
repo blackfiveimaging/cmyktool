@@ -3,10 +3,10 @@ Need to change the preset combo's position - it currently causes the image list 
 RGB images are not currently being proofed back to the monitor colour space.
 (Add a SimpleCombo to toggle between "Inspect", "Proof", "Proof, Adapt White")
 
-Add a chain-link widget to the head of each tab.  Then toggling zoom or panning pixbufview will affect
-all tabs with the link set.
+| Add a chain-link widget to the head of each tab.  Then toggling zoom or panning pixbufview will affect
+| all tabs with the link set.
 
-Add a button or menu item to invoke preferences.
+| Add a button or menu item to invoke preferences.
 
 Menus:
 
@@ -16,7 +16,7 @@ Edit -> Preferences...
 
 Need to be able to set the source profile and other details conveniently.
 
-Need to add a special "None" preset, so that an unmodified copy of the image can be inspected.
+| Need to add a special "None" preset, so that an unmodified copy of the image can be inspected.
 
 
 | Needs to be able to store conversion presets.  The presets will have names, and be presented in a "SimpleCombo":

@@ -61,8 +61,8 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB
 		free(fn);
 
 		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+//		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
+//		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
 	}
 	~CMYKTool_Core()
 	{
@@ -107,6 +107,7 @@ class TestUI : public CMYKTool_Core
 	static void processsingle(GtkWidget *wid,gpointer userdata);
 	static void batchprocess(GtkWidget *wid,gpointer userdata);
 	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
+	static void showpreferencesdialog(GtkWidget *wid,gpointer userdata);
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
 	GtkWidget *window;
@@ -217,16 +218,16 @@ TestUI::TestUI()
 	g_signal_connect(G_OBJECT(combo),"changed",G_CALLBACK(combochanged),this);
 	gtk_widget_show(combo);
 
-//	GtkWidget *tmp=gtk_button_new_with_label("Conversion Options...");
-//	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
-//	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showconversiondialog),this);
-//	gtk_widget_show(tmp);
-
-
-	GtkWidget *tmp=gtk_button_new_with_label("Batch Process...");
+	GtkWidget *tmp=gtk_button_new_with_label("Preferences...");
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
-	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(batchprocess),this);
+	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showpreferencesdialog),this);
 	gtk_widget_show(tmp);
+
+
+//	GtkWidget *tmp=gtk_button_new_with_label("Batch Process...");
+//	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+//	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(batchprocess),this);
+//	gtk_widget_show(tmp);
 
 
 	// Notebook
@@ -366,6 +367,13 @@ void TestUI::showconversiondialog(GtkWidget *wid,gpointer userdata)
 }
 
 
+void TestUI::showpreferencesdialog(GtkWidget *wid,gpointer userdata)
+{
+	TestUI *ui=(TestUI *)userdata;
+	PreferencesDialog(GTK_WINDOW(ui->window),ui->profilemanager);
+}
+
+
 void TestUI::AddImage(const char *filename)
 {
 	Debug.SetLevel(TRACE);
@@ -403,7 +411,7 @@ int main(int argc,char **argv)
 {
 	gtk_init(&argc,&argv);
 
-	Debug.SetLevel(WARN);
+	Debug.SetLevel(TRACE);
 
 	char *configdir=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool");
 	CreateDirIfNeeded(configdir);

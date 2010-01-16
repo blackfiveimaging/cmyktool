@@ -9,23 +9,36 @@
 class UITab_RenderThread;
 
 
+enum CMYKTabDisplayMode {CMYKDISPLAY_INSPECT,CMYKDISPLAY_PROOF_ADAPT_WHITE,CMYKDISPLAY_PROOF};
+
 
 ////// Class to hold view parameters - used for linking tabs with chain button
 class CMYKUITab;
 class CMYKUITab_View
 {
 	public:
-	CMYKUITab_View() : w(0), h(0), xpan(0), ypan(0), zoom(false)
+	CMYKUITab_View(CMYKUITab *source) : source(source), w(0), h(0), xpan(0), ypan(0), zoom(false), displaymode(CMYKDISPLAY_INSPECT)
 	{
 	}
-	CMYKUITab_View(CMYKUITab *source,int w,int h,int xpan,int ypan,bool zoom)
-		: w(w),h(h),xpan(xpan),ypan(ypan),zoom(zoom)
+	CMYKUITab_View(CMYKUITab *source,int w,int h,int xpan,int ypan,bool zoom, CMYKTabDisplayMode displaymode)
+		: source(source), w(w),h(h),xpan(xpan),ypan(ypan),zoom(zoom), displaymode(displaymode)
 	{
+	}
+	CMYKUITab_View &operator=(CMYKUITab_View &other)
+	{
+		w=other.w;
+		h=other.h;
+		xpan=other.xpan;
+		ypan=other.ypan;
+		zoom=other.zoom;
+		displaymode=other.displaymode;
+		return(*this);
 	}
 	CMYKUITab *source;
 	int w,h;
 	int xpan,ypan;
 	bool zoom;
+	CMYKTabDisplayMode displaymode;
 };
 
 
@@ -45,11 +58,14 @@ class CMYKUITab : public UITab
 	static gboolean mousemove(GtkWidget *widget,GdkEventMotion *event, gpointer userdata);
 	static void LinkToggled(GtkWidget *widget,gpointer userdata);
 	static void ViewChanged(GtkWidget *widget,gpointer userdata);
+	static void DisplayModeChanged(GtkWidget *widget,gpointer userdata);
+	void Redraw();
 	GtkWidget *parent;
 	JobDispatcher &dispatcher;
 	GtkWidget *hbox;
 	GtkWidget *colsel;
 	GtkWidget *pbview;
+	GtkWidget *displaymode;
 	GtkWidget *popup;
 	GtkWidget *linkbutton;
 	bool popupshown;

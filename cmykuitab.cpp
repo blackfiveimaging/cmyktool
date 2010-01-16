@@ -16,6 +16,7 @@
 #include "imagesource/pixbuf_from_imagesource.h"
 #include "cachedimage.h"
 
+#include "miscwidgets/simplecombo.h"
 #include "miscwidgets/pixbufview.h"
 #include "miscwidgets/coloranttoggle.h"
 #include "miscwidgets/imageselector.h"
@@ -114,23 +115,58 @@ class ImageSource_ColorantMask : public ImageSource
 class UITab_RenderJob : public Job, public ThreadSync, public Progress
 {
 	public:
-	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), pixbuf(NULL)
+	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), pixbuf(NULL), page(0)
 	{
+		Debug[TRACE] << endl << "Adding reference from RenderJob constructor" << endl;
+
 		tab.Ref();
+		unrefondelete=true;	// We need to be sure the reference will be released if the job gets cancelled before running.
+
+		int page=tab.view.displaymode;
 	}
 	~UITab_RenderJob()
 	{
+		Debug[TRACE] << endl << "Remove reference from RenderJob destructor" << endl;
+
+		if(unrefondelete)
+			tab.UnRef();
 	}
 	void Run(Worker *w)
 	{
 		CMTransformWorker *cw=(CMTransformWorker *)w;
 
+		unrefondelete=false;	// Once the job has definitely started it can handle unref.
+
+		Debug[TRACE] << endl << "In RenderJob's Run() method" << endl;
+
 		try
 		{
 			ImageSource *is=tab.image->GetImageSource();
 			is=new ImageSource_ColorantMask(is,tab.collist);
+			Debug[TRACE] << "Image colourspace: " << is->type << endl;
 
-			CMSTransform *transform=cw->factory->GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+			// If we're in "inspect" mode, we don't want to convert from the image's colourspace
+			// to the monitor's - assuming of course that the image is RGB.
+			// If the image is CMYK we have to convert.
+			if(tab.view.displaymode==CMYKDISPLAY_INSPECT && STRIP_ALPHA(is->type)==IS_TYPE_RGB)
+				is->SetEmbeddedProfile(NULL);
+
+			Debug[TRACE] << "Opts output space" << tab.convopts.GetOutProfile() << endl;
+
+			LCMSWrapper_Intent intent=LCMSWRAPPER_INTENT_DEFAULT;
+			switch(tab.view.displaymode)
+			{
+				case CMYKDISPLAY_INSPECT:
+					break;
+				case CMYKDISPLAY_PROOF:
+					intent=LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC;
+					break;
+				case CMYKDISPLAY_PROOF_ADAPT_WHITE:
+					intent=LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC_BPC;
+					break;
+			}
+
+			CMSTransform *transform=cw->factory->GetTransform(CM_COLOURDEVICE_DISPLAY,is,intent);
 			if(transform)
 				is=new ImageSource_CMS(is,transform);
 			else
@@ -152,6 +188,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 		}
 		else
 		{
+			Debug[TRACE] << endl << "Removing reference from RenderJob Run method - no pixbuf created" << endl;
 			tab.UnRef();
 		}
 	}
@@ -163,12 +200,15 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 
 		if(t->pixbuf)
 		{
-			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf);
+			Debug[TRACE] << "Drawing rendered pixbuf on page " << t->page << endl;
+			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf,t->page);
+			pixbufview_set_page(PIXBUFVIEW(t->tab.pbview),t->page);
 			g_object_unref(G_OBJECT(t->pixbuf));
 			t->pixbuf=NULL;
 			t->tab.SetView(t->tab.view);
 		}
 //		gtk_widget_set_sensitive(t->tab.colsel,TRUE);
+		Debug[TRACE] << endl << "Removing reference from RenderJob callback" << endl;
 		t->tab.UnRef();
 		t->Broadcast();
 		return(FALSE);
@@ -181,6 +221,8 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	CMYKUITab &tab;
 	ImageSource *src;
 	GdkPixbuf *pixbuf;
+	int page;
+	bool unrefondelete;
 };
 
 
@@ -189,16 +231,26 @@ class UITab_CacheJob : public Job
 	public:
 	UITab_CacheJob(CMYKUITab &tab,const char *filename) : Job(), tab(tab), filename(NULL)
 	{
+		Debug[TRACE] << endl << "Adding reference from CacheJob Constructor" << endl;
+
 		tab.Ref();
+		unrefondelete=true;	// If the job gets cancelled we need to be sure the reference will be released.
+
 		this->filename=SafeStrdup(filename);
 	}
 	~UITab_CacheJob()
 	{
 		free(filename);
+		Debug[TRACE] << endl << "Removing reference from CacheJob Destructor" << endl;
+
+		if(unrefondelete)
+			tab.UnRef();
 	}
 	void Run(Worker *w)
 	{
 		CMTransformWorker *cw=(CMTransformWorker *)w;
+
+		unrefondelete=false;	// Once the job has definitely been started it can handle the unref.
 
 		try
 		{
@@ -208,6 +260,7 @@ class UITab_CacheJob : public Job
 
 			tab.image=new CachedImage(is);
 
+			Debug[TRACE] << "Cached image generated - triggering render job" << endl;
 			UITab_RenderJob renderjob(tab);
 			renderjob.Run(w);
 		}
@@ -215,13 +268,16 @@ class UITab_CacheJob : public Job
 		{
 			Debug[ERROR] << "Error: " << err << endl;
 			ErrorDialogs.AddMessage(err);
+			Debug[TRACE] << endl << "Adding reference from the end of CacheJob Run method - error encountered" << endl;
 			tab.UnRef();	// If we encountered an error, delete the tab.
 		}
+		Debug[TRACE] << endl << "Adding reference from the end of CacheJob Run method" << endl;
 		tab.UnRef();	// Release the reference obtained when the job was created.
 	}
 	protected:
 	CMYKUITab &tab;
 	char *filename;
+	bool unrefondelete;
 };
 
 
@@ -283,9 +339,27 @@ void CMYKUITab::LinkToggled(GtkWidget *widget,gpointer userdata)
 }
 
 
+void CMYKUITab::DisplayModeChanged(GtkWidget *widget,gpointer userdata)
+{
+	CMYKUITab *tab=(CMYKUITab *)userdata;
+	CMYKTabDisplayMode mode=(CMYKTabDisplayMode)simplecombo_get_index(SIMPLECOMBO(tab->displaymode));
+	tab->view.displaymode=mode;
+
+	Debug[TRACE] << "Setting displaymode to " << mode << endl;
+
+	// We only need to trigger a redraw here if there's no image on the selected page already.
+	if(!pixbufview_get_pixbuf(PIXBUFVIEW(tab->pbview),mode))
+		tab->Redraw();
+	else
+		pixbufview_set_page(PIXBUFVIEW(tab->pbview),mode);
+
+	ViewChanged(widget,userdata);
+}
+
+
 CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename)
 	: UITab(notebook),  parent(parent), dispatcher(dispatcher), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(opts), filename(NULL), chain1(NULL), chain2(NULL)
+	convopts(opts), filename(NULL), renderjob(NULL), chain1(NULL), chain2(NULL), view(this)
 {
 	// Get pixbufs for chain icon...
 	GdkPixbuf *chain1pb=GetPixbuf(chain1_data,sizeof(chain1_data));
@@ -305,7 +379,7 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	AddTabButton(linkbutton);
 
 	hbox=GetBox();
-	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
+//	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
 
 	// Add a quark to the tab, which we can use to retrieve a pointer to this tab
 	// if we want to make other tabs match the view of this one.
@@ -317,6 +391,10 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	gtk_widget_show(vbox);
 
 	pbview=pixbufview_new(NULL,false);
+	pixbufview_add_page(PIXBUFVIEW(pbview),NULL);
+	pixbufview_add_page(PIXBUFVIEW(pbview),NULL);
+	pixbufview_add_page(PIXBUFVIEW(pbview),NULL);
+
 	gtk_box_pack_start(GTK_BOX(vbox),pbview,TRUE,TRUE,0);
 	g_signal_connect(G_OBJECT(pbview),"changed",G_CALLBACK(ViewChanged),this);
 	gtk_widget_show(pbview);
@@ -330,6 +408,19 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 //		(GtkSignalFunc) ColorantsChanged, this);
 //	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
 //	gtk_widget_show(colsel);
+
+	SimpleComboOptions sco;
+	sco.Add("",_("Inspect"),_("Displays image data without conversion from target space to monitor, allowing you to see "
+				 "how the data has been modified by the conversion."));
+	sco.Add("",_("Simulate print, adapt white"),_("Simulates printed colours but uses the monitor's white point. "
+				 "(Conversion from destination to monitor profiles, using Relative Colorimetric intent with BlackPoint Compensation.)"));
+	sco.Add("",_("Simulate print"),_("Simulates printed colours, using paper white. "
+				 "(Conversion from destination to monitor profiles, using Absolute Colorimetric intent.)"));
+
+	displaymode=simplecombo_new(sco);
+	g_signal_connect(G_OBJECT(displaymode),"changed",G_CALLBACK(DisplayModeChanged),this);
+	gtk_box_pack_start(GTK_BOX(hbox2),displaymode,FALSE,FALSE,0);
+	gtk_widget_show(displaymode);
 
 	GtkWidget *tmp=gtk_hbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox2),tmp,TRUE,TRUE,0);
@@ -355,6 +446,8 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	SetImage(filename);
 
 	SetLinked(true);
+
+	simplecombo_set_index(SIMPLECOMBO(displaymode),view.displaymode);
 }
 
 
@@ -423,14 +516,19 @@ void CMYKUITab::SetImage(const char *fname)
 	{
 		filename=SafeStrdup(fname);
 
-		collist=new DeviceNColorantList(convopts.GetOutputType());
-		coloranttoggle_set_colorants(COLORANTTOGGLE(colsel),collist);
+		ImageSource *is=ISLoadImage(fname);
+		if(is)
+		{
+			collist=new DeviceNColorantList(convopts.GetOutputType(is->type));
+			coloranttoggle_set_colorants(COLORANTTOGGLE(colsel),collist);
 
-		char *fn=SafeStrdup(fname);
-		SetTabText(basename(fn));
-		free(fn);
+			char *fn=SafeStrdup(fname);
+			SetTabText(basename(fn));
+			free(fn);
 
-		dispatcher.AddJob(new UITab_CacheJob(*this,filename));
+			dispatcher.AddJob(new UITab_CacheJob(*this,filename));
+			delete is;
+		}
 	}
 	catch (const char *err)
 	{
@@ -444,12 +542,17 @@ void CMYKUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 	CMYKUITab *ob=(CMYKUITab *)userdata;
 //	gtk_widget_set_sensitive(ob->colsel,FALSE);
 
+	ob->Redraw();
+}
+
+void CMYKUITab::Redraw()
+{
 	// Cancel existing render job.  This is harmless if the job's completed already,
 	// even if the object's been deleted
-	if(ob->renderjob)
-		ob->dispatcher.CancelJob(ob->renderjob);
-
-	ob->dispatcher.AddJob(ob->renderjob=new UITab_RenderJob(*ob));
+	if(renderjob)
+		dispatcher.CancelJob(renderjob);
+	if(image)
+		dispatcher.AddJob(renderjob=new UITab_RenderJob(*this));
 }
 
 
@@ -521,12 +624,20 @@ void CMYKUITab::SetView(CMYKUITab_View &view)
 		{
 			pixbufview_set_offset(PIXBUFVIEW(pbview),view.xpan,view.ypan);
 			pixbufview_set_scale(PIXBUFVIEW(pbview),view.zoom);
+
+			if(this->view.displaymode!=view.displaymode)
+			{
+				simplecombo_set_index(SIMPLECOMBO(displaymode),view.displaymode);
+				Debug[TRACE] << endl << "Copying displaymode of " << view.displaymode << endl;
+				this->view.displaymode=view.displaymode;
+				Redraw();
+			}
+			else
+				Debug[TRACE] << endl << "Already have displaymode of " << view.displaymode << endl;
 		}
 		delete is;
-		this->view=CMYKUITab_View();
 	}
-	else
-		this->view=view;
+	this->view=view;
 }
 
 
@@ -539,11 +650,13 @@ CMYKUITab_View CMYKUITab::GetView()
 		bool zoom=pixbufview_get_scale(PIXBUFVIEW(pbview));
 		ImageSource *is=image->GetImageSource();
 
-		CMYKUITab_View view(this,is->width,is->height,x,y,zoom);
+		CMYKTabDisplayMode mode=(CMYKTabDisplayMode)simplecombo_get_index(SIMPLECOMBO(displaymode));
+		Debug[TRACE] << "GetView: Using displaymode " << mode << endl;
+		CMYKUITab_View view(this,is->width,is->height,x,y,zoom,mode);
 		delete is;
 		return(view);
 	}
 	else
-		return(CMYKUITab_View());
+		return(CMYKUITab_View(this));
 }
 

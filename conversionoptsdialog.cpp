@@ -46,34 +46,54 @@ class CMYKConversionOptsDialog
 
 		GtkWidget *label;
 
+		int row=0;
+
+		// Input profile
+
+		label=gtk_label_new(_("Fallback Input Profile:"));
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+		ips = profileselector_new(&opts.profilemanager);
+		g_signal_connect(ips,"changed",G_CALLBACK(inprofile_changed),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),ips,1,2,row,row+1);
+		gtk_widget_show(ips);
+
+
+		++row;
+
 		// Output profile
 
 		label=gtk_label_new(_("Output Profile:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,0,1);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
 		gtk_widget_show(label);
 
 		ps = profileselector_new(&opts.profilemanager);
 		g_signal_connect(ps,"changed",G_CALLBACK(profile_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),ps,1,2,0,1);
+		gtk_table_attach_defaults(GTK_TABLE(table),ps,1,2,row,row+1);
 		gtk_widget_show(ps);
 
+
+		++row;
 
 		// Rendering intent
 
 		label=gtk_label_new(_("Rendering intent:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,1,2);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
 		gtk_widget_show(label);
 
 		is = intentselector_new(&opts.profilemanager);
 		g_signal_connect(is,"changed",G_CALLBACK(intent_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),is,1,2,1,2);
+		gtk_table_attach_defaults(GTK_TABLE(table),is,1,2,row,row+1);
 		gtk_widget_show(is);
 
+
+		++row;
 
 		// Conversion mode
 
 		label=gtk_label_new(_("Conversion mode:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,2,3);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
 		gtk_widget_show(label);
 
 		SimpleComboOptions scopts;
@@ -85,7 +105,7 @@ class CMYKConversionOptsDialog
 
 		combo=simplecombo_new(scopts);
 		g_signal_connect(combo,"changed",G_CALLBACK(combo_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),combo,1,2,2,3);
+		gtk_table_attach_defaults(GTK_TABLE(table),combo,1,2,row,row+1);
 		gtk_widget_show(combo);
 
 		for(int i=0;i<int(CMYKCONVERSIONMODE_MAX);++i)
@@ -98,6 +118,7 @@ class CMYKConversionOptsDialog
 
 		intentselector_setintent(INTENTSELECTOR(is),opts.GetIntent());
 
+		profileselector_set_filename(PROFILESELECTOR(ips),opts.GetInProfile());
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
 		SetSensitive();
 
@@ -149,11 +170,19 @@ class CMYKConversionOptsDialog
 	}
 	void SetSensitive()
 	{
-		gtk_widget_set_sensitive(GTK_WIDGET(combo),opts.GetOutputType()==IS_TYPE_CMYK);
+		bool active=opts.GetOutputType()==IS_TYPE_CMYK;
+
+		// FIXME - find a better solution to the problem of GetOutputType returning
+		// IS_TYPE_RGB if conversion mode is NONE
+		if(opts.GetMode()==CMYKCONVERSIONMODE_NONE)
+			active=true;
+
+		gtk_widget_set_sensitive(GTK_WIDGET(combo),active);
 	}
 	private:
 	CMYKConversionOptions &opts;
 	GtkWidget *window;
+	GtkWidget *ips;
 	GtkWidget *ps;
 	GtkWidget *is;
 	GtkWidget *combo;
@@ -174,6 +203,20 @@ class CMYKConversionOptsDialog
 			Debug[WARN] << "No profile selected... " << endl;
 	}
 
+	static void	inprofile_changed(GtkWidget *widget,gpointer user_data)
+	{
+		Debug[TRACE] << "Received changed signal from ProfileSelector" << endl;
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+		ProfileSelector *c=PROFILESELECTOR(dlg->ips);
+		const char *val=profileselector_get_filename(c);
+		if(val)
+		{
+			dlg->opts.SetInProfile(val);
+			Debug[TRACE] << "Selected: " << val << endl;
+		}
+		else
+			Debug[WARN] << "No profile selected... " << endl;
+	}
 
 	static void	intent_changed(GtkWidget *widget,gpointer user_data)
 	{
