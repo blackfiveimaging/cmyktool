@@ -6,8 +6,6 @@
 #include "miscwidgets/uitab.h"
 #include "conversionopts.h"
 
-class UITab_RenderThread;
-
 
 enum CMYKTabDisplayMode {CMYKDISPLAY_INSPECT,CMYKDISPLAY_PROOF_ADAPT_WHITE,CMYKDISPLAY_PROOF};
 
@@ -80,6 +78,7 @@ class CMYKUITab : public UITab
 	CMYKUITab_View view;	// A saved view which is applied when a rendering job finishes
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
+	friend class UITab_SaveDialog;
 };
 
 #endif

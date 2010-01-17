@@ -547,9 +547,161 @@ void CMYKUITab::Redraw()
 }
 
 
+/////////// Save Dialog ////////////
+
+enum SaveDialog_Format {FORMAT_JPEG,FORMAT_TIFF,FORMAT_TIFF16};
+
+class UITab_SaveDialog
+{
+	public:
+	UITab_SaveDialog(CMYKUITab &tab) : tab(tab), dialog(NULL)
+	{
+		tab.Ref();
+
+		GtkWidget *hbox;
+	 	dialog=gtk_dialog_new_with_buttons(_("Save Image..."),
+			GTK_WINDOW(tab.parent),GtkDialogFlags(0),
+			GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+			GTK_STOCK_SAVE,GTK_RESPONSE_OK,
+			NULL);
+
+		hbox=gtk_hbox_new(FALSE,5);
+		filechooser = gtk_file_chooser_widget_new (GTK_FILE_CHOOSER_ACTION_SAVE);
+		gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),hbox,TRUE,TRUE,5);
+		gtk_box_pack_start(GTK_BOX(hbox),filechooser,TRUE,TRUE,5);
+		gtk_widget_show(filechooser);
+		gtk_widget_show(hbox);
+
+		GtkWidget *table=gtk_table_new(2,3,FALSE);
+		gtk_container_set_border_width(GTK_CONTAINER(table),5);
+		gtk_table_set_col_spacing(GTK_TABLE(table),0,10);
+		gtk_table_set_row_spacings(GTK_TABLE(table),5);
+		gtk_box_pack_start(GTK_BOX(GTK_DIALOG(dialog)->vbox),table,FALSE,FALSE,5);
+		gtk_widget_show(table);
+
+		GtkAttachOptions gao = (GtkAttachOptions)(GTK_EXPAND|GTK_FILL);
+
+		GtkWidget *label;
+		int row=0;
+
+		// Format combo...
+
+		label=gtk_label_new(_("File format:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.95,0.5);
+		gtk_table_attach(GTK_TABLE(table),label,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
+
+		SimpleComboOptions opts;
+		opts.Add("JPEG",_("JPEG"),_("JPEG - Lossy format optimised for photographic images"));
+		opts.Add("TIFF",_("TIFF (8-bit)"),_("TIFF - 8-bits per sample, for increased compatibility"));
+		opts.Add("TIFF16",_("TIFF (16-bit)"),_("TIFF - 16-bits per sample, for maximum quality"));
+
+		format=simplecombo_new(opts);
+		g_signal_connect(G_OBJECT(format),"changed",G_CALLBACK(format_changed),this);
+		gtk_table_attach(GTK_TABLE(table),format,1,2,row,row+1,gao,GTK_SHRINK,0,0);
+
+		++row;
+
+		// JPEG Quality setting...
+
+		label=gtk_label_new(_("JPEG Quality:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.95,0.5);
+		gtk_table_attach(GTK_TABLE(table),label,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
+		gtk_widget_show(label);
+
+		quality=gtk_spin_button_new_with_range(60,100,1);
+		gtk_table_attach(GTK_TABLE(table),quality,1,2,row,row+1,gao,GTK_SHRINK,0,0);
+		gtk_widget_show(quality);
+
+		++row;
+
+		// Embed Profile setting...
+
+		embedprofile=gtk_check_button_new_with_label(_("Embed ICC Profile"));
+		gtk_table_attach(GTK_TABLE(table),embedprofile,1,2,row,row+1,gao,GTK_SHRINK,0,0);
+		gtk_widget_show(embedprofile);
+
+		++row;
+
+		// Set default filename
+
+		char *tmpfn;
+		if(tab.convopts.GetOutputType()==IS_TYPE_CMYK)
+			tmpfn=BuildFilename(tab.filename,"-CMYK","jpg");
+		else
+			tmpfn=BuildFilename(tab.filename,"-exported","jpg");
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filechooser),g_path_get_dirname(tmpfn));
+		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filechooser),g_path_get_basename(tmpfn));
+		free(tmpfn);
+
+
+		gtk_widget_show_all(dialog);
+		g_signal_connect(G_OBJECT(dialog),"response",G_CALLBACK(response),this);
+	}
+	~UITab_SaveDialog()
+	{
+		if(dialog)
+			gtk_widget_destroy(dialog);
+		tab.UnRef();
+	}
+	static void format_changed(GtkDialog *dialog, gpointer userdata)
+	{
+		UITab_SaveDialog *dlg=(UITab_SaveDialog *)userdata;
+		
+		SaveDialog_Format fmt=SaveDialog_Format(simplecombo_get_index(SIMPLECOMBO(dlg->format)));
+
+		Debug[TRACE] << "Got format: " << fmt << endl;
+
+		gtk_widget_set_sensitive(dlg->quality,fmt==FORMAT_JPEG);
+
+		Debug[TRACE] << "Set widget sensitivity " << endl;
+
+		const char *fn=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg->filechooser));
+		if(fn)
+		{
+			Debug[TRACE] << "Got filename: " << fn << endl;
+			char *newfn=BuildFilename(fn,NULL,fmt==FORMAT_JPEG ? "jpg" : "tif");
+			Debug[TRACE] << "Built new filename: " << newfn << endl;
+
+//			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),g_path_get_dirname(newfn));
+			gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dlg->filechooser),g_path_get_basename(newfn));	// Yuk.
+
+//			gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dlg->filechooser),newfn);
+			free(newfn);
+		}
+	}
+	static void response(GtkDialog *dialog, gint responseid, gpointer userdata)
+	{
+		UITab_SaveDialog *dlg=(UITab_SaveDialog *)userdata;
+		bool done=false;
+		switch(responseid)
+		{
+			case GTK_RESPONSE_OK:
+				done=true;
+				break;
+			case GTK_RESPONSE_CANCEL:
+			case GTK_RESPONSE_DELETE_EVENT:
+				done=true;
+				break;
+		}
+		if(done)
+			delete dlg;
+	}
+	protected:
+	CMYKUITab &tab;
+	GtkWidget *dialog;
+	GtkWidget *filechooser;
+	GtkWidget *format;
+	GtkWidget *quality;
+	GtkWidget *embedprofile;
+};
+
+
+
 void CMYKUITab::Save(GtkWidget *widget,gpointer userdata)
 {
 	CMYKUITab *ob=(CMYKUITab *)userdata;
+	new UITab_SaveDialog(*ob);
+#if 0
 	char *tmpfn;
 	if(ob->convopts.GetOutputType()==IS_TYPE_CMYK)
 		tmpfn=BuildFilename(ob->filename,"-CMYK","tif");
@@ -567,6 +719,7 @@ void CMYKUITab::Save(GtkWidget *widget,gpointer userdata)
 		free(newfn);
 	}
 	free(tmpfn);
+#endif
 }
 
 

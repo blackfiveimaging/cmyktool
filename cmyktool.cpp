@@ -321,6 +321,10 @@ void TestUI::combochanged(GtkWidget *wid,gpointer userdata)
 		{
 			CMYKConversionOptions_Dialog(ui->convopts,ui->window);
 		}
+		else if(strcmp(key,PRESET_NONE_ESCAPE)==0)
+		{
+			ui->convopts.SetMode(CMYKCONVERSIONMODE_NONE);
+		}
 		else
 		{
 			CMYKConversionPreset p;

@@ -97,7 +97,6 @@ class CMYKConversionOptsDialog
 		gtk_widget_show(label);
 
 		SimpleComboOptions scopts;
-		scopts.Add("",_("None"),_("No conversion"));
 		scopts.Add("",_("Normal"),_("A regular conversion from source to destination profile"));
 		scopts.Add("",_("Hold Black"),_("Maps pure black input to CMYK (0,0,0,100)"));
 		scopts.Add("",_("Hold Grey"),_("Maps grey input (R=G=B) to K channel only"));
@@ -113,6 +112,10 @@ class CMYKConversionOptsDialog
 			if(convmodes[i]==opts.GetMode())
 				simplecombo_set_index(SIMPLECOMBO(combo),i);
 		}
+
+		// Including the "None" setting in the dialog is too confusing, so we ensure that
+		// the mode gets set to something else.
+		combo_changed(combo,this);
 
 		gtk_widget_show(window);
 
@@ -250,7 +253,6 @@ class CMYKConversionOptsDialog
 
 CMYKConversionMode CMYKConversionOptsDialog::convmodes[]=
 {
-	CMYKCONVERSIONMODE_NONE,
 	CMYKCONVERSIONMODE_NORMAL,
 	CMYKCONVERSIONMODE_HOLDBLACK,
 	CMYKCONVERSIONMODE_HOLDGREY,
