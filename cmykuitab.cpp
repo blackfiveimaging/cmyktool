@@ -11,6 +11,7 @@
 #include "support/util.h"
 
 #include "imageutils/tiffsave.h"
+#include "imageutils/jpegsave.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/pixbuf_from_imagesource.h"
@@ -138,7 +139,10 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 		try
 		{
 			ImageSource *is=tab.image->GetImageSource();
-			is=new ImageSource_ColorantMask(is,tab.collist);
+
+			// We only want to do the ColorantMask thing in "inspect" mode...
+			if(tab.view.displaymode==CMYKDISPLAY_INSPECT)
+				is=new ImageSource_ColorantMask(is,tab.collist);
 			Debug[TRACE] << "Image colourspace: " << is->type << endl;
 
 			// If we're in "inspect" mode, we don't want to convert from the image's colourspace
@@ -342,6 +346,8 @@ void CMYKUITab::DisplayModeChanged(GtkWidget *widget,gpointer userdata)
 
 	Debug[TRACE] << "Setting displaymode to " << mode << endl;
 
+	gtk_widget_set_sensitive(tab->colsel,mode==CMYKDISPLAY_INSPECT);
+
 	tab->SetDisplayMode(mode);
 
 	ViewChanged(widget,userdata);
@@ -394,11 +400,6 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	gtk_box_pack_start(GTK_BOX(vbox),hbox2,FALSE,FALSE,0);
 	gtk_widget_show(hbox2);
 
-//	colsel=coloranttoggle_new(NULL);
-//	gtk_signal_connect (GTK_OBJECT (colsel), "changed",
-//		(GtkSignalFunc) ColorantsChanged, this);
-//	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
-//	gtk_widget_show(colsel);
 
 	SimpleComboOptions sco;
 	sco.Add("",_("Inspect"),_("Displays image data without conversion from target space to monitor, allowing you to see "
@@ -413,6 +414,14 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	gtk_box_pack_start(GTK_BOX(hbox2),displaymode,FALSE,FALSE,0);
 	gtk_widget_show(displaymode);
 
+
+	colsel=coloranttoggle_new(NULL);
+	gtk_signal_connect (GTK_OBJECT (colsel), "changed",
+		(GtkSignalFunc) ColorantsChanged, this);
+	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
+	gtk_widget_show(colsel);
+
+
 	GtkWidget *tmp=gtk_hbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox2),tmp,TRUE,TRUE,0);
 	gtk_widget_show(tmp);
@@ -422,7 +431,8 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	g_signal_connect(G_OBJECT(savebutton),"clicked",G_CALLBACK(Save),this);
 	gtk_box_pack_start(GTK_BOX(hbox2),savebutton,FALSE,FALSE,0);
 	gtk_widget_show(savebutton);
-	
+
+#if 0	
 	popupshown=false;
 	popup=gtk_window_new(GTK_WINDOW_POPUP);
 	gtk_window_set_default_size(GTK_WINDOW(popup),10,10);
@@ -433,6 +443,7 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 		(GtkSignalFunc) ColorantsChanged, this);
 	gtk_container_add(GTK_CONTAINER(popup),colsel);
 	gtk_widget_show(colsel);
+#endif
 
 	SetImage(filename);
 
@@ -676,7 +687,46 @@ class UITab_SaveDialog
 		switch(responseid)
 		{
 			case GTK_RESPONSE_OK:
-				done=true;
+				{
+					const char *fn=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg->filechooser));
+					if(CheckFileExists(fn))
+					{
+						if(!Query_Dialog(_("File exists - OK to overwrite?"),dlg->dialog))
+							break;
+					}
+
+					SaveDialog_Format fmt=SaveDialog_Format(simplecombo_get_index(SIMPLECOMBO(dlg->format)));
+					int quality=gtk_spin_button_get_value(GTK_SPIN_BUTTON(dlg->quality));
+					bool embedprofile=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg->embedprofile));	
+
+					ProgressBar p(_("Saving"),true,dlg->dialog);
+					ImageSource *is=dlg->tab.image->GetImageSource();
+					if(!embedprofile)
+						is->SetEmbeddedProfile(NULL);
+
+					ImageSaver *imgsaver=NULL;
+					switch(fmt)
+					{
+						case FORMAT_TIFF:
+							imgsaver=new TIFFSaver(fn,is);
+							break;
+						case FORMAT_TIFF16:
+							imgsaver=new TIFFSaver(fn,is,true);
+							break;
+						case FORMAT_JPEG:
+							imgsaver=new JPEGSaver(fn,is,quality);
+							break;
+					}
+
+					imgsaver->SetProgress(&p);
+					imgsaver->Save();
+
+					delete imgsaver;
+					delete is;				
+
+					done=true;
+				}
+
 				break;
 			case GTK_RESPONSE_CANCEL:
 			case GTK_RESPONSE_DELETE_EVENT:
