@@ -116,7 +116,7 @@ class ImageSource_ColorantMask : public ImageSource
 class UITab_RenderJob : public Job, public ThreadSync, public Progress
 {
 	public:
-	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), pixbuf(NULL), page(0)
+	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), tempimage(NULL), page(0)
 	{
 		tab.Ref();
 		unrefondelete=true;	// We need to be sure the reference will be released if the job gets cancelled before running.
@@ -172,15 +172,17 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			else
 				Debug[WARN] << "RenderJob: Couldn't create transform" << endl;
 
-			pixbuf=pixbuf_from_imagesource(is,255,255,255,this);
-			delete is;
+			// Create a cached image to hold the data since converting to pixbuf from a sub-thread seems 
+			// to be a recipe for disaster.
+			tempimage=new CachedImage(is);
+//			delete is;
 		}
 		catch(const char *err)
 		{
 			Debug[ERROR] << "Error: " << err << endl;
 			ErrorDialogs.AddMessage(err);
 		}
-		if(pixbuf)
+		if(tempimage)
 		{
 			g_timeout_add(1,CleanupFunc,this);
 			WaitCondition();
@@ -195,18 +197,31 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	{
 		UITab_RenderJob *t=(UITab_RenderJob *)ud;
 
+		Debug[TRACE] << "In cleanup function - creating pixbuf" << endl;
+
+		ImageSource *is=t->tempimage->GetImageSource();
+		GdkPixbuf *pixbuf=pixbuf_from_imagesource(is,255,255,255,t);
+		delete t->tempimage;
+
 		Debug[TRACE] << "In cleanup function - drawing pixbuf" << endl;
 
-		if(t->pixbuf)
+		if(pixbuf)
 		{
 			Debug[TRACE] << "Drawing rendered pixbuf on page " << t->page << endl;
-			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),t->pixbuf,t->page);
+			pixbufview_set_pixbuf(PIXBUFVIEW(t->tab.pbview),pixbuf,t->page);
 			pixbufview_set_page(PIXBUFVIEW(t->tab.pbview),t->page);
-			g_object_unref(G_OBJECT(t->pixbuf));
-			t->pixbuf=NULL;
-			t->tab.SetView(t->tab.view);
+			g_object_unref(G_OBJECT(pixbuf));
+
+			if(is->width==t->tab.view.w && is->height==t->tab.view.h)
+			{
+				pixbufview_set_offset(PIXBUFVIEW(t->tab.pbview),t->tab.view.xpan,t->tab.view.ypan);
+				pixbufview_set_scale(PIXBUFVIEW(t->tab.pbview),t->tab.view.zoom);
+
+	//			t->tab.SetView(t->tab.view);
+			}
 		}
-//		gtk_widget_set_sensitive(t->tab.colsel,TRUE);
+		delete is;
+
 		Debug[TRACE] << endl << "Removing reference from RenderJob callback" << endl;
 		t->tab.UnRef();
 		t->Broadcast();
@@ -219,7 +234,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	protected:
 	CMYKUITab &tab;
 	ImageSource *src;
-	GdkPixbuf *pixbuf;
+	CachedImage *tempimage;
 	int page;
 	bool unrefondelete;
 };
@@ -845,7 +860,13 @@ CMYKUITab_View CMYKUITab::GetView()
 
 		CMYKTabDisplayMode mode=(CMYKTabDisplayMode)simplecombo_get_index(SIMPLECOMBO(displaymode));
 		Debug[TRACE] << "GetView: Using displaymode " << mode << endl;
-		CMYKUITab_View view(this,is->width,is->height,x,y,zoom,mode);
+//		CMYKUITab_View view(this,is->width,is->height,x,y,zoom,mode);
+		view.w=is->width;
+		view.h=is->height;
+		view.xpan=x;
+		view.ypan=y;
+		view.zoom=zoom;
+		view.displaymode=mode;
 		delete is;
 		return(view);
 	}

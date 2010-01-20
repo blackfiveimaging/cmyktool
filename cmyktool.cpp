@@ -100,7 +100,7 @@ class TestUI : public CMYKTool_Core
 	public:
 	TestUI();
 	~TestUI();
-	void BuildComboOpts(SimpleComboOptions &opts);
+	int BuildComboOpts(SimpleComboOptions &opts);  // Returns index of "Previous" option
 	void AddImage(const char *filename);
 	void ProcessImage(const char *filename);
 	static void combochanged(GtkWidget *wid,gpointer userdata);
@@ -156,7 +156,7 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 				gchar *filename=g_filename_from_uri(uri,NULL,NULL);
 
 				ui->AddImage(filename);
-				ui->ProcessImage(filename);
+//				ui->ProcessImage(filename);
 			}
 		}
 	}
@@ -206,11 +206,11 @@ TestUI::TestUI() : CMYKTool_Core()
 	// Presets
 
 	SimpleComboOptions opts;
-	BuildComboOpts(opts);
+	int previdx=BuildComboOpts(opts);
 	combo=simplecombo_new(opts);
 	gtk_box_pack_start(GTK_BOX(vbox),combo,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(combo),"changed",G_CALLBACK(combochanged),this);
-	simplecombo_set_index(SIMPLECOMBO(combo),1);
+	simplecombo_set_index(SIMPLECOMBO(combo),previdx);
 	combochanged(combo,this);	// Load previous settings.
 	gtk_widget_show(combo);
 
@@ -252,8 +252,14 @@ TestUI::~TestUI()
 
 #define PRESET_MAXCHARS 17
 
-void TestUI::BuildComboOpts(SimpleComboOptions &opts)
+// Builds a set of ComboOpts for the presets.
+// Returns the index of the special "Previous" item, if found.
+
+int TestUI::BuildComboOpts(SimpleComboOptions &opts)
 {
+	int previdx=0;
+	int idx=1;
+
 	char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
 	DirTreeWalker dtw(configdir);
 	const char *fn;
@@ -268,6 +274,9 @@ void TestUI::BuildComboOpts(SimpleComboOptions &opts)
 		if(!(dn && strlen(dn)>0))
 			dn=_("<unknown>");
 
+		if(strcmp(p.FindString("PresetID"),PRESET_PREVIOUS_ESCAPE)==0)
+			previdx=idx;
+
 		if(strlen(dn)<=PRESET_MAXCHARS)
 			opts.Add(fn,dn,dn);
 		else
@@ -279,10 +288,13 @@ void TestUI::BuildComboOpts(SimpleComboOptions &opts)
 			p[PRESET_MAXCHARS+3]=0;
 			opts.Add(fn,p,dn);
 		}
+		++idx;
 	}
 	free(configdir);
 
 	opts.Add(PRESET_OTHER_ESCAPE,_("Other..."),_("Create a new preset"),true);
+
+	return(previdx);
 }
 
 
