@@ -15,6 +15,8 @@
 #include "imageutils/tiffsave.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
+#include "imagesource/imagesource_montage.h"
+#include "imagesource/imagesource_gdkpixbuf.h"
 #include "imagesource/pixbuf_from_imagesource.h"
 
 #include "miscwidgets/pixbufview.h"
@@ -24,7 +26,12 @@
 #include "miscwidgets/errordialogqueue.h"
 #include "miscwidgets/uitab.h"
 #include "miscwidgets/simplecombo.h"
+#include "miscwidgets/pixbuf_from_imagedata.h"
 #include "progressbar.h"
+
+#include "gfx/rgb.cpp"
+#include "gfx/cmyk.cpp"
+#include "gfx/profile.cpp"
 
 #include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
@@ -115,6 +122,9 @@ class TestUI : public CMYKTool_Core
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	GtkWidget *combo;
+	GdkPixbuf *rgbpb;
+	GdkPixbuf *cmykpb;
+	GdkPixbuf *profpb;
 };
 
 
@@ -166,6 +176,10 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 TestUI::TestUI() : CMYKTool_Core()
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
+
+	rgbpb=PixbufFromImageData(rgb_data,sizeof(rgb_data));
+	cmykpb=PixbufFromImageData(cmyk_data,sizeof(cmyk_data));
+	profpb=PixbufFromImageData(profile_data,sizeof(profile_data));
 
 	window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(window),FindInt("Win_W"),FindInt("Win_H"));
@@ -247,6 +261,12 @@ TestUI::~TestUI()
 	p.Store(convopts);
 	p.SetString("DisplayName",_("Previous settings"));
 	p.Save(PRESET_PREVIOUS_ESCAPE);
+	if(rgbpb)
+		g_object_unref(G_OBJECT(rgbpb));
+	if(cmykpb)
+		g_object_unref(G_OBJECT(cmykpb));
+	if(profpb)
+		g_object_unref(G_OBJECT(profpb));
 }
 
 
@@ -391,7 +411,8 @@ void TestUI::AddImage(const char *filename)
 	Debug.SetLevel(TRACE);
 	try
 	{
-		ImageSource *is=ISLoadImage(filename);
+		ImageSource_Montage *mon=new ImageSource_Montage(IS_TYPE_RGB);
+ 		ImageSource *is=ISLoadImage(filename);
 		if(is)
 		{
 			int h=128;
@@ -403,11 +424,49 @@ void TestUI::AddImage(const char *filename)
 			}
 			is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
 
+			// We overlay icons depending on colourspace and whether there's an embedded profile.
+
+			// We check the colourspace before applying the conversion to the monitor's profile, since that's RGB!
+
+			ImageSource *profsymbol=NULL;
+			if(is->GetEmbeddedProfile())
+				profsymbol=new ImageSource_GdkPixbuf(profpb);
+
+			ImageSource *emblem=NULL;
+			switch(STRIP_ALPHA(is->type))
+			{
+				case IS_TYPE_RGB:
+					emblem=new ImageSource_GdkPixbuf(rgbpb);
+					break;
+				case IS_TYPE_CMYK:
+					emblem=new ImageSource_GdkPixbuf(cmykpb);
+					break;
+				default:
+					break;
+			}
+
 			CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
 			if(transform)
 				is=new ImageSource_CMS(is,transform);
 
-			GdkPixbuf *pb=pixbuf_from_imagesource(is);
+
+			if(is->width<128)
+			{
+				if(profsymbol)
+					mon->Add(profsymbol,0,35);
+				if(emblem)
+					mon->Add(emblem,0,10);
+				mon->Add(is,10,0);
+			}
+			else
+			{
+				if(profsymbol)
+					mon->Add(profsymbol,35,0);
+				if(emblem)
+					mon->Add(emblem,10,0);
+				mon->Add(is,0,10);
+			}
+			GdkPixbuf *pb=pixbuf_from_imagesource(mon);
 			if(pb)
 				imageselector_add_filename(IMAGESELECTOR(imgsel),filename,pb);
 		}

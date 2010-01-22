@@ -24,6 +24,7 @@
 #include "miscwidgets/generaldialogs.h"
 #include "miscwidgets/errordialogqueue.h"
 #include "miscwidgets/uitab.h"
+#include "miscwidgets/pixbuf_from_imagedata.h"
 #include "progressbar.h"
 
 #include "profilemanager/profilemanager.h"
@@ -298,22 +299,6 @@ class UITab_CacheJob : public Job
 ////// CMYKUITab member functions ///////
 
 
-static GdkPixbuf *GetPixbuf(const guint8 *data,size_t len)
-{
-	GdkPixdata pd;
-	GdkPixbuf *result;
-	GError *err;
-
-	if(!gdk_pixdata_deserialize(&pd,len,data,&err))
-		throw(err->message);
-
-	if(!(result=gdk_pixbuf_from_pixdata(&pd,false,&err)))
-		throw(err->message);
-
-	return(result);
-}
-
-
 static void setlinkedview(GtkWidget *widget,gpointer userdata)
 {
 	CMYKUITab_View *view=(CMYKUITab_View *)userdata;
@@ -374,8 +359,8 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	convopts(opts), filename(NULL), renderjob(NULL), chain1(NULL), chain2(NULL), view(this)
 {
 	// Get pixbufs for chain icon...
-	GdkPixbuf *chain1pb=GetPixbuf(chain1_data,sizeof(chain1_data));
-	GdkPixbuf *chain2pb=GetPixbuf(chain2_data,sizeof(chain2_data));
+	GdkPixbuf *chain1pb=PixbufFromImageData(chain1_data,sizeof(chain1_data));
+	GdkPixbuf *chain2pb=PixbufFromImageData(chain2_data,sizeof(chain2_data));
 
 	chain1=gtk_image_new_from_pixbuf(chain1pb);
 	chain2=gtk_image_new_from_pixbuf(chain2pb);
@@ -648,17 +633,7 @@ class UITab_SaveDialog
 
 		++row;
 
-		// Set default filename
-
-		char *tmpfn;
-		if(tab.convopts.GetOutputType()==IS_TYPE_CMYK)
-			tmpfn=BuildFilename(tab.filename,"-CMYK","jpg");
-		else
-			tmpfn=BuildFilename(tab.filename,"-exported","jpg");
-		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filechooser),g_path_get_dirname(tmpfn));
-		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filechooser),g_path_get_basename(tmpfn));
-		free(tmpfn);
-
+		FetchDefaults();
 
 		gtk_widget_show_all(dialog);
 		g_signal_connect(G_OBJECT(dialog),"response",G_CALLBACK(response),this);
@@ -694,6 +669,25 @@ class UITab_SaveDialog
 //			gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dlg->filechooser),newfn);
 			free(newfn);
 		}
+	}
+	void FetchDefaults()
+	{
+		// Set default filename
+
+		char *tmpfn;
+		if(tab.convopts.GetOutputType()==IS_TYPE_CMYK)
+			tmpfn=BuildFilename(tab.filename,"-CMYK","jpg");
+		else
+			tmpfn=BuildFilename(tab.filename,"-exported","jpg");
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filechooser),g_path_get_dirname(tmpfn));
+		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filechooser),g_path_get_basename(tmpfn));
+		free(tmpfn);
+
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(quality),95);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(embedprofile),true);
+	}
+	void StoreDefaults()
+	{
 	}
 	static void response(GtkDialog *dialog, gint responseid, gpointer userdata)
 	{
