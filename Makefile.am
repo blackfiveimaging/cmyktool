@@ -80,6 +80,13 @@ pixbufthumbnail/libpixbufthumbnail.la:
 	$(MAKE) libpixbufthumbnail.la
 
 
-EXTRA_DIST = COPYING README TODO
+desktopdir = $(datadir)/applications
+desktop_DATA = cmyktool.desktop
 
+icondir = $(datadir)/icons/hicolor/48x48/apps/
+icon_DATA = cmyktool.png
+
+
+
+EXTRA_DIST = COPYING README TODO cmyktool.desktop cmyktool.png
 

@@ -1,7 +1,8 @@
-Need to change the preset combo's position - it currently causes the image list to expand...
+| Need to change the preset combo's position - it currently causes the image list to expand...
+| (Solved by limiting the number of characters displayed from the preset's name)
 
-RGB images are not currently being proofed back to the monitor colour space.
-(Add a SimpleCombo to toggle between "Inspect", "Proof", "Proof, Adapt White")
+| RGB images are not currently being proofed back to the monitor colour space.
+| (Add a SimpleCombo to toggle between "Inspect", "Proof", "Proof, Adapt White")
 
 | Add a chain-link widget to the head of each tab.  Then toggling zoom or panning pixbufview will affect
 | all tabs with the link set.
@@ -14,7 +15,9 @@ File -> Open...
 File -> Quit
 Edit -> Preferences...
 
-Need to be able to set the source profile and other details conveniently.
+Need to be able to set the source profile and other details conveniently.  (Including overriding
+an embedded profile, if present.
+
 
 | Need to add a special "None" preset, so that an unmodified copy of the image can be inspected.
 
@@ -26,11 +29,12 @@ Need to be able to set the source profile and other details conveniently.
 |from which the description will be extracted.
 |(Can SimpleComboOption be changed so instead of a static array it builds a list?)
 
+
 Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
 
-| Need a "core" object which will contain paths for colour profiles and other miscellaneous settings.
 
-Need menus,
+
+| Need a "core" object which will contain paths for colour profiles and other miscellaneous settings.
 | and a dialog for setting core options.
 
 
@@ -38,13 +42,9 @@ Need menus,
 
 
 | Need a better solution for the channel selectors - maybe a row of togglebuttons each with the squiggle icon
-| in a different colour.  -  or maybe checkboxes with a coloured squiggle as a label?
+| in a different colour.  -  or maybe checkboxes with a coloured squiggle as a label?  (Settled on checkboxes
+| with smaller blobs as labels.)
 
-
-The second pane of the notebook will contain a preview of the original image.
-| The third pane of the notebook will contain a preview of the converted file.
-| This will need a cached version of the transformed CMYK data, because we will need checkboxes
-| for C, M, Y and K, so the plates can be dropped out for inspection of the result.
 
 | Also needs to support converting from CMYK to RGB.
 

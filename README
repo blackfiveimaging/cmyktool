@@ -1,0 +1,30 @@
+CMYKTool - a colour conversion utility
+Copyright (c) 2009 by Alastair M. Robinson
+
+CMYKTool is a new utility intended to build on the functionality of my old
+CMYK separation plugin for the GIMP.  The key features I needed and couldn't
+find elsewhere in a convenient single package are as follows:
+
+    * Convert images between ICC profiles.
+
+    * Support RGB and CMYK images as both input and output.
+
+    * When converting from RGB to CMYK, preserve pure black, preserve
+      pure grey, or attempt to underfill black to give a fake "overprint" effect.
+
+    * Images and their individual channels can be inspected
+
+    * As well as "inspect" mode, a soft proof mode to show how an image would
+      look when printed n screen of how an image would look when printed.
+
+    * Easy comparison of multiple images.  This means it must be possible to flip
+      between them with minimal screen redrawing, and zoom-and-pan settings must
+      be synchronized between multiple images.
+
+    * Save JPEG, TIFF (8- and 16-bit) with or without embedded profiles.
+
+In the fullness of time I also intend to add the functionality of ImgTarget to
+CMYKTool (or merge the two projects) since the side-by-side comparison of images
+produced with different settings would be particularly useful when experimenting
+with devicelinks.
+

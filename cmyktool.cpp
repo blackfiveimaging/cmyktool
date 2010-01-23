@@ -27,6 +27,9 @@
 #include "miscwidgets/uitab.h"
 #include "miscwidgets/simplecombo.h"
 #include "miscwidgets/pixbuf_from_imagedata.h"
+
+#include "pixbufthumbnail/egg-pixbuf-thumbnail.h"
+
 #include "progressbar.h"
 
 #include "gfx/rgb.cpp"
@@ -111,8 +114,9 @@ class TestUI : public CMYKTool_Core
 	void AddImage(const char *filename);
 	void ProcessImage(const char *filename);
 	static void combochanged(GtkWidget *wid,gpointer userdata);
-	static void processsingle(GtkWidget *wid,gpointer userdata);
-	static void batchprocess(GtkWidget *wid,gpointer userdata);
+	static void convert(GtkWidget *wid,gpointer userdata);
+	static void addimages(GtkWidget *wid,gpointer userdata);
+//	static void batchprocess(GtkWidget *wid,gpointer userdata);
 	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
 	static void showpreferencesdialog(GtkWidget *wid,gpointer userdata);
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
@@ -210,14 +214,36 @@ TestUI::TestUI() : CMYKTool_Core()
 	gtk_widget_show(vbox);
 
 
+	// Add Images button...
+	GtkWidget *tmp;
+
+	tmp=gtk_button_new_with_label(_("Add Images..."));
+	gtk_signal_connect (GTK_OBJECT (tmp), "clicked",
+		(GtkSignalFunc) addimages,this);
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+	gtk_widget_show(tmp);	
+
+
+	// ImageSelector
+
 	imgsel=imageselector_new(NULL,GTK_SELECTION_MULTIPLE,false);
 	gtk_signal_connect (GTK_OBJECT (imgsel), "double-clicked",
-		(GtkSignalFunc) processsingle,this);
+		(GtkSignalFunc) convert,this);
 	gtk_box_pack_start(GTK_BOX(vbox),imgsel,TRUE,TRUE,0);
 	gtk_widget_show(imgsel);
 
 
+	// Convert button...
+
+
+	tmp=gtk_button_new_with_label("Convert");
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(convert),this);
+	gtk_widget_show(tmp);
+
+
 	// Presets
+
 
 	SimpleComboOptions opts;
 	int previdx=BuildComboOpts(opts);
@@ -228,7 +254,16 @@ TestUI::TestUI() : CMYKTool_Core()
 	combochanged(combo,this);	// Load previous settings.
 	gtk_widget_show(combo);
 
-	GtkWidget *tmp=gtk_button_new_with_label("Preferences...");
+
+	tmp=gtk_hseparator_new();
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,4);
+	gtk_widget_show(tmp);
+
+
+	// Preferences button
+
+
+	tmp=gtk_button_new_with_label("Preferences...");
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showpreferencesdialog),this);
 	gtk_widget_show(tmp);
@@ -324,7 +359,7 @@ void TestUI::ProcessImage(const char *filename)
 }
 
 
-void TestUI::processsingle(GtkWidget *wid,gpointer userdata)
+void TestUI::convert(GtkWidget *wid,gpointer userdata)
 {
 	try
 	{
@@ -371,6 +406,7 @@ void TestUI::combochanged(GtkWidget *wid,gpointer userdata)
 }
 
 
+#if 0
 void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
 {
 	try
@@ -389,6 +425,79 @@ void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
 	{
 		ErrorDialogs.AddMessage(err);
 	}
+}
+#endif
+
+
+
+// Preview widget for file chooser
+
+static void updatepreview(GtkWidget *fc,void *ud)
+{
+	GtkWidget *preview=GTK_WIDGET(ud);
+	gchar *fn=gtk_file_chooser_get_preview_filename(GTK_FILE_CHOOSER(fc));
+	bool active=false;
+	if(fn)
+	{
+		GError *err=NULL;
+		GdkPixbuf *pb=egg_pixbuf_get_thumbnail_for_file(fn,EGG_PIXBUF_THUMBNAIL_NORMAL,&err);
+		if(pb)
+		{
+			gtk_image_set_from_pixbuf(GTK_IMAGE(preview),pb);
+			g_object_unref(pb);
+			active=true;		
+		}	
+	}
+	gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(fc),active);
+}
+
+
+void TestUI::addimages(GtkWidget *wid,gpointer userdata)
+{
+	TestUI *ui=(TestUI *)userdata;
+
+	GtkWidget *sel = gtk_file_chooser_dialog_new (_("Open File"),
+		GTK_WINDOW(GTK_WINDOW(ui->window)),
+		GTK_FILE_CHOOSER_ACTION_OPEN,
+		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+		GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+		NULL);
+
+	gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(sel),TRUE);
+//	if(ui->prevfile)
+//		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(sel),ui->prevfile);
+//	else
+//	{
+#ifdef WIN32
+		char *dirname=substitute_homedir("$HOME\\My Documents\\My Pictures");
+#else
+		char *dirname=substitute_homedir("$HOME");
+#endif
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(sel),dirname);	
+//	}
+//	g_free(ui->prevfile);
+//	ui->prevfile=NULL;
+
+	GtkWidget *preview=gtk_image_new();
+	gtk_file_chooser_set_preview_widget(GTK_FILE_CHOOSER(sel),GTK_WIDGET(preview));
+	g_signal_connect(G_OBJECT(sel),"selection-changed",G_CALLBACK(updatepreview),preview);
+
+	if (gtk_dialog_run (GTK_DIALOG (sel)) == GTK_RESPONSE_ACCEPT)
+	{
+		GSList *filenames=gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(sel));
+		GSList *current=filenames;
+
+		if(filenames)
+		{
+			while(current)
+			{
+				ui->AddImage((char *)current->data);
+				current=g_slist_next(current);
+			}
+			g_slist_free(filenames);
+		}
+	}
+	gtk_widget_destroy (sel);
 }
 
 
@@ -482,7 +591,7 @@ int main(int argc,char **argv)
 {
 	gtk_init(&argc,&argv);
 
-	Debug.SetLevel(TRACE);
+	Debug.SetLevel(WARN);
 
 	char *configdir=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool");
 	CreateDirIfNeeded(configdir);
