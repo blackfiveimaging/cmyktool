@@ -4,10 +4,56 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkpixbuf.h>
 #include "miscwidgets/uitab.h"
+#include "miscwidgets/spinner.h"
 #include "conversionopts.h"
+#include "support/debug.h"
 
 
 enum CMYKTabDisplayMode {CMYKDISPLAY_INSPECT,CMYKDISPLAY_PROOF_ADAPT_WHITE,CMYKDISPLAY_PROOF};
+
+
+// Class to provide a spinner widget that can be shown and hidden.
+// Autonomously spins by way of a timeout function, which avoids thread issues.
+
+class TabSpinner : public Spinner
+{
+	public:
+	TabSpinner() : Spinner(), active(false), shown(false), frame(0)
+	{
+		gtk_widget_hide(GetWidget());
+	}
+	void Start()
+	{
+		active=true;
+		g_timeout_add(100,timeoutfunc,this);
+	}
+	void Stop()
+	{
+		active=false;
+	}
+	protected:
+	static gboolean timeoutfunc(gpointer userdata)
+	{
+		TabSpinner *s=(TabSpinner *)userdata;
+		if(!s->shown)
+		{
+			gtk_widget_show(s->GetWidget());
+			s->shown=true;
+		}
+
+		s->frame=(s->frame+1)&7;
+		s->SetFrame(s->frame);
+		if(!s->active)
+		{
+			gtk_widget_hide(s->GetWidget());
+			s->shown=false;
+		}
+		return(s->active);
+	}
+	bool active;
+	bool shown;
+	int frame;
+};
 
 
 ////// Class to hold view parameters - used for linking tabs with chain button
@@ -76,6 +122,7 @@ class CMYKUITab : public UITab
 	GtkWidget *chain1;
 	GtkWidget *chain2;
 	CMYKUITab_View view;	// A saved view which is applied when a rendering job finishes
+	TabSpinner spinner;
 	friend class UITab_CacheJob;
 	friend class UITab_RenderJob;
 	friend class UITab_SaveDialog;

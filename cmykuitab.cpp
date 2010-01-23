@@ -25,6 +25,7 @@
 #include "miscwidgets/errordialogqueue.h"
 #include "miscwidgets/uitab.h"
 #include "miscwidgets/pixbuf_from_imagedata.h"
+#include "miscwidgets/spinner.h"
 #include "progressbar.h"
 
 #include "profilemanager/profilemanager.h"
@@ -44,6 +45,7 @@
 
 
 using namespace std;
+
 
 
 ////////////// ImageSource to filter by colorant mask //////////////
@@ -131,6 +133,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	}
 	void Run(Worker *w)
 	{
+		tab.spinner.Start();
 		CMTransformWorker *cw=(CMTransformWorker *)w;
 
 		unrefondelete=false;	// Once the job has definitely started it can handle unref.
@@ -193,6 +196,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			Debug[TRACE] << endl << "Adding reference from RenderJob Run() - no pixbuf created" << endl;
 			tab.UnRef();
 		}
+		tab.spinner.Stop();
 	}
 	static gboolean CleanupFunc(gpointer ud)
 	{
@@ -263,6 +267,7 @@ class UITab_CacheJob : public Job
 	}
 	void Run(Worker *w)
 	{
+		tab.spinner.Start();
 		CMTransformWorker *cw=(CMTransformWorker *)w;
 
 		unrefondelete=false;	// Once the job has definitely been started it can handle the unref.
@@ -288,6 +293,7 @@ class UITab_CacheJob : public Job
 		}
 		Debug[TRACE] << endl << "Adding reference from the end of CacheJob Run method" << endl;
 		tab.UnRef();	// Release the reference obtained when the job was created.
+		tab.spinner.Stop();
 	}
 	protected:
 	CMYKUITab &tab;
@@ -356,7 +362,7 @@ void CMYKUITab::DisplayModeChanged(GtkWidget *widget,gpointer userdata)
 
 CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename)
 	: UITab(notebook),  parent(parent), dispatcher(dispatcher), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(opts), filename(NULL), renderjob(NULL), chain1(NULL), chain2(NULL), view(this)
+	convopts(opts), filename(NULL), renderjob(NULL), chain1(NULL), chain2(NULL), view(this), spinner()
 {
 	// Get pixbufs for chain icon...
 	GdkPixbuf *chain1pb=PixbufFromImageData(chain1_data,sizeof(chain1_data));
@@ -374,6 +380,8 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	gtk_widget_show(chain1);
 
 	AddTabButton(linkbutton);
+
+	AddTabWidget(spinner.GetWidget());
 
 	hbox=GetBox();
 //	g_signal_connect(G_OBJECT(hbox),"motion-notify-event",G_CALLBACK(mousemove),this);
