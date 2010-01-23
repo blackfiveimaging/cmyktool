@@ -244,6 +244,9 @@ TestUI::TestUI() : CMYKTool_Core()
 
 	// Presets
 
+	tmp=gtk_label_new(_("Using conversion preset:"));
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+	gtk_widget_show(tmp);
 
 	SimpleComboOptions opts;
 	int previdx=BuildComboOpts(opts);
@@ -256,7 +259,7 @@ TestUI::TestUI() : CMYKTool_Core()
 
 
 	tmp=gtk_hseparator_new();
-	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,4);
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,8);
 	gtk_widget_show(tmp);
 
 
@@ -487,17 +490,36 @@ void TestUI::addimages(GtkWidget *wid,gpointer userdata)
 		GSList *filenames=gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(sel));
 		GSList *current=filenames;
 
+		gtk_widget_destroy (sel);
+
+		ProgressBar *prog=new ProgressBar(_("Adding images..."),true,ui->window);
+
+		int count=0;
+		while(current)
+		{
+			++count;
+			current=g_slist_next(current);
+		}
+
+		int c=0;
+		current=filenames;
 		if(filenames)
 		{
 			while(current)
 			{
+				if(!prog->DoProgress(c,count))
+					break;
 				ui->AddImage((char *)current->data);
 				current=g_slist_next(current);
+				++c;
 			}
 			g_slist_free(filenames);
 		}
+
+		delete prog;
 	}
-	gtk_widget_destroy (sel);
+	else
+		gtk_widget_destroy (sel);
 }
 
 
