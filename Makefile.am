@@ -11,6 +11,8 @@ AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -
 noinst_LTLIBRARIES = libdeflatten.la libdeflattenui.la
 
 libdeflatten_la_SOURCES = \
+	cmyktool_core.cpp \
+	cmyktool_core.h \
 	conversionopts.cpp \
 	conversionopts.h \
 	cmtransformworker.h	\

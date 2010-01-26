@@ -5,7 +5,6 @@
 #include <gtk/gtk.h>
 
 #include "support/debug.h"
-#include "support/jobqueue.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
 #include "support/pathsupport.h"
@@ -14,6 +13,7 @@
 
 #include "imageutils/tiffsave.h"
 #include "imagesource/imagesource_util.h"
+#include "imagesource/imagesource_promote.h"
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/imagesource_montage.h"
 #include "imagesource/imagesource_gdkpixbuf.h"
@@ -36,14 +36,13 @@
 #include "gfx/cmyk.cpp"
 #include "gfx/profile.cpp"
 
-#include "profilemanager/profilemanager.h"
 #include "cachedimage.h"
-#include "dialogs.h"
 
 #include "conversionopts.h"
-#include "cmtransformworker.h"
 #include "conversionoptsdialog.h"
 
+#include "cmyktool_core.h"
+#include "dialogs.h"
 #include "cmykuitab.h"
 
 #include "config.h"
@@ -56,63 +55,16 @@ using namespace std;
 
 class UITab_RenderThread;
 
-class CMYKTool_Core : public ConfigFile, public ConfigDB
-{
-	public:
-	CMYKTool_Core() : ConfigFile(), ConfigDB(Template), profilemanager(this,"[ColourManagement]"),
-		dispatcher(0),factory(profilemanager), convopts(profilemanager)
-	{
-		new ConfigDBHandler(this,"[CMYKTool]",this);
-		profilemanager.SetInt("DefaultCMYKProfileActive",1);
-
-		char *fn=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool/cmyktool.conf");
-		ParseConfigFile(fn);
-		confname=fn;
-		free(fn);
-
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-	}
-	~CMYKTool_Core()
-	{
-	}
-	void ProcessImage(const char *filename)
-	{
-		cerr << "*** Processing image" << endl;
-	}
-	void SaveConfig()
-	{
-		SaveConfigFile(confname.c_str());
-	}
-	protected:
-	ProfileManager profilemanager;
-	JobDispatcher dispatcher;
-	CMTransformFactory factory;
-	CMYKConversionOptions convopts;
-	string confname;
-	static ConfigTemplate Template[];
-};
-
-
-ConfigTemplate CMYKTool_Core::Template[]=
-{
-	ConfigTemplate("Win_X",20),
-	ConfigTemplate("Win_Y",20),
-	ConfigTemplate("Win_W",600),
-	ConfigTemplate("Win_H",400),
-	ConfigTemplate()
-};
-
 
 class TestUI : public CMYKTool_Core
 {
 	public:
 	TestUI();
-	~TestUI();
+	virtual ~TestUI();
 	int BuildComboOpts(SimpleComboOptions &opts);  // Returns index of "Previous" option
 	void AddImage(const char *filename);
-	void ProcessImage(const char *filename);
+	virtual void ProcessImage(const char *filename);
+	virtual void SaveConfig();
 	static void combochanged(GtkWidget *wid,gpointer userdata);
 	static void convert(GtkWidget *wid,gpointer userdata);
 	static void addimages(GtkWidget *wid,gpointer userdata);
@@ -307,6 +259,23 @@ TestUI::~TestUI()
 		g_object_unref(G_OBJECT(profpb));
 }
 
+
+void TestUI::SaveConfig()
+{
+	if(window)
+	{
+		gint x,y,w,h;
+		gtk_window_get_position(GTK_WINDOW(window),&x,&y);
+		gtk_window_get_size(GTK_WINDOW(window),&w,&h);
+
+		SetInt("Win_X",x);
+		SetInt("Win_Y",y);
+		SetInt("Win_W",w);
+		SetInt("Win_H",h);
+	}
+
+	CMYKTool_Core::SaveConfig();
+}
 
 #define PRESET_MAXCHARS 17
 
@@ -533,7 +502,7 @@ void TestUI::showconversiondialog(GtkWidget *wid,gpointer userdata)
 void TestUI::showpreferencesdialog(GtkWidget *wid,gpointer userdata)
 {
 	TestUI *ui=(TestUI *)userdata;
-	PreferencesDialog(GTK_WINDOW(ui->window),ui->profilemanager);
+	PreferencesDialog(GTK_WINDOW(ui->window),*ui);
 }
 
 
@@ -554,6 +523,9 @@ void TestUI::AddImage(const char *filename)
 				h=(is->height*w)/is->width;
 			}
 			is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
+
+			if(STRIP_ALPHA(is->type==IS_TYPE_GREY))
+				is=new ImageSource_Promote(is,IS_TYPE_RGB);
 
 			// We overlay icons depending on colourspace and whether there's an embedded profile.
 
@@ -614,6 +586,10 @@ int main(int argc,char **argv)
 	gtk_init(&argc,&argv);
 
 	Debug.SetLevel(WARN);
+
+	bindtextdomain(PACKAGE,LOCALEDIR);
+	bind_textdomain_codeset(PACKAGE, "UTF-8");
+	textdomain(PACKAGE);
 
 	char *configdir=substitute_xdgconfighome("$XDG_CONFIG_HOME/cmyktool");
 	CreateDirIfNeeded(configdir);

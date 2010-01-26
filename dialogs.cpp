@@ -64,7 +64,7 @@ static void paths_changed(GtkWidget *widget,gpointer user_data)
 }
 
 
-void PreferencesDialog(GtkWindow *parent,ProfileManager &pm)
+void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 {
 	GtkWidget *dialog;
 	GtkWidget *notebook;
@@ -74,6 +74,8 @@ void PreferencesDialog(GtkWindow *parent,ProfileManager &pm)
 	GtkWidget *label;
 //	GtkWidget *argyllpath_tg;
 //	GtkWidget *argyllpath_il;
+
+	ProfileManager &pm=core.GetProfileManager();
 
 	char *savedpaths=pm.GetPaths();
 
@@ -240,11 +242,11 @@ void PreferencesDialog(GtkWindow *parent,ProfileManager &pm)
 				free(tmppaths);
 //				pm.settings.SetString("ArgyllPath_TIFFGamut",gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(argyllpath_tg)));
 //				pm.settings.SetString("ArgyllPath_ICCLink",gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(argyllpath_il)));
-//				if(result==RESPONSE_SAVE)
-//				{
-//					pm.SaveGeometry();
-//					pm.SaveConfigFile();
-//				}
+				if(result==RESPONSE_SAVE)
+				{
+//					core.SaveGeometry();
+					core.SaveConfig();
+				}
 				break;
 		}
 	}

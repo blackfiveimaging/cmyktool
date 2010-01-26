@@ -62,10 +62,10 @@ MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
 
-POFILES = 
-GMOFILES = 
-UPDATEPOFILES = 
-DUMMYPOFILES = 
+POFILES =  ru.po
+GMOFILES =  ru.gmo
+UPDATEPOFILES =  ru.po-update
+DUMMYPOFILES =  ru.nop
 DISTFILES.common = Makefile.in.in remove-potcdate.sin \
 $(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
 DISTFILES = $(DISTFILES.common) Makevars POTFILES.in \
@@ -73,8 +73,33 @@ $(POFILES) $(GMOFILES) \
 $(DISTFILES.extra1) $(DISTFILES.extra2) $(DISTFILES.extra3)
 
 POTFILES = \
+     ../cmyktool.cpp \
+     ../cmykuitab.cpp \
+     ../conversionopts.cpp \
+     ../conversionoptsdialog.cpp \
+     ../convertcmyk.cpp \
+     ../decompose.cpp \
+     ../deflatten.cpp \
+     ../dialogs.cpp \
+     ../imagesource_combine.cpp \
+     ../imagesource_deflatten.cpp \
+     ../imagesource_extractchannel.cpp \
+     ../imagesource_flatten.cpp \
+     ../imagesource/imagesource_util.cpp \
+     ../miscwidgets/imageselector.cpp \
+     ../miscwidgets/patheditor.cpp \
+     ../miscwidgets/progressbar.cpp \
+     ../pixbufthumbnail/egg-pixbuf-thumbnail.c \
+     ../profilemanager/lcmswrapper.cpp \
+     ../profilemanager/profilemanager.cpp \
+     ../profilemanager/profileselector.cpp \
+     ../psrip_core.cpp \
+     ../psrip.cpp \
+     ../psripui.cpp \
+     ../queuetest.cpp \
+     ../recombine.cpp
 
-CATALOGS = 
+CATALOGS =  ru.gmo
 
 # Makevars gets inserted here. (Don't remove this line!)
 # Makefile variables for PO directory in any package using GNU gettext.
@@ -459,7 +484,7 @@ $(DUMMYPOFILES):
 update-gmo: Makefile $(GMOFILES)
 	@:
 
-Makefile: Makefile.in.in Makevars $(top_builddir)/config.status POTFILES.in
+Makefile: Makefile.in.in Makevars $(top_builddir)/config.status POTFILES.in LINGUAS
 	cd $(top_builddir) \
 	  && $(SHELL) ./config.status $(subdir)/$@.in po-directories
 
