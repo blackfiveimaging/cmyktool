@@ -57,7 +57,7 @@ bool ParseOptions(int argc,char *argv[],CMYKConversionOptions &options)
 				printf("\t -h --help\t\tdisplay this message\n");
 				printf("\t -v --version\t\tdisplay version\n");
 				printf("\t -i --inputprofile\t\tSource (RGB) profile\n");
-				printf("\t -o --outputprofile\t\tSource (CMYK) profile\n");
+				printf("\t -o --outputprofile\t\tOutput (CMYK) profile\n");
 				printf("\t -b --preserveblack\t\tPreserve pure black pixels\n");
 				printf("\t -f --overprintblack\t\tFill in background behind black pixels\n");
 				printf("\t -g --preservegrey\t\tRestrict grey pixels to the black plate\n");
@@ -78,7 +78,7 @@ bool ParseOptions(int argc,char *argv[],CMYKConversionOptions &options)
 				options.SetMode(CMYKCONVERSIONMODE_HOLDGREY);
 				break;
 			case 'i':
-				options.SetInProfile(optarg);
+				options.SetInRGBProfile(optarg);
 				break;
 			case 'o':
 				options.SetOutProfile(optarg);

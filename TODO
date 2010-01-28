@@ -9,6 +9,10 @@
 
 | Add a button or menu item to invoke preferences.
 
+Use a separate fallback RGB and CMYK profile in the conversionopts.  This should solve the issue with devicelinks.
+
+Add "Ignore embedded profile" checkbox.
+
 Menus:
 
 File -> Open...

@@ -104,62 +104,94 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 	gtk_widget_show(GTK_WIDGET(profilepage));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),GTK_WIDGET(profilepage),GTK_WIDGET(label));
 
+
 	GtkWidget *table=gtk_table_new(2,4,FALSE);
 	gtk_container_set_border_width(GTK_CONTAINER(table),8);
 	gtk_table_set_col_spacing(GTK_TABLE(table),0,10);
 	gtk_table_set_row_spacings(GTK_TABLE(table),8);
-	gtk_box_pack_start(GTK_BOX(profilepage),table,FALSE,FALSE,5);
+	gtk_box_pack_start(GTK_BOX(profilepage),table,TRUE,TRUE,5);
 	gtk_widget_show(table);
 
+	int row=0;
 
+	// Paths...
+
+	label=gtk_label_new(_("ICC colour profile paths"));
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	gtk_table_attach(GTK_TABLE(table),label,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
+	gtk_widget_show(label);
+
+	++row;
+
+
+	GtkAttachOptions gao = (GtkAttachOptions)(GTK_EXPAND|GTK_FILL);
+	dd.patheditor = patheditor_new(&pm);
+	g_signal_connect(dd.patheditor,"changed",G_CALLBACK(paths_changed),&dd);
+	gtk_table_attach(GTK_TABLE(table),dd.patheditor,0,2,row,row+1,gao,gao,0,0);
+	gtk_widget_show(dd.patheditor);
+
+	++row;
+
+
+
+	// Profiles...
+
+#if 0
 	dd.rgbactive=gtk_check_button_new_with_label(_("Default RGB Profile:"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dd.rgbactive),pm.FindInt("DefaultRGBProfileActive"));
 	g_signal_connect(G_OBJECT(dd.rgbactive),"toggled",G_CALLBACK(checkbox_changed),&dd);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.rgbactive,0,1,0,1);
+	gtk_table_attach_defaults(GTK_TABLE(table),dd.rgbactive,0,1,row,row+1);
 	gtk_widget_show(dd.rgbactive);
 
 	dd.rgbprof=profileselector_new(&pm,IS_TYPE_RGB,false);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.rgbprof,1,2,0,1);
+	gtk_table_attach_defaults(GTK_TABLE(table),dd.rgbprof,1,2,row,row+1);
 	gtk_widget_show(dd.rgbprof);
 	profileselector_set_filename(PROFILESELECTOR(dd.rgbprof),pm.FindString("DefaultRGBProfile"));
+
+	++row;
 
 
 	dd.cmykactive=gtk_check_button_new_with_label(_("Default CMYK Profile:"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dd.cmykactive),pm.FindInt("DefaultCMYKProfileActive"));
 	g_signal_connect(G_OBJECT(dd.cmykactive),"toggled",G_CALLBACK(checkbox_changed),&dd);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.cmykactive,0,1,1,2);
+	gtk_table_attach_defaults(GTK_TABLE(table),dd.cmykactive,0,1,row,row+1);
 	gtk_widget_show(dd.cmykactive);
 
 	dd.cmykprof=profileselector_new(&pm,IS_TYPE_CMYK,false);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.cmykprof,1,2,1,2);
+	gtk_table_attach_defaults(GTK_TABLE(table),dd.cmykprof,1,2,row,row+1);
 	gtk_widget_show(dd.cmykprof);
 	profileselector_set_filename(PROFILESELECTOR(dd.cmykprof),pm.FindString("DefaultCMYKProfile"));
 
+	++row;
+#endif
 
 	dd.monactive=gtk_check_button_new_with_label(_("Monitor Profile:"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dd.monactive),pm.FindInt("MonitorProfileActive"));
 	g_signal_connect(G_OBJECT(dd.monactive),"toggled",G_CALLBACK(checkbox_changed),&dd);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.monactive,0,1,2,3);
+	gtk_table_attach(GTK_TABLE(table),dd.monactive,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
 	gtk_widget_show(dd.monactive);
 
 	dd.monprof=profileselector_new(&pm,IS_TYPE_RGB,false);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.monprof,1,2,2,3);
+	gtk_table_attach(GTK_TABLE(table),dd.monprof,1,2,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
 	gtk_widget_show(dd.monprof);
 	profileselector_set_filename(PROFILESELECTOR(dd.monprof),pm.FindString("MonitorProfile"));
 
+	++row;
 
+#if 0
 	dd.outputactive=gtk_check_button_new_with_label(_("Default Output Profile:"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(dd.outputactive),pm.FindInt("PrinterProfileActive"));
 	g_signal_connect(G_OBJECT(dd.outputactive),"toggled",G_CALLBACK(checkbox_changed),&dd);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.outputactive,0,1,3,4);
+	gtk_table_attach_defaults(GTK_TABLE(table),dd.outputactive,0,1,row,row+1);
 	gtk_widget_show(dd.outputactive);
 
 	dd.outputprof=profileselector_new(&pm,IS_TYPE_NULL,false);
-	gtk_table_attach_defaults(GTK_TABLE(table),dd.outputprof,1,2,3,4);
+	gtk_table_attach_defaults(GTK_TABLE(table),dd.outputprof,1,2,row,row+1);
 	gtk_widget_show(dd.outputprof);
 	profileselector_set_filename(PROFILESELECTOR(dd.outputprof),pm.FindString("PrinterProfile"));
+#endif
 
-
+#if 0
 	// Paths page:
 
 	label=gtk_label_new(_("Paths"));
@@ -169,19 +201,7 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 	gtk_widget_show(GTK_WIDGET(pathspage));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),GTK_WIDGET(pathspage),GTK_WIDGET(label));
 
-	vbox=gtk_vbox_new(FALSE,0);
-	gtk_box_pack_start(GTK_BOX(pathspage),vbox,TRUE,TRUE,8);
-	gtk_widget_show(vbox);
-
-	label=gtk_label_new(_("ICC colour profile paths"));
-	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
-	gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,8);
-	gtk_widget_show(label);
-
-	dd.patheditor = patheditor_new(&pm);
-	g_signal_connect(dd.patheditor,"changed",G_CALLBACK(paths_changed),&dd);
-	gtk_box_pack_start(GTK_BOX(vbox),dd.patheditor,TRUE,TRUE,0);
-	gtk_widget_show(dd.patheditor);
+#endif
 
 
 #if 0
@@ -229,14 +249,14 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 			case GTK_RESPONSE_OK:
 			case RESPONSE_SAVE:
 				done=true;
-				pm.SetString("DefaultRGBProfile",profileselector_get_filename(PROFILESELECTOR(dd.rgbprof)));
-				pm.SetString("DefaultCMYKProfile",profileselector_get_filename(PROFILESELECTOR(dd.cmykprof)));
+//				pm.SetString("DefaultRGBProfile",profileselector_get_filename(PROFILESELECTOR(dd.rgbprof)));
+//				pm.SetString("DefaultCMYKProfile",profileselector_get_filename(PROFILESELECTOR(dd.cmykprof)));
 				pm.SetString("MonitorProfile",profileselector_get_filename(PROFILESELECTOR(dd.monprof)));
-				pm.SetString("PrinterProfile",profileselector_get_filename(PROFILESELECTOR(dd.outputprof)));
-				pm.SetInt("DefaultRGBProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.rgbactive)));
-				pm.SetInt("DefaultCMYKProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.cmykactive)));
+//				pm.SetString("PrinterProfile",profileselector_get_filename(PROFILESELECTOR(dd.outputprof)));
+//				pm.SetInt("DefaultRGBProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.rgbactive)));
+//				pm.SetInt("DefaultCMYKProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.cmykactive)));
 				pm.SetInt("MonitorProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.monactive)));
-				pm.SetInt("PrinterProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.outputactive)));
+//				pm.SetInt("PrinterProfileActive",gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dd.outputactive)));
 				char *tmppaths=pm.GetPaths();
 				pm.SetString("ProfilePath",tmppaths);
 				free(tmppaths);
@@ -244,7 +264,6 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 //				pm.settings.SetString("ArgyllPath_ICCLink",gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(argyllpath_il)));
 				if(result==RESPONSE_SAVE)
 				{
-//					core.SaveGeometry();
 					core.SaveConfig();
 				}
 				break;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 
+#include "support/debug.h"
 #include "support/util.h"
 #include "support/pathsupport.h"
 #include "support/configdb.h"
@@ -20,8 +21,10 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 {
 	ConfigTemplate("PresetID",PRESET_PREVIOUS_ESCAPE),
 	ConfigTemplate("DisplayName","unnamed preset"),
-	ConfigTemplate("InProfile",BUILTINSRGB_ESCAPESTRING),
+	ConfigTemplate("InRGBProfile",BUILTINSRGB_ESCAPESTRING),
+	ConfigTemplate("InCMYKProfile","USWebCoatedSWOP.icc"),
 	ConfigTemplate("OutProfile","USWebCoatedSWOP.icc"),
+	ConfigTemplate("IgnoreEmbedded",0),
 	ConfigTemplate("Intent",0),
 	ConfigTemplate("Mode",1),
 	ConfigTemplate()
@@ -29,13 +32,15 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 
 
 CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm)
-	: profilemanager(pm), inprofile("sRGB Color Space Profile.icm"), outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL)
+	: profilemanager(pm), inrgbprofile("sRGB Color Space Profile.icm"), incmykprofile("USWebCoatedSWOP.icc"),
+	outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL), ignoreembedded(false)
 {
 }
 
 
 CMYKConversionOptions::CMYKConversionOptions(const CMYKConversionOptions &other)
-	: profilemanager(other.profilemanager), inprofile(other.inprofile), outprofile(other.outprofile), intent(other.intent), mode(other.mode)
+	: profilemanager(other.profilemanager), inrgbprofile(other.inrgbprofile), incmykprofile(other.incmykprofile),
+	outprofile(other.outprofile), intent(other.intent), mode(other.mode), ignoreembedded(false)
 {
 }
 
@@ -49,8 +54,10 @@ CMYKConversionOptions &CMYKConversionOptions::operator=(const CMYKConversionOpti
 {
 	mode=other.mode;
 	intent=other.intent;
-	inprofile=other.inprofile;
+	inrgbprofile=other.inrgbprofile;
+	incmykprofile=other.incmykprofile;
 	outprofile=other.outprofile;
+	ignoreembedded=other.ignoreembedded;
 	return(*this);
 }
 
@@ -67,9 +74,21 @@ CMYKConversionMode CMYKConversionOptions::GetMode()
 }
 
 
-const char *CMYKConversionOptions::GetInProfile()
+bool CMYKConversionOptions::GetIgnoreEmbedded()
 {
-	return(inprofile.c_str());
+	return(ignoreembedded);
+}
+
+
+const char *CMYKConversionOptions::GetInRGBProfile()
+{
+	return(inrgbprofile.c_str());
+}
+
+
+const char *CMYKConversionOptions::GetInCMYKProfile()
+{
+	return(incmykprofile.c_str());
 }
 
 
@@ -91,10 +110,23 @@ void CMYKConversionOptions::SetMode(CMYKConversionMode mode)
 }
 
 
-void CMYKConversionOptions::SetInProfile(const char *in)
+void CMYKConversionOptions::SetIgnoreEmbedded(bool ignore)
+{
+	ignoreembedded=ignore;
+}
+
+
+void CMYKConversionOptions::SetInRGBProfile(const char *in)
 {
 	if(in)
-		inprofile=string(in);
+		inrgbprofile=string(in);
+}
+
+
+void CMYKConversionOptions::SetInCMYKProfile(const char *in)
+{
+	if(in)
+		incmykprofile=string(in);
 }
 
 
@@ -135,47 +167,77 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
 		src=new ImageSource_Promote(src,IS_TYPE_RGB);
 
-	cerr << "Opening profile: " << inprofile << endl;
-
 	bool freeinprof=false;
-	CMSProfile *inprof=src->GetEmbeddedProfile();
+	CMSProfile *inprof=NULL;
+	if(!ignoreembedded)
+		inprof=src->GetEmbeddedProfile();
 	if(!inprof)
 	{
 		freeinprof=true;
-		inprof=profilemanager.GetProfile(inprofile.c_str());
+		switch(STRIP_ALPHA(src->type))
+		{
+			case IS_TYPE_RGB:
+				inprof=profilemanager.GetProfile(inrgbprofile.c_str());
+				break;
+			case IS_TYPE_CMYK:
+				inprof=profilemanager.GetProfile(incmykprofile.c_str());
+				break;
+			default:
+				throw "Image type not (yet) supported";
+				break;
+		}
 		if(!inprof)
 			throw "Can't open input profile";
 	}
 
-	if(inprof->IsDeviceLink())
+	Debug[TRACE] << "Opening profile: " << outprofile << endl;
+	CMSProfile *outprof=profilemanager.GetProfile(outprofile.c_str());
+	if(!outprof)
+		throw "Can't open output profile";
+
+	if(outprof->IsDeviceLink())
 	{
-		cerr << "Using DeviceLink profile" << endl;
+		Debug[TRACE] << "Using DeviceLink profile" << endl;
 		if(factory)
 		{
-			CMSTransform *trans=factory->GetTransform(NULL,inprof,intent);
+			Debug[TRACE] << "Getting transform from factory" << endl;
+			CMSTransform *trans=factory->GetTransform(outprof,NULL,intent);
 			if(trans)
 				src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
 		}
 		else
-			src=new ImageSource_Deflatten(src,inprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+			src=new ImageSource_Deflatten(src,outprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+
+		CMSProfile *embprof=NULL;
+
+		switch(STRIP_ALPHA(src->type))
+		{
+			case IS_TYPE_RGB:
+				embprof=profilemanager.GetProfile(inrgbprofile.c_str());
+				Debug[TRACE] << "Using default RGB profile to embed, since output profile is a DeviceLink" << endl;
+				break;
+			case IS_TYPE_CMYK:
+				embprof=profilemanager.GetProfile(incmykprofile.c_str());
+				Debug[TRACE] << "Using default CMYK profile to embed, since output profile is a DeviceLink" << endl;
+				break;
+			default:
+				throw "Image type not (yet) supported";
+				break;
+		}
+		src->SetEmbeddedProfile(embprof,true);
+		delete outprof;
 	}
 	else
 	{
-		cerr << "Opening profile: " << outprofile << endl;
-		CMSProfile *out=profilemanager.GetProfile(outprofile.c_str());
-		if(!out)
-			throw "Can't open output profile";
 		if(factory)
 		{
-			CMSTransform *trans=factory->GetTransform(out,inprof,intent);
+			CMSTransform *trans=factory->GetTransform(outprof,inprof,intent);
 			if(trans)
 				src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
 		}
 		else
-			src=new ImageSource_Deflatten(src,inprof,out,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
-		src->SetEmbeddedProfile(out,true);
-//		if(out)
-//			delete out;
+			src=new ImageSource_Deflatten(src,inprof,outprof,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		src->SetEmbeddedProfile(outprof,true);
 	}
 
 	if(freeinprof)

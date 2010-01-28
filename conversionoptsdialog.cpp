@@ -50,17 +50,44 @@ class CMYKConversionOptsDialog
 
 		// Input profile
 
-		label=gtk_label_new(_("Fallback Input Profile:"));
+		label=gtk_label_new(_("Fallback Input Profile (RGB):"));
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
 		gtk_widget_show(label);
 
-		ips = profileselector_new(&opts.profilemanager);
-		g_signal_connect(ips,"changed",G_CALLBACK(inprofile_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),ips,1,2,row,row+1);
-		gtk_widget_show(ips);
+		irps = profileselector_new(&opts.profilemanager,IS_TYPE_RGB);
+		g_signal_connect(irps,"changed",G_CALLBACK(inprofile_changed),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),irps,1,2,row,row+1);
+		gtk_widget_show(irps);
 
 
 		++row;
+
+
+		// Input CMYK profile
+
+		label=gtk_label_new(_("Fallback Input Profile (CMYK):"));
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+		icps = profileselector_new(&opts.profilemanager,IS_TYPE_CMYK);
+		g_signal_connect(icps,"changed",G_CALLBACK(inprofile_changed),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),icps,1,2,row,row+1);
+		gtk_widget_show(icps);
+
+
+		++row;
+
+
+		// Ignore embedded profile button
+
+		ignore = gtk_check_button_new_with_label(_("Ignore embedded profiles"));
+		g_signal_connect(ignore,"toggled",G_CALLBACK(ignoreembedded_changed),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),ignore,1,2,row,row+1);
+		gtk_widget_show(ignore);
+
+
+		++row;
+
 
 		// Output profile
 
@@ -119,9 +146,12 @@ class CMYKConversionOptsDialog
 
 		gtk_widget_show(window);
 
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ignore),opts.GetIgnoreEmbedded());
+
 		intentselector_setintent(INTENTSELECTOR(is),opts.GetIntent());
 
-		profileselector_set_filename(PROFILESELECTOR(ips),opts.GetInProfile());
+		profileselector_set_filename(PROFILESELECTOR(irps),opts.GetInRGBProfile());
+		profileselector_set_filename(PROFILESELECTOR(icps),opts.GetInCMYKProfile());
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
 		SetSensitive();
 
@@ -185,7 +215,9 @@ class CMYKConversionOptsDialog
 	private:
 	CMYKConversionOptions &opts;
 	GtkWidget *window;
-	GtkWidget *ips;
+	GtkWidget *irps;
+	GtkWidget *icps;
+	GtkWidget *ignore;
 	GtkWidget *ps;
 	GtkWidget *is;
 	GtkWidget *combo;
@@ -210,15 +242,26 @@ class CMYKConversionOptsDialog
 	{
 		Debug[TRACE] << "Received changed signal from ProfileSelector" << endl;
 		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
-		ProfileSelector *c=PROFILESELECTOR(dlg->ips);
+		ProfileSelector *c=PROFILESELECTOR(dlg->irps);
 		const char *val=profileselector_get_filename(c);
 		if(val)
 		{
-			dlg->opts.SetInProfile(val);
+			dlg->opts.SetInRGBProfile(val);
 			Debug[TRACE] << "Selected: " << val << endl;
 		}
 		else
 			Debug[WARN] << "No profile selected... " << endl;
+
+		c=PROFILESELECTOR(dlg->icps);
+		val=profileselector_get_filename(c);
+		if(val)
+		{
+			dlg->opts.SetInCMYKProfile(val);
+			Debug[TRACE] << "Selected: " << val << endl;
+		}
+		else
+			Debug[WARN] << "No profile selected... " << endl;
+
 	}
 
 	static void	intent_changed(GtkWidget *widget,gpointer user_data)
@@ -247,6 +290,19 @@ class CMYKConversionOptsDialog
 
 		Debug[TRACE] << "Conversion mode set to: " << convmodes[idx] << endl;
 	}
+
+
+	static void	ignoreembedded_changed(GtkWidget *widget,gpointer user_data)
+	{
+		Debug[TRACE] << "Received toggled signal from check button" << endl;
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+		bool state=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg->ignore));
+
+		dlg->opts.SetIgnoreEmbedded(state);
+
+		Debug[TRACE] << "Set IgnoreEmbedded to " << state << endl;
+	}
+
 	static CMYKConversionMode convmodes[];
 };
 
