@@ -26,14 +26,14 @@ using namespace std;
 struct prefsdialogdata
 {
 	ProfileManager *pm;
-	GtkWidget *rgbprof;
-	GtkWidget *cmykprof;
+//	GtkWidget *rgbprof;
+//	GtkWidget *cmykprof;
 	GtkWidget *monprof;
-	GtkWidget *outputprof;
-	GtkWidget *rgbactive;
-	GtkWidget *cmykactive;
+//	GtkWidget *outputprof;
+//	GtkWidget *rgbactive;
+//	GtkWidget *cmykactive;
 	GtkWidget *monactive;
-	GtkWidget *outputactive;
+//	GtkWidget *outputactive;
 	GtkWidget *patheditor;
 };
 
@@ -42,14 +42,14 @@ static void checkbox_changed(GtkWidget *wid,gpointer *ud)
 {
 	prefsdialogdata *ob=(prefsdialogdata *)ud;
 
-	int pa=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->outputactive));
-	int ra=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->rgbactive));
-	int ca=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->cmykactive));
+//	int pa=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->outputactive));
+//	int ra=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->rgbactive));
+//	int ca=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->cmykactive));
 	int ma=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ob->monactive));
 
-	gtk_widget_set_sensitive(ob->outputprof,pa);
-	gtk_widget_set_sensitive(ob->rgbprof,ra);
-	gtk_widget_set_sensitive(ob->cmykprof,ca);
+//	gtk_widget_set_sensitive(ob->outputprof,pa);
+//	gtk_widget_set_sensitive(ob->rgbprof,ra);
+//	gtk_widget_set_sensitive(ob->cmykprof,ca);
 	gtk_widget_set_sensitive(ob->monprof,ma);
 }
 
@@ -58,8 +58,8 @@ static void paths_changed(GtkWidget *widget,gpointer user_data)
 {
 	struct prefsdialogdata *dd=(struct prefsdialogdata *)user_data;
 	patheditor_get_paths(PATHEDITOR(widget),dd->pm);
-	profileselector_refresh(PROFILESELECTOR(dd->rgbprof));
-	profileselector_refresh(PROFILESELECTOR(dd->cmykprof));
+//	profileselector_refresh(PROFILESELECTOR(dd->rgbprof));
+//	profileselector_refresh(PROFILESELECTOR(dd->cmykprof));
 	profileselector_refresh(PROFILESELECTOR(dd->monprof));
 }
 

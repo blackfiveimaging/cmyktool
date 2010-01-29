@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-01-26 09:36+0000\n"
+"POT-Creation-Date: 2010-01-28 23:30+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
@@ -12,48 +12,56 @@ msgstr ""
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 
-#: cmyktool.cpp:193
+#: cmyktool.cpp:144
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:221
+#: cmyktool.cpp:172
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:248
+#: cmyktool.cpp:191
+msgid "Convert"
+msgstr ""
+
+#: cmyktool.cpp:199
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:301
+#: cmyktool.cpp:221 dialogs.cpp:85
+msgid "Preferences..."
+msgstr "Параметры CMYKTool"
+
+#: cmyktool.cpp:252
 msgid "Previous settings"
 msgstr "Предыдущие параметры"
 
-#: cmyktool.cpp:326
+#: cmyktool.cpp:328
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:326
+#: cmyktool.cpp:328
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:334
+#: cmyktool.cpp:336
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
-#: cmyktool.cpp:354 miscwidgets/imageselector.cpp:478
+#: cmyktool.cpp:357 miscwidgets/imageselector.cpp:478
 #: profilemanager/profileselector.cpp:39
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:354
+#: cmyktool.cpp:357
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:463
+#: cmyktool.cpp:466
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:496 cmyktool.cpp:637
+#: cmyktool.cpp:499 cmyktool.cpp:640
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -149,104 +157,108 @@ msgid "Colour conversion options"
 msgstr "Параметры преобразования цвета"
 
 #: conversionoptsdialog.cpp:53
-msgid "Fallback Input Profile:"
+msgid "Fallback Input Profile (RGB):"
 msgstr ""
 
-#: conversionoptsdialog.cpp:67
+#: conversionoptsdialog.cpp:68
+msgid "Fallback Input Profile (CMYK):"
+msgstr ""
+
+#: conversionoptsdialog.cpp:83
+msgid "Ignore embedded profiles"
+msgstr ""
+
+#: conversionoptsdialog.cpp:94
 msgid "Output Profile:"
 msgstr "Профиль вывода:"
 
-#: conversionoptsdialog.cpp:81
+#: conversionoptsdialog.cpp:108
 msgid "Rendering intent:"
 msgstr "Цветопередача:"
 
-#: conversionoptsdialog.cpp:95
+#: conversionoptsdialog.cpp:122
 msgid "Conversion mode:"
 msgstr "Режим преобразования:"
 
-#: conversionoptsdialog.cpp:100
+#: conversionoptsdialog.cpp:127
 msgid "Normal"
 msgstr "Обычный"
 
-#: conversionoptsdialog.cpp:100
+#: conversionoptsdialog.cpp:127
 msgid "A regular conversion from source to destination profile"
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#: conversionoptsdialog.cpp:101
+#: conversionoptsdialog.cpp:128
 msgid "Hold Black"
 msgstr "Сохранить чёрный цвет"
 
-#: conversionoptsdialog.cpp:101
+#: conversionoptsdialog.cpp:128
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Приравнять входящий чистый чёрный цвет к CMYK (0,0,0,100)"
 
-#: conversionoptsdialog.cpp:102
+#: conversionoptsdialog.cpp:129
 msgid "Hold Grey"
 msgstr "Сохранить серый цвет"
 
-#: conversionoptsdialog.cpp:102
+#: conversionoptsdialog.cpp:129
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Приравнять входящий серый цвет (R=G=B) только к каналу K"
 
-#: conversionoptsdialog.cpp:103
+#: conversionoptsdialog.cpp:130
 msgid "Overprint"
 msgstr "Надпечатка"
 
-#: conversionoptsdialog.cpp:103
+#: conversionoptsdialog.cpp:130
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
 msgstr ""
 
-#: conversionoptsdialog.cpp:133
+#: conversionoptsdialog.cpp:163
 msgid "Choose a name for this preset..."
 msgstr "Дайте профилю название..."
 
-#: dialogs.cpp:83
-msgid "Preferences..."
-msgstr "Параметры CMYKTool"
-
-#: dialogs.cpp:98
+#: dialogs.cpp:100
 msgid "Colour Management"
 msgstr "Управление цветом"
 
-#: dialogs.cpp:113
-msgid "Default RGB Profile:"
-msgstr "Профиль RGB по умолчанию:"
-
-#: dialogs.cpp:125
-msgid "Default CMYK Profile:"
-msgstr "Профиль CMYK по умолчанию:"
-
-#: dialogs.cpp:137
-msgid "Monitor Profile:"
-msgstr "Профиль монитора:"
-
-#: dialogs.cpp:149
-msgid "Default Output Profile:"
-msgstr "Профиль вывода по умолчанию:"
-
-#: dialogs.cpp:163
-msgid "Paths"
-msgstr "Расположение данных"
-
-#: dialogs.cpp:174
+#: dialogs.cpp:119
 msgid "ICC colour profile paths"
 msgstr "Расположение профилей ICC"
 
-#: dialogs.cpp:195
+#: dialogs.cpp:140
+msgid "Default RGB Profile:"
+msgstr "Профиль RGB по умолчанию:"
+
+#: dialogs.cpp:154
+msgid "Default CMYK Profile:"
+msgstr "Профиль CMYK по умолчанию:"
+
+#: dialogs.cpp:168
+msgid "Monitor Profile:"
+msgstr "Профиль монитора:"
+
+#: dialogs.cpp:182
+msgid "Default Output Profile:"
+msgstr "Профиль вывода по умолчанию:"
+
+#: dialogs.cpp:197
+msgid "Paths"
+msgstr "Расположение данных"
+
+#: dialogs.cpp:217
 msgid "Path to Argyll's 'tiffgamut' command"
 msgstr ""
 
-#: dialogs.cpp:199
+#: dialogs.cpp:221
 msgid "Path to Argyll utilities (TIFFGamut and ICCLink)"
 msgstr ""
 
-#: dialogs.cpp:204
+#: dialogs.cpp:226
 msgid "Path to Argyll's 'collink' command"
 msgstr ""
 
-#: dialogs.cpp:208
+#: dialogs.cpp:230
 msgid "Path to Argyll's collink command"
 msgstr ""
 
@@ -418,15 +430,15 @@ msgstr ""
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:491
+#: profilemanager/profilemanager.cpp:494
 msgid "No Proof profile provided!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:825
+#: profilemanager/profilemanager.cpp:828
 msgid "Default"
 msgstr "По умолчанию"
 
-#: profilemanager/profilemanager.cpp:833
+#: profilemanager/profilemanager.cpp:836
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 

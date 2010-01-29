@@ -9,9 +9,15 @@
 
 | Add a button or menu item to invoke preferences.
 
-Use a separate fallback RGB and CMYK profile in the conversionopts.  This should solve the issue with devicelinks.
+| Use a separate fallback RGB and CMYK profile in the conversionopts.  This should solve the issue with devicelinks.
 
-Add "Ignore embedded profile" checkbox.
+| Add "Ignore embedded profile" checkbox.
+
+Add ability to read coordinates to pixbufview.
+
+Figure out how to display colorant percentages?
+Perhaps move the display of the colorant blobs away from pixbufs to Cairo rendering, then draw the text on top?
+
 
 Menus:
 

@@ -188,7 +188,7 @@ TestUI::TestUI() : CMYKTool_Core()
 	// Convert button...
 
 
-	tmp=gtk_button_new_with_label("Convert");
+	tmp=gtk_button_new_with_label(_("Convert"));
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(convert),this);
 	gtk_widget_show(tmp);
@@ -218,7 +218,7 @@ TestUI::TestUI() : CMYKTool_Core()
 	// Preferences button
 
 
-	tmp=gtk_button_new_with_label("Preferences...");
+	tmp=gtk_button_new_with_label(_("Preferences..."));
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showpreferencesdialog),this);
 	gtk_widget_show(tmp);
@@ -279,6 +279,40 @@ void TestUI::SaveConfig()
 
 #define PRESET_MAXCHARS 17
 
+
+// Routine to copy UTF-8 characters into a buffer.
+// Note, the buffer should be 4 times the number of characters to
+// accommodate the worst-case scenario.
+// Always null-terminates the result, so allow space for the terminating null.
+static void utf8ncpy(char *out,const char *in,int count)
+{
+	int count2=0;
+	while(count)
+	{
+		char c=*out++=*in++;
+		if(c==0)
+			return;
+		if(c&0x80)	// multi-byte sequence
+		{
+			if((c&0xe0)==0xc0)	// 2-byte sequence
+				count2=2;
+			if((c&0xf0)==0xc0)	// 3-byte sequence
+				count2=3;
+			if((c&0xf8)==0xf0)	// 4-byte sequence
+				count2=4;
+								// If none of these conditions is met, we have a continuation byte
+		}
+		else
+			count2=1;	// 1-byte sequence
+
+		--count2;
+		if(count2==0)
+			--count;
+	}
+	*out++=0;	// Null terminate if required.
+}
+
+
 // Builds a set of ComboOpts for the presets.
 // Returns the index of the special "Previous" item, if found.
 
@@ -308,12 +342,13 @@ int TestUI::BuildComboOpts(SimpleComboOptions &opts)
 			opts.Add(fn,dn,dn);
 		else
 		{
-			char buf[PRESET_MAXCHARS+4];
-			char *p=buf;
-			strncpy(p,dn,PRESET_MAXCHARS);
-			p[PRESET_MAXCHARS]=p[PRESET_MAXCHARS+1]=p[PRESET_MAXCHARS+2]='.';
-			p[PRESET_MAXCHARS+3]=0;
-			opts.Add(fn,p,dn);
+			char buf[PRESET_MAXCHARS*4+4];
+//			char *p=buf;
+			utf8ncpy(buf,dn,PRESET_MAXCHARS);
+			int n=strlen(buf);
+			buf[n]=buf[n+1]=buf[n+2]='.';
+			buf[n+3]=0;
+			opts.Add(fn,buf,dn);
 		}
 		++idx;
 	}
