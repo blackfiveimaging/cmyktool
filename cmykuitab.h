@@ -114,6 +114,7 @@ class CMYKUITab : public UITab
 	GtkWidget *displaymode;
 	GtkWidget *popup;
 	GtkWidget *linkbutton;
+	GtkWidget *sumlabel;
 	bool popupshown;
 	CachedImage *image;
 	DeviceNColorantList *collist;

@@ -1,6 +1,6 @@
 AM_CXXFLAGS = -Wall $(GTK2_CFLAGS)
 
-BUILT_SOURCES = chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp
+BUILT_SOURCES = chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp sigma.cpp
 
 profile.cpp:
 	gdk-pixbuf-csource --name=profile_data >profile.cpp profile.png
@@ -17,5 +17,9 @@ chain1.cpp:
 chain2.cpp:
 	gdk-pixbuf-csource --name=chain2_data >chain2.cpp Chain2.png
 
-EXTRA_DIST = Chain1.png Chain2.png rgb.png cmyk.png profile.png chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp
+sigma.cpp:
+	gdk-pixbuf-csource --name=sigma_data >sigma.cpp sigma.png
+
+EXTRA_DIST = Chain1.png Chain2.png rgb.png cmyk.png profile.png sigma.png \
+			 chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp sigma.cpp
 

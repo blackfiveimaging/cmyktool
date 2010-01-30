@@ -38,6 +38,7 @@
 
 #include "gfx/chain1.cpp"
 #include "gfx/chain2.cpp"
+#include "gfx/sigma.cpp"
 
 #include "config.h"
 #include "gettext.h"
@@ -345,6 +346,15 @@ void CMYKUITab::MouseMove(GtkWidget *widget,gpointer userdata)
 	ISDeviceNValue val=tab->image->GetPixel(x,y);
 
 	coloranttoggle_set_value(COLORANTTOGGLE(tab->colsel),val);
+
+	int sum=0;
+	for(int i=0;i<val.GetChannels();++i)
+	{
+		sum+=(100 * val[i])/IS_SAMPLEMAX;
+	}
+	char buf[10];
+	sprintf(buf,"%d",sum<9999 ? sum : 9999 );
+	gtk_label_set_text(GTK_LABEL(tab->sumlabel),buf);
 }
 
 
@@ -444,11 +454,23 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
 	gtk_widget_show(colsel);
 
-
 	gtk_signal_connect (GTK_OBJECT (pbview), "mousemove",(GtkSignalFunc)MouseMove, this);
 
 
-	GtkWidget *tmp=gtk_hbox_new(FALSE,0);
+	GtkWidget *tmp;
+
+
+	GdkPixbuf *sigmapb=PixbufFromImageData(sigma_data,sizeof(sigma_data));
+	tmp=gtk_image_new_from_pixbuf(sigmapb);
+	gtk_box_pack_start(GTK_BOX(hbox2),tmp,FALSE,FALSE,2);
+	gtk_widget_show(tmp);
+
+	sumlabel=gtk_label_new("");
+	gtk_box_pack_start(GTK_BOX(hbox2),sumlabel,FALSE,FALSE,2);
+	gtk_widget_show(sumlabel);
+
+
+	tmp=gtk_hbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox2),tmp,TRUE,TRUE,0);
 	gtk_widget_show(tmp);
 
@@ -568,6 +590,7 @@ void CMYKUITab::SetImage(const char *fname)
 void CMYKUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 {
 	CMYKUITab *ob=(CMYKUITab *)userdata;
+	Debug[TRACE] << "In ColorantsChanged" << endl;
 //	gtk_widget_set_sensitive(ob->colsel,FALSE);
 
 	ob->Redraw();
