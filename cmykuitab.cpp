@@ -333,6 +333,21 @@ void CMYKUITab::ViewChanged(GtkWidget *widget,gpointer userdata)
 }
 
 
+void CMYKUITab::MouseMove(GtkWidget *widget,gpointer userdata)
+{
+	CMYKUITab *tab=(CMYKUITab *)userdata;
+	if(!tab->image)
+		return;
+
+	int x=pixbufview_get_mousex(PIXBUFVIEW(tab->pbview));
+	int y=pixbufview_get_mousey(PIXBUFVIEW(tab->pbview));
+
+	ISDeviceNValue val=tab->image->GetPixel(x,y);
+
+	coloranttoggle_set_value(COLORANTTOGGLE(tab->colsel),val);
+}
+
+
 void CMYKUITab::LinkToggled(GtkWidget *widget,gpointer userdata)
 {
 	CMYKUITab *tab=(CMYKUITab *)userdata;
@@ -428,6 +443,9 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions
 		(GtkSignalFunc) ColorantsChanged, this);
 	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
 	gtk_widget_show(colsel);
+
+
+	gtk_signal_connect (GTK_OBJECT (pbview), "mousemove",(GtkSignalFunc)MouseMove, this);
 
 
 	GtkWidget *tmp=gtk_hbox_new(FALSE,0);

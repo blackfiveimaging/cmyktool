@@ -104,6 +104,7 @@ class CMYKUITab : public UITab
 	static void LinkToggled(GtkWidget *widget,gpointer userdata);
 	static void ViewChanged(GtkWidget *widget,gpointer userdata);
 	static void DisplayModeChanged(GtkWidget *widget,gpointer userdata);
+	static void MouseMove(GtkWidget *widget,gpointer userdata);
 	void Redraw();
 	GtkWidget *parent;
 	JobDispatcher &dispatcher;
