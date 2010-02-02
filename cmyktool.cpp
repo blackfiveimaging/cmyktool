@@ -471,19 +471,16 @@ void TestUI::addimages(GtkWidget *wid,gpointer userdata)
 		NULL);
 
 	gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(sel),TRUE);
-//	if(ui->prevfile)
-//		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(sel),ui->prevfile);
-//	else
-//	{
+
 #ifdef WIN32
-		char *dirname=substitute_homedir("$HOME\\My Documents\\My Pictures");
+	char homedir[MAX_PATH]={0};
+	SHGetFolderPath(NULL,CSIDL_MYPICTURES,NULL,SHGFP_TYPE(SHGFP_TYPE_CURRENT),homedir);
+	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(sel),dirname);
 #else
-		char *dirname=substitute_homedir("$HOME");
+	char *dirname=substitute_homedir("$HOME");
+	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(sel),dirname);	
+	free(dirname);
 #endif
-		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(sel),dirname);	
-//	}
-//	g_free(ui->prevfile);
-//	ui->prevfile=NULL;
 
 	GtkWidget *preview=gtk_image_new();
 	gtk_file_chooser_set_preview_widget(GTK_FILE_CHOOSER(sel),GTK_WIDGET(preview));

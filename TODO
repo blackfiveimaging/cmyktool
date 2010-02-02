@@ -1,5 +1,8 @@
 | Add support for saving CMYK JPEGs.
-Why is resolution being saved just fine for RGB JPEGs but not for CMYK ones?
+| Why is resolution being saved just fine for RGB JPEGs but not for CMYK ones?
+| (Because JFIF doesn't support CMYK, so we'd need to save a proper Adobe header with the resolution
+| encoded differently.  For now we simply write a JFIF header despite the colourspace not officially being
+| supported)
 
 | Need to change the preset combo's position - it currently causes the image list to expand...
 | (Solved by limiting the number of characters displayed from the preset's name)
@@ -16,10 +19,10 @@ Why is resolution being saved just fine for RGB JPEGs but not for CMYK ones?
 
 | Add "Ignore embedded profile" checkbox.
 
-Add ability to read coordinates to pixbufview.
+| Add ability to read coordinates to pixbufview.
 
-Figure out how to display colorant percentages?
-Perhaps move the display of the colorant blobs away from pixbufs to Cairo rendering, then draw the text on top?
+| Figure out how to display colorant percentages?
+| Perhaps move the display of the colorant blobs away from pixbufs to Cairo rendering, then draw the text on top?
 
 
 Menus:

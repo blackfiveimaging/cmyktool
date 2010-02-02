@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-01-30 14:41+0000\n"
+"POT-Creation-Date: 2010-01-30 18:56+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
@@ -65,90 +65,90 @@ msgstr "Открыть файл"
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
-#: cmykuitab.cpp:428
+#: cmykuitab.cpp:438
 msgid "Inspect"
 msgstr ""
 
-#: cmykuitab.cpp:428
+#: cmykuitab.cpp:438
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
 msgstr ""
 
-#: cmykuitab.cpp:430
+#: cmykuitab.cpp:440
 msgid "Simulate print, adapt white"
 msgstr ""
 
-#: cmykuitab.cpp:430
+#: cmykuitab.cpp:440
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
 "with BlackPoint Compensation.)"
 msgstr ""
 
-#: cmykuitab.cpp:432
+#: cmykuitab.cpp:442
 msgid "Simulate print"
 msgstr ""
 
-#: cmykuitab.cpp:432
+#: cmykuitab.cpp:442
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
 msgstr ""
 
-#: cmykuitab.cpp:456
+#: cmykuitab.cpp:478
 msgid "Save..."
 msgstr "Сохранить..."
 
-#: cmykuitab.cpp:599
+#: cmykuitab.cpp:622
 msgid "Save Image..."
 msgstr "Сохранить изображение"
 
-#: cmykuitab.cpp:626
+#: cmykuitab.cpp:649
 msgid "File format:"
 msgstr "Формат файлов:"
 
-#: cmykuitab.cpp:631
+#: cmykuitab.cpp:654
 msgid "JPEG"
 msgstr "JPEG"
 
-#: cmykuitab.cpp:631
+#: cmykuitab.cpp:654
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr ""
 
-#: cmykuitab.cpp:632
+#: cmykuitab.cpp:655
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8-разрядный)"
 
-#: cmykuitab.cpp:632
+#: cmykuitab.cpp:655
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr ""
 
-#: cmykuitab.cpp:633
+#: cmykuitab.cpp:656
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16-разрядный)"
 
-#: cmykuitab.cpp:633
+#: cmykuitab.cpp:656
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr ""
 
-#: cmykuitab.cpp:643
+#: cmykuitab.cpp:666
 msgid "JPEG Quality:"
 msgstr "Качество JPEG:"
 
-#: cmykuitab.cpp:656
+#: cmykuitab.cpp:679
 msgid "Embed ICC Profile"
 msgstr "Встроить профиль ICC"
 
-#: cmykuitab.cpp:729
+#: cmykuitab.cpp:752
 msgid "File exists - OK to overwrite?"
 msgstr ""
 
-#: cmykuitab.cpp:737 cmykuitab.cpp:798
+#: cmykuitab.cpp:760 cmykuitab.cpp:821
 msgid "Saving"
 msgstr ""
 
-#: cmykuitab.cpp:795
+#: cmykuitab.cpp:818
 msgid "Save image - please choose filename"
 msgstr ""
 
