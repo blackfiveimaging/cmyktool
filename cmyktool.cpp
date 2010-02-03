@@ -4,6 +4,13 @@
 #include <libgen.h>
 #include <gtk/gtk.h>
 
+#ifdef WIN32
+#include <w32api.h>
+#define _WIN32_IE IE5
+#define _WIN32_WINNT Windows2000
+#include <shlobj.h>
+#endif
+
 #include "support/debug.h"
 #include "support/rwmutex.h"
 #include "support/thread.h"
@@ -473,8 +480,8 @@ void TestUI::addimages(GtkWidget *wid,gpointer userdata)
 	gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(sel),TRUE);
 
 #ifdef WIN32
-	char homedir[MAX_PATH]={0};
-	SHGetFolderPath(NULL,CSIDL_MYPICTURES,NULL,SHGFP_TYPE(SHGFP_TYPE_CURRENT),homedir);
+	char dirname[MAX_PATH]={0};
+	SHGetFolderPath(NULL,CSIDL_MYPICTURES,NULL,SHGFP_TYPE(SHGFP_TYPE_CURRENT),dirname);
 	gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(sel),dirname);
 #else
 	char *dirname=substitute_homedir("$HOME");
@@ -618,6 +625,8 @@ int main(int argc,char **argv)
 	gtk_init(&argc,&argv);
 
 	Debug.SetLevel(WARN);
+
+	gtk_set_locale();
 
 	bindtextdomain(PACKAGE,LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");

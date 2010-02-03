@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-01-30 18:56+0000\n"
+"POT-Creation-Date: 2010-02-02 23:59+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
@@ -12,56 +12,56 @@ msgstr ""
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 
-#: cmyktool.cpp:144
+#: cmyktool.cpp:151
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:172
+#: cmyktool.cpp:179
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:191
+#: cmyktool.cpp:198
 msgid "Convert"
 msgstr ""
 
-#: cmyktool.cpp:199
+#: cmyktool.cpp:206
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:221 dialogs.cpp:85
+#: cmyktool.cpp:228 dialogs.cpp:85
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:252
+#: cmyktool.cpp:259
 msgid "Previous settings"
 msgstr "Предыдущие параметры"
 
-#: cmyktool.cpp:328
+#: cmyktool.cpp:335
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:328
+#: cmyktool.cpp:335
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:336
+#: cmyktool.cpp:343
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
-#: cmyktool.cpp:357 miscwidgets/imageselector.cpp:478
+#: cmyktool.cpp:364 miscwidgets/imageselector.cpp:478
 #: profilemanager/profileselector.cpp:39
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:357
+#: cmyktool.cpp:364
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:466
+#: cmyktool.cpp:473
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:499 cmyktool.cpp:640
+#: cmyktool.cpp:503 cmyktool.cpp:646
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
