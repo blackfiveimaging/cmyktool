@@ -12,7 +12,7 @@
 GETTEXT_MACRO_VERSION = 0.17
 
 PACKAGE = cmyktool
-VERSION = 0.1.1
+VERSION = 0.1.2
 PACKAGE_BUGREPORT = blackfive@fakenhamweb.co.uk
 
 SHELL = /bin/sh
@@ -62,10 +62,10 @@ MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
 
-POFILES =  ru.po
-GMOFILES =  ru.gmo
-UPDATEPOFILES =  ru.po-update
-DUMMYPOFILES =  ru.nop
+POFILES =  ru.po fr.po
+GMOFILES =  ru.gmo fr.gmo
+UPDATEPOFILES =  ru.po-update fr.po-update
+DUMMYPOFILES =  ru.nop fr.nop
 DISTFILES.common = Makefile.in.in remove-potcdate.sin \
 $(DISTFILES.common.extra1) $(DISTFILES.common.extra2) $(DISTFILES.common.extra3)
 DISTFILES = $(DISTFILES.common) Makevars POTFILES.in \
@@ -99,7 +99,7 @@ POTFILES = \
      ../queuetest.cpp \
      ../recombine.cpp
 
-CATALOGS =  ru.gmo
+CATALOGS =  ru.gmo fr.gmo
 
 # Makevars gets inserted here. (Don't remove this line!)
 # Makefile variables for PO directory in any package using GNU gettext.
@@ -228,7 +228,7 @@ $(DOMAIN).pot-update: $(POTFILES) $(srcdir)/POTFILES.in remove-potcdate.sed
 	      --files-from=$(srcdir)/POTFILES.in \
 	      --copyright-holder='$(COPYRIGHT_HOLDER)' \
 	      --package-name="$${package_gnu}cmyktool" \
-	      --package-version='0.1.1' \
+	      --package-version='0.1.2' \
 	      --msgid-bugs-address="$$msgid_bugs_address" \
 	    ;; \
 	esac
