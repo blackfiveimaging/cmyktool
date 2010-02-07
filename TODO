@@ -13,6 +13,7 @@ Add support for creatng DeviceLinks.
 
 Add a "Width" parameter to the "Hold Grey" code which will cause near-greys to be modified in an
 interpolated fashion between the output of the CMS transform and the pure grey pixel value.
+(This could be useful for hold black mode, too.)
 
 Improve the grey rendition by creating and inverting an LUT from the CMYK profile.
 
@@ -20,6 +21,12 @@ Add DuoTone capability (probably better handled with a separate utility) which w
 you to set an approximate tone for a spot colour, and have a duotone image calculated.
 Would work by finding a CMYK approximation for that colour, then building a 2D lookup-table
 using the CMYK profile.
+
+Add ability to perform a "naive" RGB->CMYK conversion with no profiles.
+
+Solve problem with UTF-8 filenames on Win32.
+Need to use wide version of fopen - which unfortunately means avoiding the use of ifstream.
+(Perhaps implement an equivalent?)
 
 
 | Add support for saving CMYK JPEGs.
