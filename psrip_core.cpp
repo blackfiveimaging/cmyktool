@@ -79,31 +79,21 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 				cerr << "Subprocess complete." << endl;
 				break;
 		}		
+
 #else
 		SendSync();
-		int cmdlen=1;
+
+		string cmd;
 		for(int i=0;i<argc;++i)
 		{
 			if(argv[i])
-				cmdlen+=strlen(argv[i])+1;
+			{
+				cmd+=argv[i];
+				cmd+=" ";
+			}
 		}
-		char *cmd=(char *)malloc(cmdlen);
-
-		// Yes, I know - yuk.
-		snprintf(cmd,cmdlen,"%s %s %s %s %s %s %s %s %s %s %s",
-			argv[0] ? argv[0] : "",
-			argv[1] ? argv[1] : "",
-			argv[2] ? argv[2] : "",
-			argv[3] ? argv[3] : "",
-			argv[4] ? argv[4] : "",
-			argv[5] ? argv[5] : "",
-			argv[6] ? argv[6] : "",
-			argv[7] ? argv[7] : "",
-			argv[8] ? argv[8] : "",
-			argv[9] ? argv[9] : "",
-			argv[10] ? argv[10] : "");
 		cerr << "Using command " << cmd << endl;
-		system(cmd);
+		system(cmd.c_str());
 #endif
 		return(0);
 	}
@@ -266,6 +256,7 @@ PSRipOptions::PSRipOptions(IS_TYPE type,int resolution,int firstpage,int lastpag
 	: SearchPathHandler(), type(type),resolution(resolution),firstpage(firstpage),lastpage(lastpage),
 	textantialias(textantialias),gfxantialias(gfxantialias), argc(0)
 {
+	// FIXME - need a config file to store paths
 #ifdef WIN32
 	AddPath("c:/gs/gs8.64/bin;c:/Program Files/gs/bin;c:/Program Files/gs/gs8.64/bin");
 #else

@@ -1,5 +1,7 @@
 Add proper support for greyscale images and profiles.
 
+Need to be able to remove images from the left hand tray.
+
 Add newly-created presets to the preset list.
 
 Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
@@ -10,6 +12,17 @@ Add support for creatng DeviceLinks.
   That way the destination profile can be identified for proofing and embedding purposes.
   Better yet, use an MD5 hash of the entire CMYKConversionOpts as a filename, and save metadata
   alonside the devicelink.
+
+Need to maintain a list of available devicelinks, which will be made available in the conversionoptsdialog.
+
+The devicelinks are defined by:
+* Source Profile
+* Destination Profile
+* Rendering Intent
+* Black Generation
+* Viewing conditions
+Also need a "Description" field.
+
 
 Add a "Width" parameter to the "Hold Grey" code which will cause near-greys to be modified in an
 interpolated fashion between the output of the CMS transform and the pure grey pixel value.
@@ -27,7 +40,8 @@ Add ability to perform a "naive" RGB->CMYK conversion with no profiles.
 Solve problem with UTF-8 filenames on Win32.
 Need to use wide version of fopen - which unfortunately means avoiding the use of ifstream.
 (Perhaps implement an equivalent?)
-
+Use a variant of fdstream.hpp?
+Need to convert from UTF-8 to UTF-16 wchar_t...  (Is glib going to be the easiest way, or can we avoid that dependency?)
 
 | Add support for saving CMYK JPEGs.
 | Why is resolution being saved just fine for RGB JPEGs but not for CMYK ones?

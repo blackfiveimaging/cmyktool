@@ -34,7 +34,9 @@ struct prefsdialogdata
 //	GtkWidget *cmykactive;
 	GtkWidget *monactive;
 //	GtkWidget *outputactive;
-	GtkWidget *patheditor;
+	GtkWidget *cmpatheditor;
+	GtkWidget *argyllpatheditor;
+	GtkWidget *gspatheditor;
 };
 
 
@@ -69,7 +71,7 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 	GtkWidget *dialog;
 	GtkWidget *notebook;
 	GtkWidget *profilepage;
-	GtkWidget *pathspage;
+	GtkWidget *extutilspage;
 	GtkWidget *vbox;
 	GtkWidget *label;
 //	GtkWidget *argyllpath_tg;
@@ -125,10 +127,10 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 
 
 	GtkAttachOptions gao = (GtkAttachOptions)(GTK_EXPAND|GTK_FILL);
-	dd.patheditor = patheditor_new(&pm);
-	g_signal_connect(dd.patheditor,"changed",G_CALLBACK(paths_changed),&dd);
-	gtk_table_attach(GTK_TABLE(table),dd.patheditor,0,2,row,row+1,gao,gao,0,0);
-	gtk_widget_show(dd.patheditor);
+	dd.cmpatheditor = patheditor_new(&pm);
+	g_signal_connect(dd.cmpatheditor,"changed",G_CALLBACK(paths_changed),&dd);
+	gtk_table_attach(GTK_TABLE(table),dd.cmpatheditor,0,2,row,row+1,gao,gao,0,0);
+	gtk_widget_show(dd.cmpatheditor);
 
 	++row;
 
@@ -191,17 +193,59 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 	profileselector_set_filename(PROFILESELECTOR(dd.outputprof),pm.FindString("PrinterProfile"));
 #endif
 
-#if 0
-	// Paths page:
+	// External utilities
 
-	label=gtk_label_new(_("Paths"));
+	label=gtk_label_new(_("External utilities"));
 	gtk_widget_show(label);
 
-	pathspage=gtk_hbox_new(FALSE,8);
-	gtk_widget_show(GTK_WIDGET(pathspage));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),GTK_WIDGET(pathspage),GTK_WIDGET(label));
+	extutilspage=gtk_vbox_new(FALSE,0);
+	gtk_widget_show(GTK_WIDGET(extutilspage));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook),GTK_WIDGET(extutilspage),GTK_WIDGET(label));
 
-#endif
+
+	table=gtk_table_new(2,4,FALSE);
+	gtk_container_set_border_width(GTK_CONTAINER(table),8);
+	gtk_table_set_col_spacing(GTK_TABLE(table),0,10);
+	gtk_table_set_row_spacings(GTK_TABLE(table),8);
+	gtk_box_pack_start(GTK_BOX(extutilspage),table,TRUE,TRUE,5);
+	gtk_widget_show(table);
+
+	row=0;
+
+	// Paths...
+
+	label=gtk_label_new(_("Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"));
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	gtk_table_attach(GTK_TABLE(table),label,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
+	gtk_widget_show(label);
+
+	++row;
+
+	// FIXME - replace test_sp with a real searchpath
+	SearchPathHandler test_sp;
+	dd.argyllpatheditor = patheditor_new(&test_sp);
+//	g_signal_connect(dd.cmpatheditor,"changed",G_CALLBACK(paths_changed),&dd);
+	gtk_table_attach(GTK_TABLE(table),dd.argyllpatheditor,0,2,row,row+1,gao,gao,0,0);
+	gtk_widget_show(dd.argyllpatheditor);
+
+	++row;
+
+
+	label=gtk_label_new(_("Search paths for GhostScript executable"));
+	gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+	gtk_table_attach(GTK_TABLE(table),label,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
+	gtk_widget_show(label);
+
+	++row;
+
+	// FIXME - replace test_sp2 with a real searchpath
+	SearchPathHandler test_sp2;
+	dd.gspatheditor = patheditor_new(&test_sp2);
+//	g_signal_connect(dd.cmpatheditor,"changed",G_CALLBACK(paths_changed),&dd);
+	gtk_table_attach(GTK_TABLE(table),dd.gspatheditor,0,2,row,row+1,gao,gao,0,0);
+	gtk_widget_show(dd.gspatheditor);
+
+	++row;
 
 
 #if 0

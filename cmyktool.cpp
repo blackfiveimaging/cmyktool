@@ -75,8 +75,9 @@ class TestUI : public CMYKTool_Core
 	static void combochanged(GtkWidget *wid,gpointer userdata);
 	static void convert(GtkWidget *wid,gpointer userdata);
 	static void addimages(GtkWidget *wid,gpointer userdata);
+	static void removeimages(GtkWidget *wid,gpointer userdata);
 //	static void batchprocess(GtkWidget *wid,gpointer userdata);
-	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
+//	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
 	static void showpreferencesdialog(GtkWidget *wid,gpointer userdata);
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
@@ -179,6 +180,13 @@ TestUI::TestUI() : CMYKTool_Core()
 	tmp=gtk_button_new_with_label(_("Add Images..."));
 	gtk_signal_connect (GTK_OBJECT (tmp), "clicked",
 		(GtkSignalFunc) addimages,this);
+	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+	gtk_widget_show(tmp);	
+
+
+	tmp=gtk_button_new_with_label(_("Remove Images"));
+	gtk_signal_connect (GTK_OBJECT (tmp), "clicked",
+		(GtkSignalFunc) removeimages,this);
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	gtk_widget_show(tmp);	
 
@@ -401,6 +409,11 @@ void TestUI::combochanged(GtkWidget *wid,gpointer userdata)
 		if(strcmp(key,PRESET_OTHER_ESCAPE)==0)
 		{
 			CMYKConversionOptions_Dialog(ui->convopts,ui->window);
+			Debug[TRACE] << "Updating combo..." << endl;
+
+			SimpleComboOptions opts;
+			ui->BuildComboOpts(opts);
+			simplecombo_set_opts(SIMPLECOMBO(ui->combo),opts);
 		}
 		else if(strcmp(key,PRESET_NONE_ESCAPE)==0)
 		{
@@ -463,6 +476,14 @@ static void updatepreview(GtkWidget *fc,void *ud)
 		}	
 	}
 	gtk_file_chooser_set_preview_widget_active(GTK_FILE_CHOOSER(fc),active);
+}
+
+
+void TestUI::removeimages(GtkWidget *wid,gpointer userdata)
+{
+	TestUI *ui=(TestUI *)userdata;
+
+	imageselector_remove(IMAGESELECTOR(ui->imgsel));
 }
 
 
@@ -531,12 +552,21 @@ void TestUI::addimages(GtkWidget *wid,gpointer userdata)
 }
 
 
+#if 0
 void TestUI::showconversiondialog(GtkWidget *wid,gpointer userdata)
 {
+	Debug[TRACE] << "About to display dialog..." << endl;
+
 	TestUI *ui=(TestUI *)userdata;
 	CMYKConversionOptions_Dialog(ui->convopts,ui->window);
-}
 
+	Debug[TRACE] << "Updating combo..." << endl;
+
+	SimpleComboOptions opts;
+	ui->BuildComboOpts(opts);
+	simplecombo_set_opts(SIMPLECOMBO(ui->combo),opts);
+}
+#endif
 
 void TestUI::showpreferencesdialog(GtkWidget *wid,gpointer userdata)
 {
@@ -624,7 +654,7 @@ int main(int argc,char **argv)
 {
 	gtk_init(&argc,&argv);
 
-	Debug.SetLevel(WARN);
+	Debug.SetLevel(TRACE);
 
 	gtk_set_locale();
 
