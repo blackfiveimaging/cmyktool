@@ -224,6 +224,15 @@ bool PSRip::TestFinished()
 }
 
 
+void PSRip::WaitFinished()
+{
+	if(monitorthread)
+		monitorthread->WaitFinished();
+	if(ripthread)
+		ripthread->WaitFinished();
+}
+
+
 PSRip::~PSRip()
 {
 	if(monitorthread)

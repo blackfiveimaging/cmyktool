@@ -1,8 +1,8 @@
 Add proper support for greyscale images and profiles.
 
-Need to be able to remove images from the left hand tray.
+| Need to be able to remove images from the left hand tray.
 
-Add newly-created presets to the preset list.
+| Add newly-created presets to the preset list.
 
 Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
 
