@@ -24,6 +24,52 @@ The devicelinks are defined by:
 Also need a "Description" field.
 
 
+Since we need to call both Argyll utilities and GhostScript, need to create a better solution
+for calling command-line programs.
+
+class ExternalProgArgList : public std::deque<std::string>
+{
+	public:
+	ExternalProgArgList() : std::deque<std::string>()
+	{
+	}
+	virtual ~ExternalProgArgList()
+	{
+	}
+	virtual std::string &operator[](const ExternalProgArgList &arglist,int i)
+	{
+		if(i<0)
+			throw "ExternalProgArgList - index must be >= 0";
+		while(size()<=i)
+		{
+			push_back("");
+		}
+		return(std::deque<std::string>::operator[](*this,i));
+	}
+};
+
+class ExternalProgram : public SearchPathHandler
+{
+	public:
+	ExternalProgram() : SearchPathHandler()
+	{
+		SetDefaultPath();
+	}
+	virtual ~ExternalProgram()
+	{
+	}
+	virtual void SetDefaultPath()
+	{
+		// If the application knows where a particular program should be stored,
+		// such as /usr/lib/cups/backend, or c:/Program Files/PhotoPrint/
+		// then override and set in here.
+	}
+	virtual void Run()
+	{
+	}
+};
+
+
 Add a "Width" parameter to the "Hold Grey" code which will cause near-greys to be modified in an
 interpolated fashion between the output of the CMS transform and the pure grey pixel value.
 (This could be useful for hold black mode, too.)
