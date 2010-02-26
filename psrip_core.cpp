@@ -237,6 +237,8 @@ void PSRipOptions::RunProgram(std::string &filename)
 	// Build a GhostScript command according to the following format:
 	// %s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s
 
+	ClearArgs();
+
 	// Select an appropriate GS device for output...
 
 	switch(STRIP_ALPHA(type))
