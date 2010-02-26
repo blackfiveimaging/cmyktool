@@ -8,15 +8,14 @@
 #include "support/progress.h"
 #include "support/threadevent.h"
 #include "support/threadutil.h"
+#include "externalghostscript.h"
 
-
-#define PSRIPOPTIONS_ARGC_MAX 10
-class PSRipOptions : public SearchPathHandler
+class PSRipOptions : public ExternalGhostScript
 {
 	public:
 	PSRipOptions(IS_TYPE type=IS_TYPE_RGB,int resolution=300,int firstpage=0,int lastpage=0,bool textantialias=false,bool gfxantialias=true);
-	~PSRipOptions();
-	char * const *GetArgV(const char *filename,int &argc);
+	virtual ~PSRipOptions();
+	virtual void RunProgram(std::string &filename);
 	void ToDB(ConfigDB &db);
 	void FromDB(ConfigDB &db);
 	IS_TYPE type;
@@ -26,8 +25,6 @@ class PSRipOptions : public SearchPathHandler
 	bool textantialias;
 	bool gfxantialias;
 	protected:
-	int argc;
-	char *argv[PSRIPOPTIONS_ARGC_MAX+1];
 };
 
 class PSRip_TempFile;

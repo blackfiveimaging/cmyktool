@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include <cstdio>
 #include <cstring>
 
@@ -45,9 +46,8 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 {
 	public:
 	Thread_PSRipProcess(PSRip &rip,const char *filename,PSRipOptions &opt)
-		: ThreadFunction(), Thread(this), rip(rip), argc(0), forkpid(-1)
+		: ThreadFunction(), Thread(this), rip(rip), opt(opt), filename(filename)
 	{
-		argv=opt.GetArgV(filename,argc);
 		Start();
 		WaitSync();
 	}
@@ -56,60 +56,18 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 	}
 	virtual int Entry(Thread &t)
 	{
-#ifndef WIN32
-		for(int i=0;i<argc;++i)
-		{
-			if(argv[i])
-				cerr << "Argument: " << argv[i] << endl;
-		}
-		SendSync();
-		switch((forkpid=fork()))
-		{
-			case -1:
-				throw "Unable to launch subprocess";
-				break;
-			case 0:
-				cerr << "Subprocess running..." << endl;
-				execv(argv[0],argv);
-				break;
-			default:
-				cerr << "Waiting for subprocess to complete..." << endl;
-				int status;
-				waitpid(forkpid,&status,0);
-				cerr << "Subprocess complete." << endl;
-				break;
-		}		
-
-#else
-		SendSync();
-
-		string cmd;
-		for(int i=0;i<argc;++i)
-		{
-			if(argv[i])
-			{
-				cmd+=argv[i];
-				cmd+=" ";
-			}
-		}
-		cerr << "Using command " << cmd << endl;
-		system(cmd.c_str());
-#endif
+		opt.RunProgram(filename);
 		return(0);
 	}
 	virtual void Stop()
 	{
-#ifndef WIN32
-		if(forkpid)
-			kill(forkpid,SIGTERM);
-#endif			
+		opt.StopProgram();
 		Thread::Stop();
 	}
 	protected:
 	PSRip &rip;
-	int argc;
-	char * const *argv;
-	int forkpid;
+	PSRipOptions &opt;
+	std::string filename;
 };
 
 
@@ -262,71 +220,38 @@ char *PSRip::GetRippedFilename(int page)
 
 
 PSRipOptions::PSRipOptions(IS_TYPE type,int resolution,int firstpage,int lastpage,bool textantialias,bool gfxantialias)
-	: SearchPathHandler(), type(type),resolution(resolution),firstpage(firstpage),lastpage(lastpage),
-	textantialias(textantialias),gfxantialias(gfxantialias), argc(0)
+	: ExternalGhostScript(), type(type),resolution(resolution),firstpage(firstpage),lastpage(lastpage),
+	textantialias(textantialias),gfxantialias(gfxantialias)
 {
-	// FIXME - need a config file to store paths
-#ifdef WIN32
-	AddPath("c:/gs/gs8.64/bin;c:/Program Files/gs/bin;c:/Program Files/gs/gs8.64/bin");
-#else
-	AddPath("/usr/bin");
-#endif
-
-	for(int i=0;i<(PSRIPOPTIONS_ARGC_MAX+1);++i)
-		argv[i]=NULL;
 }
 
 
 PSRipOptions::~PSRipOptions()
 {
-	for(int i=0;i<(PSRIPOPTIONS_ARGC_MAX+1);++i)
-	{
-		if(argv[i])
-			free(argv[i]);
-	}
 }
 
 
 // Build argv array ready for execv call.  Returns a pointer to the argv array.
-char * const *PSRipOptions::GetArgV(const char *filename,int &retargc)
+void PSRipOptions::RunProgram(std::string &filename)
 {
-	// Free results of any previous run
-	for(int i=0;i<(PSRIPOPTIONS_ARGC_MAX+1);++i)
-	{
-		if(argv[i])
-			free(argv[i]);
-	}
-	argc=0;
-
 	// Build a GhostScript command according to the following format:
 	// %s -sDEVICE=%s -sOutputFile=%s_%%d.tif -r%dx%d %s -dBATCH -dNOPAUSE %s
-
-	// Locate GhostScript executable...
-#ifdef WIN32
-	argv[argc]=SearchPaths("gswin32c.exe");
-#else
-	argv[argc]=SearchPaths("gs");
-#endif
-	if(!argv[argc])
-		throw "Can't locate GhostScript executable!";
-
-	++argc;
 
 	// Select an appropriate GS device for output...
 
 	switch(STRIP_ALPHA(type))
 	{
 		case IS_TYPE_BW:
-			argv[argc]=strdup("-sDEVICE=tifflzw");
+			AddArg("-sDEVICE=tifflzw");
 			break;
 		case IS_TYPE_GREY:
-			argv[argc]=strdup("-sDEVICE=tiffgray");
+			AddArg("-sDEVICE=tiffgray");
 			break;
 		case IS_TYPE_RGB:
-			argv[argc]=strdup("-sDEVICE=tiff24nc");
+			AddArg("-sDEVICE=tiff24nc");
 			break;
 		case IS_TYPE_CMYK:
-			argv[argc]=strdup("-sDEVICE=tiff32nc");
+			AddArg("-sDEVICE=tiff32nc");
 			break;
 		case IS_TYPE_DEVICEN:
 			// FIXME: add support for DeviceN using the tiffsep device.
@@ -334,58 +259,49 @@ char * const *PSRipOptions::GetArgV(const char *filename,int &retargc)
 			throw "PSRip: type not yet supported";
 			break;
 	}
-	cerr << "Using Ghostscript device: " << argv[argc] << endl;
-	++argc;
 
 	// Enable interpolation
-	argv[argc++]=strdup("-dDOINTERPOLATE");
+	AddArg("-dDOINTERPOLATE");
 
 	// Create anti-aliasing parameters
 	if(textantialias)
-		argv[argc++]=strdup("-dTextAlphaBits=4");
+		AddArg("-dTextAlphaBits=4");
 
 	if(gfxantialias)
-		argv[argc++]=strdup("-dGraphicsAlphaBits=4");
+		AddArg("-dGraphicsAlphaBits=4");
 
 	// Create FirstPage and LastPage paramters, if needed...	
 	if(firstpage)
 	{
-		const char *pagefmt=" -dFirstPage=%d";
-		int bl=strlen(pagefmt)+20;
-		argv[argc]=(char *)malloc(bl);
-		snprintf(argv[argc],bl,pagefmt,firstpage);
-		++argc;
+		std::stringstream tmp;
+		tmp << "-dFirstPage=" << firstpage;
+		AddArg(tmp.str());
 	}
 
 	if(lastpage)
 	{
-		const char *pagefmt=" -dFirstPage=%d";
-		int bl=strlen(pagefmt)+20;
-		argv[argc]=(char *)malloc(bl);
-		snprintf(argv[argc],bl,pagefmt,lastpage);
-		++argc;
+		std::stringstream tmp;
+		tmp << "-dLastPage=" << firstpage;
+		AddArg(tmp.str());
 	}
 
 	// Build output name;
-	char *tmp=BuildFilename(filename,"_%03d","tif");
-	argv[argc++]=BuildFilename("-sOutputFile=",tmp,"");
+	char *tmp=BuildFilename(filename.c_str(),"_%03d","tif");
+	char *tmp2=BuildFilename("-sOutputFile=",tmp,"");
+	AddArg(tmp2);
+	free(tmp2);
 	free(tmp);
 
 	// Build resolution;
-	const char *resfmt="-r%dx%d";
-	int resl=strlen(resfmt)+20;
-	argv[argc]=(char *)malloc(resl);
-	snprintf(argv[argc],resl,resfmt,resolution,resolution);
-	++argc;
+	std::stringstream tmpss;
+	tmpss << "-r" << resolution << "x" << resolution << endl;
+	AddArg(tmpss.str());
 
-	argv[argc++]=strdup("-dBATCH");
-	argv[argc++]=strdup("-dNOPAUSE");
-	argv[argc++]=strdup(filename);
-	argv[argc]=NULL;
+	AddArg("-dBATCH");
+	AddArg("-dNOPAUSE");
+	AddArg(filename);
 
-
-	retargc=argc;
-	return(&argv[0]);
+	ExternalGhostScript::RunProgram();
 }
 
 
