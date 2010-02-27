@@ -12,6 +12,7 @@
 #include "support/progresstext.h"
 #include "support/util.h"
 #include "psripui.h"
+#include "debug.h"
 
 #include "config.h"
 #include "gettext.h"
@@ -23,6 +24,8 @@ using namespace std;
 int main(int argc,char *argv[])
 {
 	gtk_init(&argc,&argv);
+
+	Debug.SetLevel(TRACE);
 
 	try
 	{

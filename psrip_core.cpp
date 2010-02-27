@@ -49,7 +49,6 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 		: ThreadFunction(), Thread(this), rip(rip), opt(opt), filename(filename)
 	{
 		Start();
-		WaitSync();
 	}
 	virtual ~Thread_PSRipProcess()
 	{
