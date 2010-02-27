@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-02-05 22:59+0000\n"
+"POT-Creation-Date: 2010-02-27 00:14+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
@@ -12,56 +12,61 @@ msgstr ""
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 
-#: cmyktool.cpp:151
+#: cmyktool.cpp:152
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:179
+#: cmyktool.cpp:180
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:198
+#: cmyktool.cpp:187
+#, fuzzy
+msgid "Remove Images"
+msgstr "Удалить"
+
+#: cmyktool.cpp:206
 msgid "Convert"
 msgstr "Преобразовать"
 
-#: cmyktool.cpp:206
+#: cmyktool.cpp:214
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:228 dialogs.cpp:85
+#: cmyktool.cpp:236 dialogs.cpp:87
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:259
+#: cmyktool.cpp:267
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:335
+#: cmyktool.cpp:343
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:335
+#: cmyktool.cpp:343
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:343
+#: cmyktool.cpp:351
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
-#: cmyktool.cpp:364 miscwidgets/imageselector.cpp:478
+#: cmyktool.cpp:372 miscwidgets/imageselector.cpp:478
 #: profilemanager/profileselector.cpp:39
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:364
+#: cmyktool.cpp:372
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:473
+#: cmyktool.cpp:494
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:503 cmyktool.cpp:646
+#: cmyktool.cpp:524 cmyktool.cpp:676
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -224,47 +229,55 @@ msgstr ""
 msgid "Choose a name for this preset..."
 msgstr "Дайте профилю название..."
 
-#: dialogs.cpp:100
+#: dialogs.cpp:102
 msgid "Colour Management"
 msgstr "Управление цветом"
 
-#: dialogs.cpp:119
+#: dialogs.cpp:121
 msgid "ICC colour profile paths"
 msgstr "Расположение профилей ICC"
 
-#: dialogs.cpp:140
+#: dialogs.cpp:142
 msgid "Default RGB Profile:"
 msgstr "Профиль RGB по умолчанию:"
 
-#: dialogs.cpp:154
+#: dialogs.cpp:156
 msgid "Default CMYK Profile:"
 msgstr "Профиль CMYK по умолчанию:"
 
-#: dialogs.cpp:168
+#: dialogs.cpp:170
 msgid "Monitor Profile:"
 msgstr "Профиль монитора:"
 
-#: dialogs.cpp:182
+#: dialogs.cpp:184
 msgid "Default Output Profile:"
 msgstr "Профиль вывода по умолчанию:"
 
-#: dialogs.cpp:197
-msgid "Paths"
-msgstr "Расположение данных"
+#: dialogs.cpp:198
+msgid "External utilities"
+msgstr ""
 
 #: dialogs.cpp:217
+msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
+msgstr ""
+
+#: dialogs.cpp:234
+msgid "Search paths for GhostScript executable"
+msgstr ""
+
+#: dialogs.cpp:261
 msgid "Path to Argyll's 'tiffgamut' command"
 msgstr ""
 
-#: dialogs.cpp:221
+#: dialogs.cpp:265
 msgid "Path to Argyll utilities (TIFFGamut and ICCLink)"
 msgstr ""
 
-#: dialogs.cpp:226
+#: dialogs.cpp:270
 msgid "Path to Argyll's 'collink' command"
 msgstr ""
 
-#: dialogs.cpp:230
+#: dialogs.cpp:274
 msgid "Path to Argyll's collink command"
 msgstr ""
 
@@ -459,3 +472,6 @@ msgstr ""
 #: psripui.cpp:120
 msgid "PSRip Test"
 msgstr ""
+
+#~ msgid "Paths"
+#~ msgstr "Расположение данных"

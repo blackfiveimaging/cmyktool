@@ -6,6 +6,8 @@
 #include "debug.h"
 #include "externalghostscript.h"
 
+
+
 int main(int argc,char **argv)
 {
 	Debug.SetLevel(TRACE);

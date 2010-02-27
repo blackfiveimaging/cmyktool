@@ -1,10 +1,17 @@
 #ifndef EXTERNALGHOSTSCRIPT_H
 #define EXTERNALGHOSTSCRIPT_H
 
-#include "dirtreewalker.h"
-#include "searchpath.h"
-#include "debug.h"
-#include "externalprog.h"
+#include "support/dirtreewalker.h"
+#include "support/searchpath.h"
+#include "support/debug.h"
+#include "support/externalprog.h"
+
+#ifdef WIN32
+#include <w32api.h>
+#define _WIN32_IE IE5
+#define _WIN32_WINNT Windows2000
+#include <shlobj.h>
+#endif
 
 class ExternalGhostScript : public ExternalProgram
 {
@@ -22,29 +29,33 @@ class ExternalGhostScript : public ExternalProgram
 		// FIXME - Need to scan user's homedir if Ghostscript's not found in Program Files
 
 		static char programfiles[MAX_PATH]={0};
-		SHGetFolderPath(NULL,CSIDL_PROGRAM_FILES,NULL,SHGFP_TYPE(SHGFP_TYPE_CURRENT),programfile);
+		SHGetFolderPath(NULL,CSIDL_PROGRAM_FILES,NULL,SHGFP_TYPE(SHGFP_TYPE_CURRENT),programfiles);
+
+		Debug[TRACE] << "Program Files path: " << programfiles << std::endl;
 
 		// Hunt for a Ghostscript Installation...
 		DirTreeWalker dtw(programfiles);
 		DirTreeWalker *w;
 		while((w=dtw.NextDirectory()))
 		{
-			Debug[TRACE] << "Checking path: " << w->c_str() << std::endl;
-			const char *p=w->c_str();
-			if(strncasecmp(p,"GS",2)==0)
+			if(MatchBaseName("gs",w->c_str())==0)
 			{
-				std::string path=p+std::string("/bin/");
-				Debug[TRACE] << "Adding " << path << " to search path" << std::endl;
-				prog.AddPath(path.c_str());
+				std::string gspath=FindParent(*w,"gswin32c");
+				if(gspath.size())
+				{
+					Debug[TRACE] << "Adding " << gspath << " to search path" << std::endl;
+					AddPath(gspath.c_str());
+				}
 			}
 		}
-		args[0]="gswin32c";
+		args[0]="gswin32c.exe";
 		Debug[TRACE] << "args[0] is now: " << args[0] << std::endl;
 #else
 		AddPath("/usr/bin:/usr/local/bin");
 		args[0]="gs";
 		Debug[TRACE] << "args[0] is now: " << args[0] << std::endl;
 #endif
+		Debug[TRACE] << GetPaths() << std::endl;
 	}
 	bool CheckPath()
 	{

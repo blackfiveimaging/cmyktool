@@ -89,7 +89,7 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 	{
 		SendSync();
 
-		cerr << "Monitor thread active" << endl;
+		Debug[TRACE] << "*** Monitor thread active" << std::endl;
 
 		// scan the output files and add them to the TempFileTracker
 
@@ -97,14 +97,14 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 		char *rfn=NULL;
 		while(!rip.ripthread->TestFinished())
 		{
-//			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
+			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
 			if((rfn=rip.GetRippedFilename(page+1)))
 			{
-				cerr << "File monitor thread found file: " << rfn << endl;
+				Debug[TRACE] << "File monitor thread found file: " << rfn << std::endl;
 				free(rfn);
 				if((rfn=rip.GetRippedFilename(page)))
 				{
-					cerr << "So now safe to add: " << rfn << endl;
+					Debug[TRACE] << "So now safe to add: " << rfn << std::endl;
 					new PSRip_TempFile(&rip,rfn);
 					++page;
 					free(rfn);
@@ -114,11 +114,13 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 			}
 			else
 			{
+				Debug[TRACE] << "File not found, so sleeping..." << std::endl;
 #ifdef WIN32
 				Sleep(100);
 #else
 				usleep(100000);
 #endif
+				Debug[TRACE] << "Woken from sleep - trying again..." << std::endl;
 			}
 		}
 		while((rfn=rip.GetRippedFilename(page)))
@@ -206,11 +208,15 @@ char *PSRip::GetRippedFilename(int page)
 {
 	char *buf=(char *)malloc(strlen(tempname)+10);
 	snprintf(buf,strlen(tempname)+10,"%s_%03d.tif",tempname,page);
+	Debug[TRACE] << "Checking existence of file: " << buf << std::endl;
 	if(!CheckFileExists(buf))
 	{
+		Debug[TRACE] << "Doesn't exist" << std::endl;
 		free(buf);
 		buf=NULL;
 	}
+	else
+		Debug[TRACE] << "Exists" << std::endl;
 	return(buf);
 }	
 
@@ -286,6 +292,7 @@ void PSRipOptions::RunProgram(std::string &filename)
 		AddArg(tmp.str());
 	}
 
+	// FIXME - need to escape this for the shell!
 	// Build output name;
 	char *tmp=BuildFilename(filename.c_str(),"_%03d","tif");
 	char *tmp2=BuildFilename("-sOutputFile=",tmp,"");
@@ -300,6 +307,7 @@ void PSRipOptions::RunProgram(std::string &filename)
 
 	AddArg("-dBATCH");
 	AddArg("-dNOPAUSE");
+
 	AddArg(filename);
 
 	ExternalGhostScript::RunProgram();
