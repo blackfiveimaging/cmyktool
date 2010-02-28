@@ -95,7 +95,7 @@ class CMYKConversionOptsDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
 		gtk_widget_show(label);
 
-		ps = profileselector_new(&opts.profilemanager);
+		ps = profileselector_new(&opts.profilemanager,IS_TYPE_NULL,true,true);
 		g_signal_connect(ps,"changed",G_CALLBACK(profile_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),ps,1,2,row,row+1);
 		gtk_widget_show(ps);
