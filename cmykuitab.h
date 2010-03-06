@@ -8,6 +8,7 @@
 #include "conversionopts.h"
 #include "support/debug.h"
 
+#include "cmyktool_core.h"
 
 enum CMYKTabDisplayMode {CMYKDISPLAY_INSPECT,CMYKDISPLAY_PROOF_ADAPT_WHITE,CMYKDISPLAY_PROOF};
 
@@ -89,7 +90,7 @@ class CMYKUITab_View
 class CMYKUITab : public UITab
 {
 	public:
-	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename);
+	CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKTool_Core &core,const char *filename);
 	~CMYKUITab();
 	bool GetLinked();
 	void SetLinked(bool linked);
@@ -106,8 +107,8 @@ class CMYKUITab : public UITab
 	static void DisplayModeChanged(GtkWidget *widget,gpointer userdata);
 	static void MouseMove(GtkWidget *widget,gpointer userdata);
 	void Redraw();
+	CMYKTool_Core &core;
 	GtkWidget *parent;
-	JobDispatcher &dispatcher;
 	GtkWidget *hbox;
 	GtkWidget *colsel;
 	GtkWidget *pbview;
@@ -118,7 +119,6 @@ class CMYKUITab : public UITab
 	bool popupshown;
 	CachedImage *image;
 	DeviceNColorantList *collist;
-	CMYKConversionOptions convopts;
 	char *filename;
 	Job *renderjob;
 	GtkWidget *chain1;

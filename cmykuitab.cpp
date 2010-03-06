@@ -156,7 +156,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			if(tab.view.displaymode==CMYKDISPLAY_INSPECT && STRIP_ALPHA(is->type)==IS_TYPE_RGB)
 				is->SetEmbeddedProfile(NULL);
 
-			Debug[TRACE] << "Opts output space" << tab.convopts.GetOutProfile() << endl;
+			Debug[TRACE] << "Opts output space" << tab.core.GetOptions().GetOutProfile() << endl;
 
 			LCMSWrapper_Intent intent=LCMSWRAPPER_INTENT_DEFAULT;
 			switch(tab.view.displaymode)
@@ -277,7 +277,7 @@ class UITab_CacheJob : public Job
 		{
 			ImageSource *is=ISLoadImage(filename);
 
-			is=tab.convopts.Apply(is,NULL,cw->factory);
+			is=tab.core.GetOptions().Apply(is,NULL,cw->factory);
 
 			tab.image=new CachedImage(is);
 
@@ -385,9 +385,9 @@ void CMYKUITab::DisplayModeChanged(GtkWidget *widget,gpointer userdata)
 }
 
 
-CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKConversionOptions &opts,JobDispatcher &dispatcher,const char *filename)
-	: UITab(notebook),  parent(parent), dispatcher(dispatcher), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
-	convopts(opts), filename(NULL), renderjob(NULL), chain1(NULL), chain2(NULL), view(this), spinner()
+CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKTool_Core &core,const char *filename)
+	: UITab(notebook), core(core), parent(parent), colsel(NULL), pbview(NULL), image(NULL), collist(NULL),
+	filename(NULL), renderjob(NULL), chain1(NULL), chain2(NULL), view(this), spinner()
 {
 	// Get pixbufs for chain icon...
 	GdkPixbuf *chain1pb=PixbufFromImageData(chain1_data,sizeof(chain1_data));
@@ -569,14 +569,14 @@ void CMYKUITab::SetImage(const char *fname)
 		ImageSource *is=ISLoadImage(fname);
 		if(is)
 		{
-			collist=new DeviceNColorantList(convopts.GetOutputType(is->type));
+			collist=new DeviceNColorantList(core.GetOptions().GetOutputType(is->type));
 			coloranttoggle_set_colorants(COLORANTTOGGLE(colsel),collist);
 
 			char *fn=SafeStrdup(fname);
 			SetTabText(basename(fn));
 			free(fn);
 
-			dispatcher.AddJob(new UITab_CacheJob(*this,filename));
+			core.GetDispatcher().AddJob(new UITab_CacheJob(*this,filename));
 			delete is;
 		}
 	}
@@ -601,9 +601,9 @@ void CMYKUITab::Redraw()
 	// Cancel existing render job.  This is harmless if the job's completed already,
 	// even if the object's been deleted
 	if(renderjob)
-		dispatcher.CancelJob(renderjob);
+		core.GetDispatcher().CancelJob(renderjob);
 	if(image)
-		dispatcher.AddJob(renderjob=new UITab_RenderJob(*this));
+		core.GetDispatcher().AddJob(renderjob=new UITab_RenderJob(*this));
 }
 
 
@@ -724,7 +724,7 @@ class UITab_SaveDialog
 		// Set default filename
 
 		char *tmpfn;
-		if(tab.convopts.GetOutputType()==IS_TYPE_CMYK)
+		if(tab.core.GetOptions().GetOutputType()==IS_TYPE_CMYK)
 			tmpfn=BuildFilename(tab.filename,"-CMYK","jpg");
 		else
 			tmpfn=BuildFilename(tab.filename,"-exported","jpg");

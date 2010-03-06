@@ -97,7 +97,7 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 		char *rfn=NULL;
 		while(!rip.ripthread->TestFinished())
 		{
-			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
+//			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
 			if((rfn=rip.GetRippedFilename(page+1)))
 			{
 				Debug[TRACE] << "File monitor thread found file: " << rfn << std::endl;
@@ -114,13 +114,13 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 			}
 			else
 			{
-				Debug[TRACE] << "File not found, so sleeping..." << std::endl;
+//				Debug[TRACE] << "File not found, so sleeping..." << std::endl;
 #ifdef WIN32
 				Sleep(100);
 #else
 				usleep(100000);
 #endif
-				Debug[TRACE] << "Woken from sleep - trying again..." << std::endl;
+//				Debug[TRACE] << "Woken from sleep - trying again..." << std::endl;
 			}
 		}
 		while((rfn=rip.GetRippedFilename(page)))
@@ -208,15 +208,15 @@ char *PSRip::GetRippedFilename(int page)
 {
 	char *buf=(char *)malloc(strlen(tempname)+10);
 	snprintf(buf,strlen(tempname)+10,"%s_%03d.tif",tempname,page);
-	Debug[TRACE] << "Checking existence of file: " << buf << std::endl;
+//	Debug[TRACE] << "Checking existence of file: " << buf << std::endl;
 	if(!CheckFileExists(buf))
 	{
-		Debug[TRACE] << "Doesn't exist" << std::endl;
+//		Debug[TRACE] << "Doesn't exist" << std::endl;
 		free(buf);
 		buf=NULL;
 	}
-	else
-		Debug[TRACE] << "Exists" << std::endl;
+//	else
+//		Debug[TRACE] << "Exists" << std::endl;
 	return(buf);
 }	
 

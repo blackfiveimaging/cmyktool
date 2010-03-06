@@ -53,7 +53,6 @@ decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
 cmyktool_SOURCES = cmyktool.cpp
-tabui_SOURCES = tabui.cpp
 
 LDADD = \
 	libdeflattenui.la \

@@ -46,6 +46,14 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB
 	{
 		return(profilemanager);
 	}
+	JobDispatcher &GetDispatcher()
+	{
+		return(dispatcher);
+	}
+	CMYKConversionOptions &GetOptions()
+	{
+		return(convopts);
+	};
 	protected:
 	ProfileManager profilemanager;
 	JobDispatcher dispatcher;

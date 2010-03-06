@@ -377,7 +377,7 @@ int TestUI::BuildComboOpts(SimpleComboOptions &opts)
 
 void TestUI::ProcessImage(const char *filename)
 {
-	new CMYKUITab(window,notebook,convopts,dispatcher,filename);
+	new CMYKUITab(window,notebook,*this,filename);
 }
 
 
