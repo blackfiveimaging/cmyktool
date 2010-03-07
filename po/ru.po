@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-02-27 00:14+0000\n"
+"POT-Creation-Date: 2010-03-07 13:05+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
@@ -41,7 +41,7 @@ msgstr "Параметры CMYKTool"
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:343
+#: cmyktool.cpp:343 profilemanager/profileselector.cpp:193
 msgid "None"
 msgstr "Без профиля"
 
@@ -145,19 +145,23 @@ msgstr "TIFF — 8 разрядов на цветовой канал, для м�
 msgid "JPEG Quality:"
 msgstr "Качество JPEG:"
 
-#: cmykuitab.cpp:679
+#: cmykuitab.cpp:682
+msgid "Resolution:"
+msgstr ""
+
+#: cmykuitab.cpp:698
 msgid "Embed ICC Profile"
 msgstr "Встроить профиль ICC"
 
-#: cmykuitab.cpp:752
+#: cmykuitab.cpp:793
 msgid "File exists - OK to overwrite?"
 msgstr "Файл уже существует. Перезаписать?"
 
-#: cmykuitab.cpp:760 cmykuitab.cpp:821
+#: cmykuitab.cpp:807 cmykuitab.cpp:870
 msgid "Saving"
 msgstr ""
 
-#: cmykuitab.cpp:818
+#: cmykuitab.cpp:867
 msgid "Save image - please choose filename"
 msgstr ""
 
@@ -449,19 +453,19 @@ msgstr ""
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:494
+#: profilemanager/profilemanager.cpp:497
 msgid "No Proof profile provided!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:828
+#: profilemanager/profilemanager.cpp:831
 msgid "Default"
 msgstr "По умолчанию"
 
-#: profilemanager/profilemanager.cpp:836
+#: profilemanager/profilemanager.cpp:839
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
-#: profilemanager/profileselector.cpp:384
+#: profilemanager/profileselector.cpp:392
 msgid "Please choose a valid ICC profile"
 msgstr "Выберите корректный цветовой профиль"
 

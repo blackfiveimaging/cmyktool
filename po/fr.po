@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.2\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-02-27 00:14+0000\n"
+"POT-Creation-Date: 2010-03-07 13:05+0000\n"
 "PO-Revision-Date: 2010-02-05 22:50+0000\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -45,7 +45,7 @@ msgstr "Prfrences..."
 msgid "Previous settings"
 msgstr "Paramtres Prcdents"
 
-#: cmyktool.cpp:343
+#: cmyktool.cpp:343 profilemanager/profileselector.cpp:193
 msgid "None"
 msgstr "Aucun"
 
@@ -145,19 +145,23 @@ msgstr "TIFF - 16-bit, pour une qualit optimale"
 msgid "JPEG Quality:"
 msgstr "Qualit JPEG :"
 
-#: cmykuitab.cpp:679
+#: cmykuitab.cpp:682
+msgid "Resolution:"
+msgstr ""
+
+#: cmykuitab.cpp:698
 msgid "Embed ICC Profile"
 msgstr "Profil ICC incorpor"
 
-#: cmykuitab.cpp:752
+#: cmykuitab.cpp:793
 msgid "File exists - OK to overwrite?"
 msgstr "Le fichier existe dj : craser ?"
 
-#: cmykuitab.cpp:760 cmykuitab.cpp:821
+#: cmykuitab.cpp:807 cmykuitab.cpp:870
 msgid "Saving"
 msgstr "Enregistrer"
 
-#: cmykuitab.cpp:818
+#: cmykuitab.cpp:867
 msgid "Save image - please choose filename"
 msgstr "Enregistre l'image - choisissez un nom de fichier"
 
@@ -450,19 +454,19 @@ msgstr "Impossible sans un profil moniteur valide!"
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr "Impossible sans un profil RVB par dfaut valide!"
 
-#: profilemanager/profilemanager.cpp:494
+#: profilemanager/profilemanager.cpp:497
 msgid "No Proof profile provided!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:828
+#: profilemanager/profilemanager.cpp:831
 msgid "Default"
 msgstr "Defaut"
 
-#: profilemanager/profilemanager.cpp:836
+#: profilemanager/profilemanager.cpp:839
 msgid "Default rendering intent"
 msgstr "Intention de rendu par dfaut"
 
-#: profilemanager/profileselector.cpp:384
+#: profilemanager/profileselector.cpp:392
 msgid "Please choose a valid ICC profile"
 msgstr "Choisissez un Profil ICC valide"
 
