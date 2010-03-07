@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-03-07 13:05+0000\n"
+"POT-Creation-Date: 2010-03-07 13:25+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
@@ -66,7 +66,7 @@ msgstr "Создать новый профиль"
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:524 cmyktool.cpp:676
+#: cmyktool.cpp:524 cmyktool.cpp:681
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -453,15 +453,15 @@ msgstr ""
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:497
+#: profilemanager/profilemanager.cpp:494
 msgid "No Proof profile provided!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:831
+#: profilemanager/profilemanager.cpp:828
 msgid "Default"
 msgstr "По умолчанию"
 
-#: profilemanager/profilemanager.cpp:839
+#: profilemanager/profilemanager.cpp:836
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 

@@ -655,6 +655,11 @@ int main(int argc,char **argv)
 	gtk_init(&argc,&argv);
 
 	Debug.SetLevel(TRACE);
+#ifdef WIN32
+	char *logname=substitute_homedir("$HOME" SEARCHPATH_SEPARATOR_S ".cmyktool_errorlog");
+	Debug.SetLogFile(logname);
+	delete logname;
+#endif
 
 	gtk_set_locale();
 
