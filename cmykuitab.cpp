@@ -672,6 +672,25 @@ class UITab_SaveDialog
 		gtk_table_attach(GTK_TABLE(table),quality,1,2,row,row+1,gao,GTK_SHRINK,0,0);
 		gtk_widget_show(quality);
 
+
+		++row;
+
+		Debug[TRACE] << "Creating label..." << endl;
+
+		// Resolution override...
+
+		label=gtk_label_new(_("Resolution:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.95,0.5);
+		gtk_table_attach(GTK_TABLE(table),label,0,1,row,row+1,GTK_SHRINK,GTK_SHRINK,0,0);
+		gtk_widget_show(label);
+
+		Debug[TRACE] << "Creating spin button..." << endl;
+
+		resolution=gtk_spin_button_new_with_range(36,2400,1);
+		gtk_table_attach(GTK_TABLE(table),resolution,1,2,row,row+1,gao,GTK_SHRINK,0,0);
+		gtk_widget_show(resolution);
+
+
 		++row;
 
 		// Embed Profile setting...
@@ -693,7 +712,7 @@ class UITab_SaveDialog
 			gtk_widget_destroy(dialog);
 		tab.UnRef();
 	}
-	static void format_changed(GtkDialog *dialog, gpointer userdata)
+	static void format_changed(GtkWidget *widget, gpointer userdata)
 	{
 		UITab_SaveDialog *dlg=(UITab_SaveDialog *)userdata;
 		
@@ -706,6 +725,8 @@ class UITab_SaveDialog
 		Debug[TRACE] << "Set widget sensitivity " << endl;
 
 		const char *fn=gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dlg->filechooser));
+		if(!fn)
+			fn=strdup(dlg->filename.c_str());
 		if(fn)
 		{
 			Debug[TRACE] << "Got filename: " << fn << endl;
@@ -728,12 +749,32 @@ class UITab_SaveDialog
 			tmpfn=BuildFilename(tab.filename,"-CMYK","jpg");
 		else
 			tmpfn=BuildFilename(tab.filename,"-exported","jpg");
+		filename=tmpfn;
 		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(filechooser),g_path_get_dirname(tmpfn));
 		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(filechooser),g_path_get_basename(tmpfn));
 		free(tmpfn);
+		Debug[TRACE] << "Getting defaults" << endl;
+		int qual=tab.core.FindInt("SaveJPEGQuality");
+		Debug[TRACE] << "Got quality: " << qual << endl;
 
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(quality),95);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(embedprofile),true);
+		// We fetch the image's native resolution, and if it's 72dpi we fetch the
+		// resolution from the configdb.  This works around the GdkPixbuf loaders'
+		// inability to pick up the resolution.
+
+		ImageSource *is=tab.image->GetImageSource();
+		int res=is->xres;
+		if(res==72)
+			res=tab.core.FindInt("SaveResolution");
+
+		Debug[TRACE] << "Got resolution: " << res << endl;
+		bool embedflag=bool(tab.core.FindInt("SaveEmbedProfile"));
+		Debug[TRACE] << "Got embed: " << embedflag << endl;
+		int fmt=tab.core.FindInt("SaveFormat");
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(quality),qual);
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(resolution),res);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(embedprofile),embedflag);
+		simplecombo_set_index(SIMPLECOMBO(format),fmt);
+		format_changed(format,this);
 	}
 	void StoreDefaults()
 	{
@@ -755,7 +796,13 @@ class UITab_SaveDialog
 
 					SaveDialog_Format fmt=SaveDialog_Format(simplecombo_get_index(SIMPLECOMBO(dlg->format)));
 					int quality=gtk_spin_button_get_value(GTK_SPIN_BUTTON(dlg->quality));
-					bool embedprofile=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg->embedprofile));	
+					int resolution=gtk_spin_button_get_value(GTK_SPIN_BUTTON(dlg->resolution));
+					bool embedprofile=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg->embedprofile));
+
+					dlg->tab.core.SetInt("SaveFormat",int(fmt));
+					dlg->tab.core.SetInt("SaveResolution",int(resolution));
+					dlg->tab.core.SetInt("SaveJPEGQuality",int(quality));
+					dlg->tab.core.SetInt("SaveEmbedProfile",int(embedprofile));
 
 					ProgressBar p(_("Saving"),true,dlg->dialog);
 					ImageSource *is=dlg->tab.image->GetImageSource();
@@ -780,7 +827,7 @@ class UITab_SaveDialog
 					imgsaver->Save();
 
 					delete imgsaver;
-					delete is;				
+					delete is;
 
 					done=true;
 				}
@@ -800,7 +847,9 @@ class UITab_SaveDialog
 	GtkWidget *filechooser;
 	GtkWidget *format;
 	GtkWidget *quality;
+	GtkWidget *resolution;
 	GtkWidget *embedprofile;
+	std::string filename;
 };
 
 
