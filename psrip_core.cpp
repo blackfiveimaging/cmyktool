@@ -98,10 +98,9 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 		while(!rip.ripthread->TestFinished())
 		{
 //			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
-			if((rfn=rip.GetRippedFilename(page+1)))
+			if(rip.TestPage(page+1))
 			{
-				Debug[TRACE] << "File monitor thread found file: " << rfn << std::endl;
-				free(rfn);
+				Debug[TRACE] << "File monitor thread found page " << page+1 << std::endl;
 				if((rfn=rip.GetRippedFilename(page)))
 				{
 					Debug[TRACE] << "So now safe to add: " << rfn << std::endl;
@@ -123,13 +122,15 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 //				Debug[TRACE] << "Woken from sleep - trying again..." << std::endl;
 			}
 		}
-		while((rfn=rip.GetRippedFilename(page)))
+		while(rip.TestPage(page))
 		{
+			rfn=rip.GetRippedFilename(page);
 			cerr << "Thread finished -- adding file: " << rfn << endl;
 			new PSRip_TempFile(&rip,rfn);
 			++page;
 			free(rfn);
 		}
+		// FIXME - need to consider concurrency here...
 		rip.Event.Trigger();
 		return(0);
 	}
@@ -206,19 +207,21 @@ PSRip::~PSRip()
 
 char *PSRip::GetRippedFilename(int page)
 {
+	if(!tempname)
+		throw "PSRip: Don't have a tempname yet!";
 	char *buf=(char *)malloc(strlen(tempname)+10);
 	snprintf(buf,strlen(tempname)+10,"%s_%03d.tif",tempname,page);
-//	Debug[TRACE] << "Checking existence of file: " << buf << std::endl;
-	if(!CheckFileExists(buf))
-	{
-//		Debug[TRACE] << "Doesn't exist" << std::endl;
-		free(buf);
-		buf=NULL;
-	}
-//	else
-//		Debug[TRACE] << "Exists" << std::endl;
 	return(buf);
-}	
+}
+
+
+bool PSRip::TestPage(int page)
+{
+	char *fn=GetRippedFilename(page);
+	bool result=CheckFileExists(fn);
+	free(fn);
+	return(result);
+}
 
 
 // PSRipOptions

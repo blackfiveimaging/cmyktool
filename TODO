@@ -24,6 +24,8 @@ The devicelinks are defined by:
 Also need a "Description" field.
 
 
+Preserve clipping paths, as per latest Separate+
+
 | Since we need to call both Argyll utilities and GhostScript, need to create a better solution
 | for calling command-line programs.
 

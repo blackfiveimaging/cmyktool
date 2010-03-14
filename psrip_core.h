@@ -39,6 +39,8 @@ class PSRip : public TempFileTracker, public ThreadEventHandler
 	void Stop();
 	bool TestFinished();
 	void WaitFinished();
+	bool TestPage(int page);
+	void WaitPage(int page);
 	char *GetRippedFilename(int page);
 	ThreadEvent Event;
 	protected:
