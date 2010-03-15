@@ -1,6 +1,8 @@
 #ifndef CMTRANSFORMWORKER_H
 #define CMTRANSFORMWORKER_H
 
+#include "jobqueue.h"
+
 //////////////  Conversion Worker Thread - ///////////////
 // A subclass of the generic worker thread which has a
 // thread-specific TransformFactory, to dodge LCMS's thread safety issues.
