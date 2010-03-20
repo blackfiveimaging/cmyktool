@@ -43,6 +43,7 @@ class CMYKConversionOptions
 	const char *GetOutProfile();
 	IS_TYPE GetOutputType(IS_TYPE deflt=IS_TYPE_RGB);
 	bool GetIgnoreEmbedded();
+	int GetWidth();
 
 	void SetIntent(LCMSWrapper_Intent intent);
 	void SetMode(CMYKConversionMode mode);
@@ -50,6 +51,7 @@ class CMYKConversionOptions
 	void SetInCMYKProfile(const char *in);
 	void SetOutProfile(const char *out);
 	void SetIgnoreEmbedded(bool ignore);
+	void SetWidth(int w);
 
 	void Save(const char *presetname);
 
@@ -63,6 +65,7 @@ class CMYKConversionOptions
 	LCMSWrapper_Intent intent;
 	CMYKConversionMode mode;
 	bool ignoreembedded;
+	int width;
 };
 
 
@@ -125,6 +128,7 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 		SetString("InCMYKProfile",opts.GetInCMYKProfile());
 		SetInt("Intent",opts.GetIntent());
 		SetInt("Mode",opts.GetMode());
+		SetInt("Width",opts.GetWidth());
 		SetInt("IgnoreEmbedded",opts.GetIgnoreEmbedded());
 	}
 	void Retrieve(CMYKConversionOptions &opts)
@@ -134,6 +138,7 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 		opts.SetInCMYKProfile(FindString("InCMYKProfile"));	
 		opts.SetIntent(LCMSWrapper_Intent(FindInt("Intent")));	
 		opts.SetMode(CMYKConversionMode(FindInt("Mode")));	
+		opts.SetWidth(FindInt("Width"));
 		opts.SetIgnoreEmbedded(FindInt("IgnoreEmbedded"));
 	}
 	protected:

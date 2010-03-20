@@ -60,9 +60,27 @@ ISDataType *ImageSource_Deflatten::GetRow(int row)
 			int g=*src++;
 			int b=*src++;
 
-			if((r==g) && (g==b))
+			int tc=(IS_SAMPLEMAX*tmp2[i*tmpdestspp])/65535;
+			int tm=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+1])/65535;
+			int ty=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+2])/65535;
+			int tz=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+3])/65535;
+
+			int ew=effectwidth;
+			if(ew==0)
+				ew=1;		// Avoid division by zero without needing a special-case inner conditional.
+
+			int grey=IS_SAMPLEMAX-(r+g+b)/3;
+
+			int t1=(r-g);
+			int t2=(r-b);
+			if(t1<0)
+				t1=-t1;
+			if(t2<0)
+				t2=-t2;
+			int w=(255*(t1+t2))/IS_SAMPLEMAX;
+
+			if(w==0)
 			{
-				int grey=IS_SAMPLEMAX-g;
 				rowbuffer[i*samplesperpixel]=0;
 				rowbuffer[i*samplesperpixel+1]=0;
 				rowbuffer[i*samplesperpixel+2]=0;
@@ -70,10 +88,19 @@ ISDataType *ImageSource_Deflatten::GetRow(int row)
 			}
 			else
 			{
-				rowbuffer[i*samplesperpixel]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp])/65535;
-				rowbuffer[i*samplesperpixel+1]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+1])/65535;
-				rowbuffer[i*samplesperpixel+2]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+2])/65535;
-				rowbuffer[i*samplesperpixel+3]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+3])/65535;
+				if(w>ew)
+					w=ew;
+				int iw=ew-w;
+
+				rowbuffer[i*samplesperpixel]=(w*tc)/ew;
+				rowbuffer[i*samplesperpixel+1]=(w*tm)/ew;
+				rowbuffer[i*samplesperpixel+2]=(w*ty)/ew;
+				rowbuffer[i*samplesperpixel+3]=((w*tz)+(grey*iw))/ew;
+
+//				rowbuffer[i*samplesperpixel]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp])/65535;
+//				rowbuffer[i*samplesperpixel+1]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+1])/65535;
+//				rowbuffer[i*samplesperpixel+2]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+2])/65535;
+//				rowbuffer[i*samplesperpixel+3]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+3])/65535;
 			}			
 		}
 	}
@@ -85,31 +112,43 @@ ISDataType *ImageSource_Deflatten::GetRow(int row)
 			int g=*src++;
 			int b=*src++;
 
-			if((r|g|b)!=0)
+			int w=(255*(r+g+b))/IS_SAMPLEMAX;
+			int ew=effectwidth;
+			if(ew==0)
+				ew=1;		// Avoid division by zero without needing a special-case inner conditional.
+
+			int tc=(IS_SAMPLEMAX*tmp2[i*tmpdestspp])/65535;
+			int tm=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+1])/65535;
+			int ty=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+2])/65535;
+			int tz=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+3])/65535;
+
+			if(w>effectwidth)
 			{
-				int nc,nm,ny;
-				nc=rowbuffer[i*samplesperpixel]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp])/65535;
-				nm=rowbuffer[i*samplesperpixel+1]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+1])/65535;
-				ny=rowbuffer[i*samplesperpixel+2]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+2])/65535;
-				rowbuffer[i*samplesperpixel+3]=(IS_SAMPLEMAX*tmp2[i*tmpdestspp+3])/65535;
-				lc=(5*lc+nc)/6;
-				lm=(5*lm+nm)/6;
-				ly=(5*ly+ny)/6;
-			}
-			else if (overprintblack)
-			{
-				rowbuffer[i*samplesperpixel]=lc;
-				rowbuffer[i*samplesperpixel+1]=lm;
-				rowbuffer[i*samplesperpixel+2]=ly;
-				rowbuffer[i*samplesperpixel+3]=IS_SAMPLEMAX;
+				rowbuffer[i*samplesperpixel]=tc;
+				rowbuffer[i*samplesperpixel+1]=tm;
+				rowbuffer[i*samplesperpixel+2]=ty;
+				rowbuffer[i*samplesperpixel+3]=tz;
+				lc=(5*lc+tc)/6;
+				lm=(5*lm+tm)/6;
+				ly=(5*ly+ty)/6;
 			}
 			else
 			{
-				rowbuffer[i*samplesperpixel]=0;
-				rowbuffer[i*samplesperpixel+1]=0;
-				rowbuffer[i*samplesperpixel+2]=0;
-				rowbuffer[i*samplesperpixel+3]=IS_SAMPLEMAX;
-			}			
+				if (overprintblack)
+				{
+					rowbuffer[i*samplesperpixel]=lc;
+					rowbuffer[i*samplesperpixel+1]=lm;
+					rowbuffer[i*samplesperpixel+2]=ly;
+					rowbuffer[i*samplesperpixel+3]=IS_SAMPLEMAX;
+				}
+				else
+				{
+					rowbuffer[i*samplesperpixel]=(w*tc)/ew;
+					rowbuffer[i*samplesperpixel+1]=(w*tm)/ew;
+					rowbuffer[i*samplesperpixel+2]=(w*ty)/ew;
+					rowbuffer[i*samplesperpixel+3]=((w*tz)+(IS_SAMPLEMAX*(ew-w)))/ew;
+				}			
+			}
 		}
 	}
 	else
@@ -134,8 +173,10 @@ ISDataType *ImageSource_Deflatten::GetRow(int row)
 }
 
 
-ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp,CMSProfile *outp,bool preserveblack,bool overprintblack,bool preservegrey)
-	: ImageSource(source), source(source), preserveblack(preserveblack), overprintblack(overprintblack), preservegrey(preservegrey)
+ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp,CMSProfile *outp,
+		bool preserveblack,bool overprintblack,bool preservegrey,int effectwidth)
+	: ImageSource(source), source(source), preserveblack(preserveblack),
+		overprintblack(overprintblack), preservegrey(preservegrey), effectwidth(effectwidth)
 {
 	CMSProfile *emb=new CMSProfile(*outp);
 	SetEmbeddedProfile(emb,true);
@@ -149,8 +190,10 @@ ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp
 }
 
 
-ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,bool preserveblack,bool overprintblack,bool preservegrey)
-	: ImageSource(source), source(source), transform(transform), preserveblack(preserveblack), overprintblack(overprintblack), preservegrey(preservegrey)
+ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,
+		bool preserveblack,bool overprintblack,bool preservegrey, int effectwidth)
+	: ImageSource(source), source(source), transform(transform), preserveblack(preserveblack),
+		overprintblack(overprintblack), preservegrey(preservegrey), effectwidth(effectwidth)
 {
 	SetEmbeddedProfile(NULL);
 	disposetransform=false;
@@ -205,6 +248,7 @@ void ImageSource_Deflatten::Init()
 	cerr << "tmpdestspp: " << tmpdestspp << endl;
 	cerr << "samplesperpixel: " << samplesperpixel << endl;
 	cerr << "type: " << type << endl;
+	cerr << "effectwidth: " << effectwidth << endl;
 
 	MakeRowBuffer();
 }

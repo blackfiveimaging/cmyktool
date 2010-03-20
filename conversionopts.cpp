@@ -28,13 +28,14 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 	ConfigTemplate("IgnoreEmbedded",0),
 	ConfigTemplate("Intent",0),
 	ConfigTemplate("Mode",1),
+	ConfigTemplate("Width",10),
 	ConfigTemplate()
 };
 
 
 CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm)
 	: profilemanager(pm), inrgbprofile("sRGB Color Space Profile.icm"), incmykprofile("USWebCoatedSWOP.icc"),
-	outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL), ignoreembedded(false)
+	outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL), ignoreembedded(false), width(0)
 {
 }
 
@@ -99,6 +100,12 @@ const char *CMYKConversionOptions::GetOutProfile()
 }
 
 
+int CMYKConversionOptions::GetWidth()
+{
+	return(width);
+}
+
+
 void CMYKConversionOptions::SetIntent(LCMSWrapper_Intent intent)
 {
 	this->intent=intent;
@@ -135,6 +142,12 @@ void CMYKConversionOptions::SetOutProfile(const char *out)
 {
 	if(out)
 		outprofile=string(out);
+}
+
+
+void CMYKConversionOptions::SetWidth(int w)
+{
+	width=w;
 }
 
 
@@ -210,10 +223,12 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 				Debug[TRACE] << "Getting transform from factory" << endl;
 				CMSTransform *trans=factory->GetTransform(outprof,NULL,intent);
 				if(trans)
-					src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+					src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+						mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 			}
 			else
-				src=new ImageSource_Deflatten(src,outprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+				src=new ImageSource_Deflatten(src,outprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+					mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 
 			CMSProfile *embprof=NULL;
 
@@ -240,10 +255,12 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 			{
 				CMSTransform *trans=factory->GetTransform(outprof,inprof,intent);
 				if(trans)
-					src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+					src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+						mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 			}
 			else
-				src=new ImageSource_Deflatten(src,inprof,outprof,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+				src=new ImageSource_Deflatten(src,inprof,outprof,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+					mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 			src->SetEmbeddedProfile(outprof,true);
 		}
 	}
@@ -251,7 +268,8 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	{
 		// No output profile - use a naive conversion instead.
 		CMSTransform *trans=new NaiveCMYKTransform(src);
-		src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY);
+		src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+			mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 	}
 	if(freeinprof)
 		delete inprof;

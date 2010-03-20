@@ -21,8 +21,10 @@
 class ImageSource_Deflatten : public ImageSource
 {
 	public:
-	ImageSource_Deflatten(ImageSource *source,CMSProfile *inp,CMSProfile *outp,bool preserveblack=true,bool overprintblack=false,bool preservegrey=false);
-	ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,bool preserveblack=true,bool overprintblack=false,bool preservegrey=false);
+	ImageSource_Deflatten(ImageSource *source,CMSProfile *inp,CMSProfile *outp,
+		bool preserveblack=true,bool overprintblack=false,bool preservegrey=false,int effectwidth=0);
+	ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,
+		bool preserveblack=true,bool overprintblack=false,bool preservegrey=false,int effectwidth=0);
 	~ImageSource_Deflatten();
 	ISDataType *GetRow(int row);
 	private:
@@ -33,6 +35,7 @@ class ImageSource_Deflatten : public ImageSource
 	bool preserveblack;
 	bool overprintblack;
 	bool preservegrey;
+	int effectwidth;
 	int tmpsourcespp;
 	int tmpdestspp;
 	unsigned short *tmp1;
