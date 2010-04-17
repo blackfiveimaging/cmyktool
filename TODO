@@ -11,7 +11,8 @@ Add support for creatng DeviceLinks.
   <MD5Hash_of_source_profile>-<MD5Hash_of_dest_profile>-<MD5Hash_of_conversion_settings>.icc
   That way the destination profile can be identified for proofing and embedding purposes.
   Better yet, use an MD5 hash of the entire CMYKConversionOpts as a filename, and save metadata
-  alonside the devicelink.
+  alongside the devicelink.
+  (Need to place a description in the collink "-D" parameter.  Build automatically from 
 
 Need to maintain a list of available devicelinks, which will be made available in the conversionoptsdialog.
 
@@ -30,18 +31,17 @@ Preserve clipping paths, as per latest Separate+
 | for calling command-line programs.
 
 
-Add a "Width" parameter to the "Hold Grey" code which will cause near-greys to be modified in an
-interpolated fashion between the output of the CMS transform and the pure grey pixel value.
-(This could be useful for hold black mode, too.)
+| Add a "Width" parameter to the "Hold Grey" code which will cause near-greys to be modified in an
+| interpolated fashion between the output of the CMS transform and the pure grey pixel value.
+| (This could be useful for hold black mode, too.)
 
-Improve the grey rendition by creating and inverting an LUT from the CMYK profile.
 
 Add DuoTone capability (probably better handled with a separate utility) which would allow 
 you to set an approximate tone for a spot colour, and have a duotone image calculated.
 Would work by finding a CMYK approximation for that colour, then building a 2D lookup-table
 using the CMYK profile.
 
-Add ability to perform a "naive" RGB->CMYK conversion with no profiles.
+| Add ability to perform a "naive" RGB->CMYK conversion with no profiles.
 
 Solve problem with UTF-8 filenames on Win32.
 Need to use wide version of fopen - which unfortunately means avoiding the use of ifstream.
@@ -75,6 +75,10 @@ Menus:
 
 File -> Open...
 File -> Quit
+Image -> Add Images...
+Image -> Remove Images
+Colour -> Colour Management Options...
+Colour -> Create DeviceLink profile...
 Edit -> Preferences...
 
 Need to be able to set the source profile and other details conveniently.  (Including overriding
