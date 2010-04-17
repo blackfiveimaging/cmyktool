@@ -1,6 +1,6 @@
 # Makefile.am
 
-SUBDIRS = po support imagesource imageutils miscwidgets profilemanager pixbufthumbnail gfx
+SUBDIRS = po argyllsupport support imagesource imageutils miscwidgets profilemanager pixbufthumbnail gfx
 
 localedir=$(datadir)/locale
 
@@ -57,6 +57,7 @@ cmyktool_SOURCES = cmyktool.cpp
 LDADD = \
 	libdeflattenui.la \
 	libdeflatten.la \
+	argyllsupport/libargyllsupport.la \
 	imageutils/libimageutils.la	\
 	miscwidgets/libmiscwidgets.la	\
 	support/libsupport.la	\
