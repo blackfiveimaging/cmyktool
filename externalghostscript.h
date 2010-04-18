@@ -5,6 +5,7 @@
 #include "support/searchpath.h"
 #include "support/debug.h"
 #include "support/externalprog.h"
+#include "support/util.h"
 
 #ifdef WIN32
 #include <w32api.h>
