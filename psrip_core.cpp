@@ -49,12 +49,15 @@ class Thread_PSRipProcess : public ThreadFunction, public Thread
 		: ThreadFunction(), Thread(this), rip(rip), opt(opt), filename(filename)
 	{
 		Start();
+		WaitSync();
 	}
 	virtual ~Thread_PSRipProcess()
 	{
 	}
 	virtual int Entry(Thread &t)
 	{
+		SendSync();
+		Debug[TRACE] << "PSRipProcess: Sent sync to main thread" << endl;
 		opt.RunProgram(filename);
 		return(0);
 	}
