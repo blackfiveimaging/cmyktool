@@ -41,7 +41,7 @@ class ExternalGhostScript : public ExternalProgram
 		{
 			if(MatchBaseName("gs",w->c_str())==0)
 			{
-				std::string gspath=FindParent(*w,"gswin32c");
+				std::string gspath=FindParent(*w,"gswin32");
 				if(gspath.size())
 				{
 					Debug[TRACE] << "Adding " << gspath << " to search path" << std::endl;
@@ -49,7 +49,7 @@ class ExternalGhostScript : public ExternalProgram
 				}
 			}
 		}
-		args[0]="gswin32c.exe";
+		args[0]="gswin32.exe";
 		Debug[TRACE] << "args[0] is now: " << args[0] << std::endl;
 #else
 		AddPath("/usr/bin:/usr/local/bin");

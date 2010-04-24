@@ -91,49 +91,55 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 	virtual int Entry(Thread &t)
 	{
 		SendSync();
-
-		Debug[TRACE] << "*** Monitor thread active" << std::endl;
-
-		// scan the output files and add them to the TempFileTracker
-
-		int page=1;
-		char *rfn=NULL;
-		while(!rip.ripthread->TestFinished())
+		try
 		{
-//			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
-			if(rip.TestPage(page+1))
+			Debug[TRACE] << "*** Monitor thread active" << std::endl;
+
+			// scan the output files and add them to the TempFileTracker
+
+			int page=1;
+			char *rfn=NULL;
+			while(!rip.ripthread->TestFinished())
 			{
-				Debug[TRACE] << "File monitor thread found page " << page+1 << std::endl;
-				if((rfn=rip.GetRippedFilename(page)))
+	//			cerr << "Thread not yet finished - waiting for page " << page+1 << endl;
+				if(rip.TestPage(page+1))
 				{
-					Debug[TRACE] << "So now safe to add: " << rfn << std::endl;
-					new PSRip_TempFile(&rip,rfn);
-					++page;
-					free(rfn);
-					cerr << "Triggering event" << endl;
-					rip.Event.Trigger();
+					Debug[TRACE] << "File monitor thread found page " << page+1 << std::endl;
+					if((rfn=rip.GetRippedFilename(page)))
+					{
+						Debug[TRACE] << "So now safe to add: " << rfn << std::endl;
+						new PSRip_TempFile(&rip,rfn);
+						++page;
+						free(rfn);
+						cerr << "Triggering event" << endl;
+						rip.Event.Trigger();
+					}
+				}
+				else
+				{
+	//				Debug[TRACE] << "File not found, so sleeping..." << std::endl;
+	#ifdef WIN32
+					Sleep(100);
+	#else
+					usleep(100000);
+	#endif
+	//				Debug[TRACE] << "Woken from sleep - trying again..." << std::endl;
 				}
 			}
-			else
+			while(rip.TestPage(page))
 			{
-//				Debug[TRACE] << "File not found, so sleeping..." << std::endl;
-#ifdef WIN32
-				Sleep(100);
-#else
-				usleep(100000);
-#endif
-//				Debug[TRACE] << "Woken from sleep - trying again..." << std::endl;
+				rfn=rip.GetRippedFilename(page);
+				cerr << "Thread finished -- adding file: " << rfn << endl;
+				new PSRip_TempFile(&rip,rfn);
+				++page;
+				free(rfn);
 			}
+			// FIXME - need to consider concurrency here...
 		}
-		while(rip.TestPage(page))
+		catch(const char *err)
 		{
-			rfn=rip.GetRippedFilename(page);
-			cerr << "Thread finished -- adding file: " << rfn << endl;
-			new PSRip_TempFile(&rip,rfn);
-			++page;
-			free(rfn);
+			Debug[ERROR] << "Error: " << err << endl;
 		}
-		// FIXME - need to consider concurrency here...
 		rip.Event.Trigger();
 		return(0);
 	}
@@ -165,6 +171,9 @@ void PSRip::Rip(const char *filename,PSRipOptions &opts)
 
 	ripthread=new Thread_PSRipProcess(*this,filename,opts);
 
+//  Disable monitorthread until we can determine whether it's causing Ghostscript locks.
+//  Don't think it is - think the problem was actually with having the *input* file open from
+//  another thread, so re-enabling for now...
 	monitorthread=new Thread_PSRipFileMonitor(*this);
 }
 
@@ -208,12 +217,14 @@ PSRip::~PSRip()
 }
 
 
-char *PSRip::GetRippedFilename(int page)
+char *PSRip::GetRippedFilename(int page,const char *basename)
 {
-	if(!tempname)
+	if(!basename)
+		basename=tempname;
+	if(!basename)
 		throw "PSRip: Don't have a tempname yet!";
-	char *buf=(char *)malloc(strlen(tempname)+10);
-	snprintf(buf,strlen(tempname)+10,"%s_%03d.tif",tempname,page);
+	char *buf=(char *)malloc(strlen(basename)+10);
+	snprintf(buf,strlen(basename)+10,"%s_%03d.tif",basename,page);
 	return(buf);
 }
 
@@ -300,8 +311,10 @@ void PSRipOptions::RunProgram(std::string &filename)
 
 	// FIXME - need to escape this for the shell!
 	// Build output name;
+	Debug[TRACE] << "Building filename from " << filename.c_str() << ", " << "_%03d" << " and " << "tif" << endl;
 	char *tmp=BuildFilename(filename.c_str(),"_%03d","tif");
 	char *tmp2=BuildFilename("-sOutputFile=",tmp,"");
+	Debug[TRACE] << "Got " << tmp2 << " by way of " << tmp << endl;
 	AddArg(tmp2);
 	free(tmp2);
 	free(tmp);
