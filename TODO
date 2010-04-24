@@ -82,7 +82,7 @@ Colour -> Create DeviceLink profile...
 Edit -> Preferences...
 
 Need to be able to set the source profile and other details conveniently.  (Including overriding
-an embedded profile, if present.
+an embedded profile, if present.)
 
 
 | Needs to be able to store conversion presets.  The presets will have names, and be presented in a "SimpleCombo":
