@@ -140,6 +140,21 @@ class CMYKConversionOptsDialog
 				simplecombo_set_index(SIMPLECOMBO(combo),i);
 		}
 
+
+		++row;
+
+		// Conversion width
+
+		label=gtk_label_new(_("Transition width:"));
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+		widthbutton=gtk_spin_button_new_with_range(0.0,32.0,1.0);
+		g_signal_connect(widthbutton,"value-changed",G_CALLBACK(width_changed),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),widthbutton,1,2,row,row+1);
+		gtk_widget_show(widthbutton);
+
+
 		// Including the "None" setting in the dialog is too confusing, so we ensure that
 		// the mode gets set to something else.
 		combo_changed(combo,this);
@@ -154,6 +169,8 @@ class CMYKConversionOptsDialog
 		profileselector_set_filename(PROFILESELECTOR(icps),opts.GetInCMYKProfile());
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
 		SetSensitive();
+
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(widthbutton),opts.GetWidth());
 
 		gint result=gtk_dialog_run(GTK_DIALOG(window));
 		switch(result)
@@ -221,6 +238,7 @@ class CMYKConversionOptsDialog
 	GtkWidget *ps;
 	GtkWidget *is;
 	GtkWidget *combo;
+	GtkWidget *widthbutton;
 
 	static void	profile_changed(GtkWidget *widget,gpointer user_data)
 	{
@@ -278,6 +296,16 @@ class CMYKConversionOptsDialog
 	}
 
 
+	static void width_changed(GtkWidget *widget,gpointer user_data)
+	{
+		Debug[TRACE] << "Received value-changed signal from Width widget" << endl;
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+
+		float val=gtk_spin_button_get_value(GTK_SPIN_BUTTON(widget));
+		dlg->opts.SetWidth(int(val));
+	}
+
+
 	static void	combo_changed(GtkWidget *widget,gpointer user_data)
 	{
 		Debug[TRACE] << "Received changed signal from combo" << endl;
@@ -287,6 +315,17 @@ class CMYKConversionOptsDialog
 		int idx=simplecombo_get_index(c);
 
 		dlg->opts.SetMode(convmodes[idx]);
+
+		switch(convmodes[idx])
+		{
+			case CMYKCONVERSIONMODE_HOLDBLACK:
+			case CMYKCONVERSIONMODE_HOLDGREY:
+				gtk_widget_set_sensitive(dlg->widthbutton,true);
+				break;
+			default:
+				gtk_widget_set_sensitive(dlg->widthbutton,false);
+				break;
+		}
 
 		Debug[TRACE] << "Conversion mode set to: " << convmodes[idx] << endl;
 	}
