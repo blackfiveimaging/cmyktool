@@ -41,6 +41,15 @@ you to set an approximate tone for a spot colour, and have a duotone image calcu
 Would work by finding a CMYK approximation for that colour, then building a 2D lookup-table
 using the CMYK profile.
 
+Will need several RSPLs.
+First, using a CMYK profile, ignore the K channel and build a mapping from CMY -> Lab.
+Then, given a secondary colorant, find its Lab value (Mapping white and black points in Lab)
+and from that derive CMY for the colorant (R).
+Now build a KR -> Lab RSPL, using the CMYK Profile - convert each R to CMY, add in the K and enter into
+the RSPL.
+Invert, and the RSPL will provide a mapping from Lab -> KR.
+
+
 | Add ability to perform a "naive" RGB->CMYK conversion with no profiles.
 
 Solve problem with UTF-8 filenames on Win32.
