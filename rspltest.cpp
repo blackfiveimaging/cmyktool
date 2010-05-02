@@ -90,6 +90,36 @@ class LabToCMY
 		delete[] myco;
 		return(true);
 	}
+
+	void Interp(double *in, double *out)
+	{
+		co point;
+		for(int i=0;i<ind;++i)
+			point.p[i]=*in++;
+		for(int i=0;i<outd;++i)
+			point.v[i]=0.0;
+		interp->interp(interp,&point);
+		for(int i=0;i<outd;++i)
+			*out++=point.v[i];
+	}
+
+	bool ReverseInterp(double *out, double *in)
+	{
+		co point;
+		for(int i=0;i<ind;++i)
+			point.v[i]=0;
+		for(int i=0;i<outd;++i)
+			point.p[i]=*out++;
+		int result=interp->rev_interp(interp,0,1,NULL,NULL,&point);
+		for(int i=0;i<outd;++i)
+			*in++=point.p[i];
+		if(result==0)
+		{
+			Debug[TRACE] << "ReverseInterp: no solutions found" << endl;
+			return(false);
+		}
+		return(true);
+	}
 	protected:
 	int ind,outd;
 	rspl *interp;
@@ -108,6 +138,7 @@ int main(int argc,char **argv)
 		ConfigFile dummyfile;
 		ProfileManager profman(&dummyfile,"[Colour Management]");
 		profman.SetInt("DefaultCMYKProfileActive",1);
+		profman.SetString("DefaultCMYKProfile","ISOcoated_v2_eci.icc");
 
 		CMSWhitePoint wp(5000);
 		CMSProfile lab(wp);
@@ -117,6 +148,14 @@ int main(int argc,char **argv)
 
 		CMSTransform trans(cmyk,&lab);
 
+		// We create an RSPL for converting between CMY0 (i.e. all possible CMYK colours that
+		// don't involve black) and L*ab.  We will use this in reverse to find a CMY value for a duotone
+		// secondary colorant R, so we can simulate mixing K and R.
+		// We then need a second RSPL which maps between KR and LAB, so having picked an input shade for R
+		// in LAB, we pass it through the first RSPL to get a CMY0 value for it, then build a second
+		// RSPL combining Ax(CMY0) / BxK vs Lab.
+
+		// Create a 6x6x6 grid.
 		int dim=6;
 		int count=dim*dim*dim;
 		double cmyin[count*3];
@@ -136,14 +175,22 @@ int main(int argc,char **argv)
 					trans.Transform(cmyk,lab,1);
 					Debug[TRACE] << cmyk[0] << ", " << cmyk[1] << ", " << cmyk[2] << " -> " <<
 						lab[0]*100/IS_SAMPLEMAX << ", " << lab[1]*100/IS_SAMPLEMAX-50 << ", " << lab[2]*100/IS_SAMPLEMAX-50 << endl;
+					cmyin[((c*dim+m)*dim+y)*3]=cmyk[0];
+					cmyin[((c*dim+m)*dim+y)*3+1]=cmyk[1];
+					cmyin[((c*dim+m)*dim+y)*3+2]=cmyk[2];
+					labout[((c*dim+m)*dim+y)*3]=lab[0];
+					labout[((c*dim+m)*dim+y)*3+1]=lab[1];
+					labout[((c*dim+m)*dim+y)*3+2]=lab[2];
 				}
 			}
 		}
 		LabToCMY interp;
+		interp.Populate(count,cmyin,labout,0.05);
 
 		if(cmyk)
 			delete cmyk;
 	}
+
 	catch(const char *err)
 	{
 		Debug[ERROR] << "Error: " << err << endl;
