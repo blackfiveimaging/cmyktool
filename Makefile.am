@@ -1,11 +1,11 @@
 # Makefile.am
 
-SUBDIRS = po argyllsupport support imagesource imageutils miscwidgets profilemanager pixbufthumbnail gfx
+SUBDIRS = po numlib rspl argyllsupport support imagesource imageutils miscwidgets profilemanager pixbufthumbnail gfx
 
 localedir=$(datadir)/locale
 
 AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -I./imageutils \
-	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail \
+	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail -I./numlib -I./rspl \
 	$(LCMS_CFLAGS) $(GTK2_CFLAGS)
 
 noinst_LTLIBRARIES = libdeflatten.la libdeflattenui.la
@@ -41,10 +41,11 @@ libdeflattenui_la_SOURCES = \
 	dialogs.cpp	\
 	dialogs.h
 
-bin_PROGRAMS = cmyktool
+bin_PROGRAMS = cmyktool rspltest
 
 check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test
 
+rspltest_SOURCES = rspltest.cpp
 test_SOURCES = test.cpp
 convertcmyk_SOURCES = convertcmyk.cpp
 queuetest_SOURCES = queuetest.cpp
@@ -65,6 +66,8 @@ LDADD = \
 	profilemanager/libprofilemanager.la	\
 	support/libsupport.la	\
 	pixbufthumbnail/libpixbufthumbnail.la	\
+	rspl/librspl.la  \
+	numlib/libargyllnum.la  \
 	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS)
 
 
