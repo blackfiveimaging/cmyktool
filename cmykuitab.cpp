@@ -454,7 +454,7 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKTool_Core &core,c
 	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
 	gtk_widget_show(colsel);
 
-	gtk_signal_connect (GTK_OBJECT (pbview), "mousemove",(GtkSignalFunc)MouseMove, this);
+	gtk_signal_connect (GTK_OBJECT (pbview), "changed",(GtkSignalFunc)MouseMove, this);
 
 
 	GtkWidget *tmp;
