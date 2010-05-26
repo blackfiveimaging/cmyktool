@@ -179,7 +179,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 
 			// Create a cached image to hold the data since converting to pixbuf from a sub-thread seems 
 			// to be a recipe for disaster.
-			tempimage=new CachedImage(is);
+			tempimage=new CachedImage(is,this);
 //			delete is;
 		}
 		catch(const char *err)
@@ -235,6 +235,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	}
 	bool DoProgress(int i, int maxi)
 	{
+		Debug[TRACE] << "In customised DoProgress function - JobStatus: " << GetJobStatus() << endl;
 		return(GetJobStatus()!=JOBSTATUS_CANCELLED);
 	}
 	protected:
