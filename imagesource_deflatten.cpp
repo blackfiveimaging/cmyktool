@@ -204,6 +204,10 @@ ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSTransform *t
 
 void ImageSource_Deflatten::Init()
 {
+	// If overprint mode being set implies hold black mode.
+	if(overprintblack)
+		preserveblack=true;
+
 	cerr << "Initialsing CMS transform" << endl;
 	switch(type=transform->GetOutputColourSpace())
 	{
