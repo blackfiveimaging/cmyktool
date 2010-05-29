@@ -179,7 +179,19 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 
 			// Create a cached image to hold the data since converting to pixbuf from a sub-thread seems 
 			// to be a recipe for disaster.
-			tempimage=new CachedImage(is,this);
+
+			// Note that on 32-bit systems when processing huge images it's entirely possible for this
+			// to fail due to address space exhaustion!
+			try
+			{
+				tempimage=new CachedImage(is,this);
+			}
+			catch(const char *err)
+			{
+				// If creating the cached image failed we try again having scaled down.
+				is=ISScaleImageBySize(is,is->width/4,is->height/4);
+				tempimage=new CachedImage(is,this);
+			}
 //			delete is;
 		}
 		catch(const char *err)
