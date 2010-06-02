@@ -1,90 +1,97 @@
+#
+# Александр Прокудин <alexandre.prokoudine@gmail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-03-07 13:25+0000\n"
-"PO-Revision-Date: \n"
-"Last-Translator: Alexandre Prokoudine <alexandre.prokoudine@gmail.com>\n"
-"Language-Team: GNOME Russian <gnome-cyr@lists.gnome.org>\n"
+"POT-Creation-Date: 2010-06-01 03:09+0400\n"
+"PO-Revision-Date: 2010-06-01 03:23+0400\n"
+"Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
+"Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: UTF-8\n"
 "X-Poedit-Language: Russian\n"
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); 10<=4 && (n%100<10 || n%"
+"100>=20) ? 1 : 2);\n"
 
-#: cmyktool.cpp:152
+#: ../cmyktool.cpp:152
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:180
+#: ../cmyktool.cpp:180
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:187
-#, fuzzy
+#: ../cmyktool.cpp:187
 msgid "Remove Images"
-msgstr "Удалить"
+msgstr "Удалить изображения"
 
-#: cmyktool.cpp:206
+#. Convert button...
+#: ../cmyktool.cpp:206
 msgid "Convert"
 msgstr "Преобразовать"
 
-#: cmyktool.cpp:214
+#. Presets
+#: ../cmyktool.cpp:214
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:236 dialogs.cpp:87
+#. Preferences button
+#: ../cmyktool.cpp:236 ../dialogs.cpp:87
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:267
+#: ../cmyktool.cpp:267
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:343 profilemanager/profileselector.cpp:193
+#: ../cmyktool.cpp:343 ../profilemanager/profileselector.cpp:193
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:343
+#: ../cmyktool.cpp:343
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:351
+#: ../cmyktool.cpp:351
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
-#: cmyktool.cpp:372 miscwidgets/imageselector.cpp:478
-#: profilemanager/profileselector.cpp:39
+#: ../cmyktool.cpp:372 ../miscwidgets/imageselector.cpp:478
+#: ../profilemanager/profileselector.cpp:39
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:372
+#: ../cmyktool.cpp:372
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:494
+#: ../cmyktool.cpp:494
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:524 cmyktool.cpp:681
+#: ../cmyktool.cpp:524 ../cmyktool.cpp:681
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
-#: cmykuitab.cpp:438
+#: ../cmykuitab.cpp:451
 msgid "Inspect"
 msgstr "Исследование"
 
-#: cmykuitab.cpp:438
+#: ../cmykuitab.cpp:451
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
 msgstr ""
 
-#: cmykuitab.cpp:440
+#: ../cmykuitab.cpp:453
 msgid "Simulate print, adapt white"
 msgstr "Имитация печати, адаптация белого"
 
-#: cmykuitab.cpp:440
+#: ../cmykuitab.cpp:453
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
@@ -95,133 +102,143 @@ msgstr ""
 "колориметрической цветопередачей и включённой компенсацией чёрной точки "
 "(BPC)."
 
-#: cmykuitab.cpp:442
+#: ../cmykuitab.cpp:455
 msgid "Simulate print"
 msgstr "Имитация печати"
 
-#: cmykuitab.cpp:442
+#: ../cmykuitab.cpp:455
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
 msgstr ""
 
-#: cmykuitab.cpp:478
+#: ../cmykuitab.cpp:491
 msgid "Save..."
 msgstr "Сохранить..."
 
-#: cmykuitab.cpp:622
+#: ../cmykuitab.cpp:635
 msgid "Save Image..."
 msgstr "Сохранить изображение"
 
-#: cmykuitab.cpp:649
+#. Format combo...
+#: ../cmykuitab.cpp:662
 msgid "File format:"
 msgstr "Формат файлов:"
 
-#: cmykuitab.cpp:654
+#: ../cmykuitab.cpp:667
 msgid "JPEG"
 msgstr "JPEG"
 
-#: cmykuitab.cpp:654
+#: ../cmykuitab.cpp:667
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG — формат сжатых файлов с потерей данных, для хранения фотографий"
 
-#: cmykuitab.cpp:655
+#: ../cmykuitab.cpp:668
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8-разрядный)"
 
-#: cmykuitab.cpp:655
+#: ../cmykuitab.cpp:668
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF — 8 разрядов на цветовой канал, для повышенной совместимости"
 
-#: cmykuitab.cpp:656
+#: ../cmykuitab.cpp:669
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16-разрядный)"
 
-#: cmykuitab.cpp:656
+#: ../cmykuitab.cpp:669
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr "TIFF — 8 разрядов на цветовой канал, для максимального качества"
 
-#: cmykuitab.cpp:666
+#. JPEG Quality setting...
+#: ../cmykuitab.cpp:679
 msgid "JPEG Quality:"
 msgstr "Качество JPEG:"
 
-#: cmykuitab.cpp:682
+#. Resolution override...
+#: ../cmykuitab.cpp:695
 msgid "Resolution:"
-msgstr ""
+msgstr "Разрешение:"
 
-#: cmykuitab.cpp:698
+#. Embed Profile setting...
+#: ../cmykuitab.cpp:711
 msgid "Embed ICC Profile"
 msgstr "Встроить профиль ICC"
 
-#: cmykuitab.cpp:793
+#: ../cmykuitab.cpp:806
 msgid "File exists - OK to overwrite?"
 msgstr "Файл уже существует. Перезаписать?"
 
-#: cmykuitab.cpp:807 cmykuitab.cpp:870
+#: ../cmykuitab.cpp:820 ../cmykuitab.cpp:883
 msgid "Saving"
 msgstr ""
 
-#: cmykuitab.cpp:867
+#: ../cmykuitab.cpp:880
 msgid "Save image - please choose filename"
 msgstr ""
 
-#: conversionoptsdialog.cpp:29
+#: ../conversionoptsdialog.cpp:29
 msgid "Colour conversion options"
 msgstr "Параметры преобразования цвета"
 
-#: conversionoptsdialog.cpp:53
+#. Input profile
+#: ../conversionoptsdialog.cpp:53
 msgid "Fallback Input Profile (RGB):"
 msgstr "Откатный профиль ввода (RGB):"
 
-#: conversionoptsdialog.cpp:68
+#. Input CMYK profile
+#: ../conversionoptsdialog.cpp:68
 msgid "Fallback Input Profile (CMYK):"
 msgstr "Откатный профиль ввода (CMYK):"
 
-#: conversionoptsdialog.cpp:83
+#. Ignore embedded profile button
+#: ../conversionoptsdialog.cpp:83
 msgid "Ignore embedded profiles"
 msgstr "Игнорировать встроенные профили"
 
-#: conversionoptsdialog.cpp:94
+#. Output profile
+#: ../conversionoptsdialog.cpp:94
 msgid "Output Profile:"
 msgstr "Профиль вывода:"
 
-#: conversionoptsdialog.cpp:108
+#. Rendering intent
+#: ../conversionoptsdialog.cpp:108
 msgid "Rendering intent:"
 msgstr "Цветопередача:"
 
-#: conversionoptsdialog.cpp:122
+#. Conversion mode
+#: ../conversionoptsdialog.cpp:122
 msgid "Conversion mode:"
 msgstr "Режим преобразования:"
 
-#: conversionoptsdialog.cpp:127
+#: ../conversionoptsdialog.cpp:127
 msgid "Normal"
 msgstr "Обычный"
 
-#: conversionoptsdialog.cpp:127
+#: ../conversionoptsdialog.cpp:127
 msgid "A regular conversion from source to destination profile"
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#: conversionoptsdialog.cpp:128
+#: ../conversionoptsdialog.cpp:128
 msgid "Hold Black"
 msgstr "Сохранить чёрный цвет"
 
-#: conversionoptsdialog.cpp:128
+#: ../conversionoptsdialog.cpp:128
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Приравнять входящий чистый чёрный цвет к CMYK (0,0,0,100)"
 
-#: conversionoptsdialog.cpp:129
+#: ../conversionoptsdialog.cpp:129
 msgid "Hold Grey"
 msgstr "Сохранить серый цвет"
 
-#: conversionoptsdialog.cpp:129
+#: ../conversionoptsdialog.cpp:129
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Приравнять входящий серый цвет (R=G=B) только к каналу K"
 
-#: conversionoptsdialog.cpp:130
+#: ../conversionoptsdialog.cpp:130
 msgid "Overprint"
 msgstr "Надпечатка"
 
-#: conversionoptsdialog.cpp:130
+#: ../conversionoptsdialog.cpp:130
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
@@ -229,251 +246,260 @@ msgstr ""
 "Приравнять чистый чёрный цвет к CMYK (0,0,0,100) и скопировать C, M и Y из "
 "последнего нечёрного пиксела."
 
-#: conversionoptsdialog.cpp:163
+#. Conversion width
+#: ../conversionoptsdialog.cpp:148
+msgid "Transition width:"
+msgstr "Ширина перехода:"
+
+#: ../conversionoptsdialog.cpp:180
 msgid "Choose a name for this preset..."
 msgstr "Дайте профилю название..."
 
-#: dialogs.cpp:102
+#. Colour management page:
+#: ../dialogs.cpp:102
 msgid "Colour Management"
 msgstr "Управление цветом"
 
-#: dialogs.cpp:121
+#. Paths...
+#: ../dialogs.cpp:121
 msgid "ICC colour profile paths"
 msgstr "Расположение профилей ICC"
 
-#: dialogs.cpp:142
+#: ../dialogs.cpp:142
 msgid "Default RGB Profile:"
 msgstr "Профиль RGB по умолчанию:"
 
-#: dialogs.cpp:156
+#: ../dialogs.cpp:156
 msgid "Default CMYK Profile:"
 msgstr "Профиль CMYK по умолчанию:"
 
-#: dialogs.cpp:170
+#: ../dialogs.cpp:170
 msgid "Monitor Profile:"
 msgstr "Профиль монитора:"
 
-#: dialogs.cpp:184
+#: ../dialogs.cpp:184
 msgid "Default Output Profile:"
 msgstr "Профиль вывода по умолчанию:"
 
-#: dialogs.cpp:198
+#. External utilities
+#: ../dialogs.cpp:198
 msgid "External utilities"
-msgstr ""
+msgstr "Внешние утилиты"
 
-#: dialogs.cpp:217
+#. Paths...
+#: ../dialogs.cpp:217
 msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
-msgstr ""
+msgstr "Пути к утилитам Argyll (TIFFGamut, ColLink и пр.)"
 
-#: dialogs.cpp:234
+#: ../dialogs.cpp:234
 msgid "Search paths for GhostScript executable"
-msgstr ""
+msgstr "Пути к исполняемому файлу GhostScript"
 
-#: dialogs.cpp:261
+#: ../dialogs.cpp:261
 msgid "Path to Argyll's 'tiffgamut' command"
 msgstr ""
 
-#: dialogs.cpp:265
+#: ../dialogs.cpp:265
 msgid "Path to Argyll utilities (TIFFGamut and ICCLink)"
 msgstr ""
 
-#: dialogs.cpp:270
+#: ../dialogs.cpp:270
 msgid "Path to Argyll's 'collink' command"
 msgstr ""
 
-#: dialogs.cpp:274
+#: ../dialogs.cpp:274
 msgid "Path to Argyll's collink command"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:32
+#: ../imagesource/imagesource_util.cpp:32
 msgid "Automatic"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:32
+#: ../imagesource/imagesource_util.cpp:32
 msgid "Selects a scaling algorithm based on scale factor"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:33
+#: ../imagesource/imagesource_util.cpp:33
 msgid "Fast"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:33
+#: ../imagesource/imagesource_util.cpp:33
 msgid "Very fast scaling with no interpolation"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:34
+#: ../imagesource/imagesource_util.cpp:34
 msgid "Bilinear"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:34
+#: ../imagesource/imagesource_util.cpp:34
 msgid "An interpolation filter with mediocre speed and quality"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:35
+#: ../imagesource/imagesource_util.cpp:35
 msgid "LanczosSinc"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:35
+#: ../imagesource/imagesource_util.cpp:35
 msgid "Slow but very high quality interpolation filter"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:37
+#: ../imagesource/imagesource_util.cpp:37
 msgid "Downsample"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:37
+#: ../imagesource/imagesource_util.cpp:37
 msgid "High quality filter for reductions only"
 msgstr ""
 
-#: miscwidgets/imageselector.cpp:458
+#: ../miscwidgets/imageselector.cpp:458
 msgid "Image"
 msgstr "Изображение"
 
-#: miscwidgets/patheditor.cpp:53
+#: ../miscwidgets/patheditor.cpp:53
 msgid "Select directory..."
-msgstr ""
+msgstr "Выберите каталог..."
 
-#: miscwidgets/patheditor.cpp:98
+#: ../miscwidgets/patheditor.cpp:98
 msgid "Path"
 msgstr "Расположение"
 
-#: miscwidgets/patheditor.cpp:112
+#: ../miscwidgets/patheditor.cpp:112
 msgid "Add..."
 msgstr "Добавить..."
 
-#: miscwidgets/patheditor.cpp:117
+#: ../miscwidgets/patheditor.cpp:117
 msgid "Remove"
 msgstr "Удалить"
 
-#: miscwidgets/progressbar.cpp:51
+#: ../miscwidgets/progressbar.cpp:52
 msgid "Progress..."
 msgstr "Прогресс..."
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:349
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:349
 #, c-format
 msgid "Error creating directory `%s': %s"
 msgstr "Ошибка при создании каталога`%s': %s"
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:463
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:463
 #, c-format
 msgid "Error opening `%s': %s"
 msgstr "Ошибка при открытии `%s': %s"
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:481
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:481
 #, c-format
 msgid "Error reading `%s': file contains no data."
 msgstr ""
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:505
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:505
 #, c-format
 msgid "Error reading `%s': %s"
 msgstr "Ошибка при чтении `%s': %s"
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:540
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:540
 #, c-format
 msgid ""
 "Failed to load image '%s': reason not known, probably a corrupt image file"
 msgstr ""
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:613
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:613
 #, c-format
 msgid "Error verifying `%s': %s"
 msgstr "Ошибка при проверке `%s': %s"
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:629
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:629
 #, c-format
 msgid "Error reading `%s': file is not a regular file or symbolic link."
 msgstr ""
 
-#: pixbufthumbnail/egg-pixbuf-thumbnail.c:1071
+#: ../pixbufthumbnail/egg-pixbuf-thumbnail.c:1071
 #, c-format
 msgid "Error creating temporary thumbnail file for `%s': %s"
 msgstr "Ошибка при создании временного файла миниатюры для `%s': %s"
 
-#: profilemanager/lcmswrapper.cpp:535
+#: ../profilemanager/lcmswrapper.cpp:553
 msgid "Perceptual"
 msgstr "Воспринимаемая"
 
-#: profilemanager/lcmswrapper.cpp:536
+#: ../profilemanager/lcmswrapper.cpp:554
 msgid "Relative Colorimetric"
 msgstr "Относительная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:537
+#: ../profilemanager/lcmswrapper.cpp:555
 msgid "Relative Colorimetric with BPC"
 msgstr "Относительная колориметрическая с компенсацией точки чёрного"
 
-#: profilemanager/lcmswrapper.cpp:538
+#: ../profilemanager/lcmswrapper.cpp:556
 msgid "Saturation"
 msgstr "Насыщенность"
 
-#: profilemanager/lcmswrapper.cpp:539
+#: ../profilemanager/lcmswrapper.cpp:557
 msgid "Absolute Colorimetric"
 msgstr "Абсолютная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:544
+#: ../profilemanager/lcmswrapper.cpp:562
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:545
+#: ../profilemanager/lcmswrapper.cpp:563
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:546
+#: ../profilemanager/lcmswrapper.cpp:564
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
 "and shadows."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:547
+#: ../profilemanager/lcmswrapper.cpp:565
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:548
+#: ../profilemanager/lcmswrapper.cpp:566
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:207
+#: ../profilemanager/profilemanager.cpp:207
 msgid "Can't do proofing without a valid Printer profile!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:212
+#: ../profilemanager/profilemanager.cpp:212
 msgid "Can't do proofing without a valid Monitor profile!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:217
+#: ../profilemanager/profilemanager.cpp:217
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:494
+#: ../profilemanager/profilemanager.cpp:497
 msgid "No Proof profile provided!"
-msgstr ""
+msgstr "Профиль для цветопробы не указан!"
 
-#: profilemanager/profilemanager.cpp:828
+#: ../profilemanager/profilemanager.cpp:831
 msgid "Default"
 msgstr "По умолчанию"
 
-#: profilemanager/profilemanager.cpp:836
+#: ../profilemanager/profilemanager.cpp:839
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
-#: profilemanager/profileselector.cpp:392
+#: ../profilemanager/profileselector.cpp:392
 msgid "Please choose a valid ICC profile"
 msgstr "Выберите корректный цветовой профиль"
 
-#: psripui.cpp:28
+#: ../psripui.cpp:28
 msgid "Ripping File..."
 msgstr ""
 
-#: psripui.cpp:120
+#: ../psripui.cpp:120
 msgid "PSRip Test"
 msgstr ""
 
