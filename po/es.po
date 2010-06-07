@@ -1,0 +1,460 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CMYKTool 0.1.3\n"
+"Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
+"POT-Creation-Date: 2010-06-02 23:13+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-Country: ARGENTINA\n"
+
+#: cmyktool.cpp:152
+msgid "CMYKTool"
+msgstr "CMYKTool"
+
+#: cmyktool.cpp:180
+msgid "Add Images..."
+msgstr "Agregar Imágenes"
+
+#: cmyktool.cpp:187
+msgid "Remove Images"
+msgstr "Quitar Imágenes"
+
+#: cmyktool.cpp:206
+msgid "Convert"
+msgstr "Convertir"
+
+#: cmyktool.cpp:214
+msgid "Using conversion preset:"
+msgstr "Usar ajuste predefinido de conversión:"
+
+#: cmyktool.cpp:236
+#: dialogs.cpp:87
+msgid "Preferences..."
+msgstr "Preferencias..."
+
+#: cmyktool.cpp:267
+msgid "Previous settings"
+msgstr "Ajustes previos"
+
+#: cmyktool.cpp:343
+#: profilemanager/profileselector.cpp:193
+msgid "None"
+msgstr "Ninguno"
+
+#: cmyktool.cpp:343
+msgid "No conversion"
+msgstr "Sin conversión"
+
+#: cmyktool.cpp:351
+msgid "<unknown>"
+msgstr "<desconocido>"
+
+#: cmyktool.cpp:372
+#: miscwidgets/imageselector.cpp:478
+#: profilemanager/profileselector.cpp:39
+msgid "Other..."
+msgstr "Otro..."
+
+#: cmyktool.cpp:372
+msgid "Create a new preset"
+msgstr "Crear un nuevo ajuste predefinido"
+
+#: cmyktool.cpp:494
+msgid "Open File"
+msgstr "Abrir archivo"
+
+#: cmyktool.cpp:524
+#: cmyktool.cpp:681
+msgid "Adding images..."
+msgstr "Agregando imágenes..."
+
+#: cmykuitab.cpp:451
+msgid "Inspect"
+msgstr "Inspeccionar"
+
+#: cmykuitab.cpp:451
+msgid "Displays image data without conversion from target space to monitor, allowing you to see how the data has been modified by the conversion."
+msgstr "Muestra los información de imagen sin conversión desde el espacio de destino al monitor, permitiendo ver cómo la información ha sido modificada por la conversión."
+
+#: cmykuitab.cpp:453
+msgid "Simulate print, adapt white"
+msgstr "Simular impresión, adaptar blanco"
+
+#: cmykuitab.cpp:453
+msgid "Simulates printed colours but uses the monitor's white point. (Conversion from destination to monitor profiles, using Relative Colorimetric intent with BlackPoint Compensation.)"
+msgstr "Simula los colores impresos, pero usa el punto blanco del monitor. (Conversión desde el perfil de destino al perfil del monitor, usando el intento Colorimétrico Relativo con Compensación de Punto Negro.)"
+
+#: cmykuitab.cpp:455
+msgid "Simulate print"
+msgstr "Simular impresión"
+
+#: cmykuitab.cpp:455
+msgid "Simulates printed colours, using paper white. (Conversion from destination to monitor profiles, using Absolute Colorimetric intent.)"
+msgstr "Simula los colores impresos, usando el blanco del papel. (Conversión desde el perfil de destino al perfil del monitor, usando el intento Colorimétrico Absoluto.)"
+
+#: cmykuitab.cpp:491
+msgid "Save..."
+msgstr "Guardar"
+
+#: cmykuitab.cpp:635
+msgid "Save Image..."
+msgstr "Guardar imagen..."
+
+#: cmykuitab.cpp:662
+msgid "File format:"
+msgstr "Formato de archivo:"
+
+#: cmykuitab.cpp:667
+msgid "JPEG"
+msgstr "JPEG"
+
+#: cmykuitab.cpp:667
+msgid "JPEG - Lossy format optimised for photographic images"
+msgstr "JPEG - Formato con pérdida optimizado para imágenes fotográficas"
+
+#: cmykuitab.cpp:668
+msgid "TIFF (8-bit)"
+msgstr "TIFF (8 bits)"
+
+#: cmykuitab.cpp:668
+msgid "TIFF - 8-bits per sample, for increased compatibility"
+msgstr "TIFF - 8 bits por muestra, para mayor compatibilidad"
+
+#: cmykuitab.cpp:669
+msgid "TIFF (16-bit)"
+msgstr "TIFF (16 bits)"
+
+#: cmykuitab.cpp:669
+msgid "TIFF - 16-bits per sample, for maximum quality"
+msgstr "TIFF - 16 bits por muestra, para máxima calidad"
+
+#: cmykuitab.cpp:679
+msgid "JPEG Quality:"
+msgstr "Calidad JPEG:"
+
+#: cmykuitab.cpp:695
+msgid "Resolution:"
+msgstr "Resolución:"
+
+#: cmykuitab.cpp:711
+msgid "Embed ICC Profile"
+msgstr "Incrustar Perfil ICC"
+
+#: cmykuitab.cpp:806
+msgid "File exists - OK to overwrite?"
+msgstr "El archivo existe - Desea sobreescribirlo?"
+
+#: cmykuitab.cpp:820
+#: cmykuitab.cpp:883
+msgid "Saving"
+msgstr "Guardando"
+
+#: cmykuitab.cpp:880
+msgid "Save image - please choose filename"
+msgstr "Guardar imagen - por favor ingrese un nombre de archivo"
+
+#: conversionoptsdialog.cpp:29
+msgid "Colour conversion options"
+msgstr "Opciones de conversión de color"
+
+#: conversionoptsdialog.cpp:53
+msgid "Fallback Input Profile (RGB):"
+msgstr "Perfil de Respaldo de Entrada (RGB):"
+
+#: conversionoptsdialog.cpp:68
+msgid "Fallback Input Profile (CMYK):"
+msgstr "Perfil de Respaldo de Salida (CMYK):"
+
+#: conversionoptsdialog.cpp:83
+msgid "Ignore embedded profiles"
+msgstr "Ignorar perfiles incrustados"
+
+#: conversionoptsdialog.cpp:94
+msgid "Output Profile:"
+msgstr "Perfil de Salida:"
+
+#: conversionoptsdialog.cpp:108
+msgid "Rendering intent:"
+msgstr "Intento de Renderizado:"
+
+#: conversionoptsdialog.cpp:122
+msgid "Conversion mode:"
+msgstr "Modo de Conversión:"
+
+#: conversionoptsdialog.cpp:127
+msgid "Normal"
+msgstr "Normal"
+
+#: conversionoptsdialog.cpp:127
+msgid "A regular conversion from source to destination profile"
+msgstr "Una conversión normal del perfil de origen al de destino"
+
+#: conversionoptsdialog.cpp:128
+msgid "Hold Black"
+msgstr "Preservar Negro"
+
+#: conversionoptsdialog.cpp:128
+msgid "Maps pure black input to CMYK (0,0,0,100)"
+msgstr "Mapea la entrada de negro puro a CMYK (0,0,0,100)"
+
+#: conversionoptsdialog.cpp:129
+msgid "Hold Grey"
+msgstr "Retener Grises"
+
+#: conversionoptsdialog.cpp:129
+msgid "Maps grey input (R=G=B) to K channel only"
+msgstr "Mapea la entrada de grises (R=G=B) al canal K solamente"
+
+#: conversionoptsdialog.cpp:130
+msgid "Overprint"
+msgstr "Sompreimprimir"
+
+#: conversionoptsdialog.cpp:130
+msgid "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most recent non-black pixel."
+msgstr "Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-negros más recientes."
+
+#: conversionoptsdialog.cpp:148
+msgid "Transition width:"
+msgstr "Ancho de transición:"
+
+#: conversionoptsdialog.cpp:180
+msgid "Choose a name for this preset..."
+msgstr "Seleccione un nombre para este ajuste predefinido..."
+
+#: dialogs.cpp:102
+msgid "Colour Management"
+msgstr "Gestión de Color"
+
+#: dialogs.cpp:121
+msgid "ICC colour profile paths"
+msgstr "Rutas de los perfiles de color ICC"
+
+#: dialogs.cpp:142
+msgid "Default RGB Profile:"
+msgstr "Perfil RGB Predeterminado:"
+
+#: dialogs.cpp:156
+msgid "Default CMYK Profile:"
+msgstr "Perfil CMYK Predeterminado:"
+
+#: dialogs.cpp:170
+msgid "Monitor Profile:"
+msgstr "Perfil del Monitor:"
+
+#: dialogs.cpp:184
+msgid "Default Output Profile:"
+msgstr "Perfil de Salida Predeterminado:"
+
+#: dialogs.cpp:198
+msgid "External utilities"
+msgstr "Utilidades externas"
+
+#: dialogs.cpp:217
+msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
+msgstr "Rutas de búsqueda para las utilidades Argyll (TIFFGamut, ColLink, etc.)"
+
+#: dialogs.cpp:234
+msgid "Search paths for GhostScript executable"
+msgstr "Rutas de búsqueda para el ejecutable GhostScript"
+
+#: dialogs.cpp:261
+msgid "Path to Argyll's 'tiffgamut' command"
+msgstr "Ruta para el comando 'tiffgamut' de Argyll"
+
+#: dialogs.cpp:265
+msgid "Path to Argyll utilities (TIFFGamut and ICCLink)"
+msgstr "Ruta para las utilidades Argyll (TIFFGamut e ICCLink)"
+
+#: dialogs.cpp:270
+msgid "Path to Argyll's 'collink' command"
+msgstr "Euta para el comando 'collink' de Argyll"
+
+#: dialogs.cpp:274
+msgid "Path to Argyll's collink command"
+msgstr "Ruta para el comando collink de Argyll"
+
+#: imagesource/imagesource_util.cpp:32
+msgid "Automatic"
+msgstr "Automático"
+
+#: imagesource/imagesource_util.cpp:32
+msgid "Selects a scaling algorithm based on scale factor"
+msgstr "Selecciona un algoritmo de escalado basado en el factor de escala"
+
+#: imagesource/imagesource_util.cpp:33
+msgid "Fast"
+msgstr "Rápido"
+
+#: imagesource/imagesource_util.cpp:33
+msgid "Very fast scaling with no interpolation"
+msgstr "Escalado muy rápido sin interpolación"
+
+#: imagesource/imagesource_util.cpp:34
+msgid "Bilinear"
+msgstr "Bilinear"
+
+#: imagesource/imagesource_util.cpp:34
+msgid "An interpolation filter with mediocre speed and quality"
+msgstr "Un filtro de interpolación con velocidad y calidad mediocres"
+
+#: imagesource/imagesource_util.cpp:35
+msgid "LanczosSinc"
+msgstr "LanczosSinc"
+
+#: imagesource/imagesource_util.cpp:35
+msgid "Slow but very high quality interpolation filter"
+msgstr "Filtro de interpolación lento pero de muy alta calidad"
+
+#: imagesource/imagesource_util.cpp:37
+msgid "Downsample"
+msgstr "Downsample"
+
+#: imagesource/imagesource_util.cpp:37
+msgid "High quality filter for reductions only"
+msgstr "filtro de alta calidad sólo para reducciones"
+
+#: miscwidgets/imageselector.cpp:458
+msgid "Image"
+msgstr "Imagen"
+
+#: miscwidgets/patheditor.cpp:53
+msgid "Select directory..."
+msgstr "Seleccionar directorio..."
+
+#: miscwidgets/patheditor.cpp:98
+msgid "Path"
+msgstr "Ruta"
+
+#: miscwidgets/patheditor.cpp:112
+msgid "Add..."
+msgstr "Agregar..."
+
+#: miscwidgets/patheditor.cpp:117
+msgid "Remove"
+msgstr "Quitar"
+
+#: miscwidgets/progressbar.cpp:52
+msgid "Progress..."
+msgstr "Progreso..."
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:349
+#, c-format
+msgid "Error creating directory `%s': %s"
+msgstr "Error creando directorio `%s': %s"
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:463
+#, c-format
+msgid "Error opening `%s': %s"
+msgstr "Error abriendo `%s': %s"
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:481
+#, c-format
+msgid "Error reading `%s': file contains no data."
+msgstr "Error leyendo `%s': el archivo no contiene datos."
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:505
+#, c-format
+msgid "Error reading `%s': %s"
+msgstr "Error leyendo `%s': %s"
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:540
+#, c-format
+msgid "Failed to load image '%s': reason not known, probably a corrupt image file"
+msgstr "Falló al cargar la imagen '%s': razón desconocida, probablemente el archivo de imagen está dañado"
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:613
+#, c-format
+msgid "Error verifying `%s': %s"
+msgstr "Error verificando `%s': %s"
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:629
+#, c-format
+msgid "Error reading `%s': file is not a regular file or symbolic link."
+msgstr "Error leyendo `%s': El archivo no es un archivo común o un enlace simbólico."
+
+#: pixbufthumbnail/egg-pixbuf-thumbnail.c:1071
+#, c-format
+msgid "Error creating temporary thumbnail file for `%s': %s"
+msgstr "Error creando el archivo de miniatura temporal para `%s': %s"
+
+#: profilemanager/lcmswrapper.cpp:553
+msgid "Perceptual"
+msgstr "Perceptual"
+
+#: profilemanager/lcmswrapper.cpp:554
+msgid "Relative Colorimetric"
+msgstr "Colorimétrico Relativo"
+
+#: profilemanager/lcmswrapper.cpp:555
+msgid "Relative Colorimetric with BPC"
+msgstr "Colorimétrico Relativo con BPC"
+
+#: profilemanager/lcmswrapper.cpp:556
+msgid "Saturation"
+msgstr "Saturación"
+
+#: profilemanager/lcmswrapper.cpp:557
+msgid "Absolute Colorimetric"
+msgstr "Colorimétrico Absoluto"
+
+#: profilemanager/lcmswrapper.cpp:562
+msgid "Aims for pleasing photographic results by preserving relationships between colours, and avoiding clipping of unattainable colours"
+msgstr "Apunta a resultados fotográficos agradables mediante la preservación de las relaciones entre colores y evitando el recorte de colores no reproducibles"
+
+#: profilemanager/lcmswrapper.cpp:563
+msgid "Attempts to preserve the original colours, relative to white-point differences."
+msgstr "Intenta preservar los colores originales, relativos a las diferencias de punto blanco."
+
+#: profilemanager/lcmswrapper.cpp:564
+msgid "Attempts to preserve the original colours, relative to white-point differences.  Uses Black Point Compensation to avoid clipping of highlights and shadows."
+msgstr "Intenta preservar los colores originales, relativos a las diferencias de punto blanco. Usa Compensación de Punto Negro para evitar el recorte de luces y sombras."
+
+#: profilemanager/lcmswrapper.cpp:565
+msgid "Attempts to provide brighter, more saturated colours, at the expense of colour relationships."
+msgstr "Intenta proveer colores más brillantes y saturados, a expensas de las relaciones entre ellos."
+
+#: profilemanager/lcmswrapper.cpp:566
+msgid "Mimics the original colours (including white point) as closely as possible, for side-by-side comparisons.  Clips unattainable colours."
+msgstr "Imita los colores originales (incluyendo el punto blanco) de la forma más aproximada posible, para comparaciones lado a lado. Recorta los colores no reproducibles."
+
+#: profilemanager/profilemanager.cpp:207
+msgid "Can't do proofing without a valid Printer profile!"
+msgstr "No se puede realizar una prueba sin un perfil de Impresión válido!"
+
+#: profilemanager/profilemanager.cpp:212
+msgid "Can't do proofing without a valid Monitor profile!"
+msgstr "No se puede realizar una prueba sin un perfil de Monitor válido!"
+
+#: profilemanager/profilemanager.cpp:217
+msgid "Can't do proofing without a valid Default RGB profile!"
+msgstr "No se puede realizar una prueba sin un perfil RGB predeterminado válido!"
+
+#: profilemanager/profilemanager.cpp:497
+msgid "No Proof profile provided!"
+msgstr "No se ha provisto un perfil de Prueba!"
+
+#: profilemanager/profilemanager.cpp:831
+msgid "Default"
+msgstr "Predeterminado"
+
+#: profilemanager/profilemanager.cpp:839
+msgid "Default rendering intent"
+msgstr "Intento de renderizado predeterminado"
+
+#: profilemanager/profileselector.cpp:392
+msgid "Please choose a valid ICC profile"
+msgstr "Por favor seleccione un perfil ICC válido"
+
+#: psripui.cpp:28
+msgid "Ripping File..."
+msgstr "Archivo de Ripeado."
+
+#: psripui.cpp:120
+msgid "PSRip Test"
+msgstr "Prueba de PSRip"
+
