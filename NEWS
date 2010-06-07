@@ -1,0 +1,67 @@
+CMYKTool-0.1.4
+
+    * Added Spanish translation, thanks to Guillermo Espertino.
+
+
+CMYKTool-0.1.3
+
+    * Can now remove an image from the list.  Fixed bug which prevented last image from being removed.
+
+    * Now has a "transition width" parameter which attempts to hide the sharp transitions
+      that can appear in Hold Black and Hold Grey modes, by interpolating between normal
+      and adjusted values for near black/grey colours.
+
+    * Fixed bug which prevented Overprint mode from doing anything.
+
+    * Improved job cancelling when colorants are changed.
+
+
+CMYKTool-0.1.2
+
+    * French translation added - thanks to Cedric Gémy.
+
+    * Profile selector now allows "None" as a choice for output profile.
+
+    * Now has a "naive" non-colour-managed RGB -> CMYK conversion, accessed by setting
+      the output profile to "None".
+
+    * Added (currently non-functional) "External Utilities" tab to the preferences dialog.
+
+    * Now remembers the last settings in the Save Dialog during a session.  They are also saved
+      along with preferences.
+
+
+CMYKTool-0.1.1
+
+	* Now handles greyscale images
+
+    * Partial support for 16-bit (5-bits per channel) BMP files
+
+    * Now creates parent directories for XDG_CONFIG_HOME if needed.
+	  (Solves issue with preferences not being saved.)
+
+	* Save button in Prefs dialog now works
+
+	* Now saves the window geometry along with global preferences.
+
+    * Cropped the spinner graphic a little, so it will (hopefully) not cause the tab to resize any more.
+
+    * ConversionPresets now have both RGB and CMYK fallback profiles.  (Simplifies the use of DeviceLinks)
+
+    * Now has an option to ignore embedded profiles and use the fallback instead.
+
+    * Now supports loading and saving of CMYK JPEGs.
+
+    * Resolution of input file is now preserved.  (Including hack to force this for CMYK JPEGs.)
+
+    * Now displays the channel percentages under the cursor, overlaid on the "blobs" that make up
+      the colorant toggle, and to the right of that, a total area coverage readout.
+
+    * Fixed case of locale "domain" to match the package name.
+
+
+CMYKTool-0.1.0
+
+	* Initial Release
+
+

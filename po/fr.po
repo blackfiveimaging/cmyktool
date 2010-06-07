@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.2\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-03-07 13:25+0000\n"
+"POT-Creation-Date: 2010-06-02 23:13+0100\n"
 "PO-Revision-Date: 2010-02-05 22:50+0000\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -74,94 +74,94 @@ msgstr "Ouvrir un fichier"
 msgid "Adding images..."
 msgstr "Ajotuer des images..."
 
-#: cmykuitab.cpp:438
+#: cmykuitab.cpp:451
 msgid "Inspect"
 msgstr "Inspecter"
 
-#: cmykuitab.cpp:438
+#: cmykuitab.cpp:451
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
 msgstr ""
 
-#: cmykuitab.cpp:440
+#: cmykuitab.cpp:453
 msgid "Simulate print, adapt white"
 msgstr "Simule l'impression, adapte le blanc"
 
-#: cmykuitab.cpp:440
+#: cmykuitab.cpp:453
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
 "with BlackPoint Compensation.)"
 msgstr ""
 
-#: cmykuitab.cpp:442
+#: cmykuitab.cpp:455
 msgid "Simulate print"
 msgstr "Simule l'impression"
 
-#: cmykuitab.cpp:442
+#: cmykuitab.cpp:455
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
 msgstr ""
 
-#: cmykuitab.cpp:478
+#: cmykuitab.cpp:491
 msgid "Save..."
 msgstr "Enregistre..."
 
-#: cmykuitab.cpp:622
+#: cmykuitab.cpp:635
 msgid "Save Image..."
 msgstr "Enregistre l'image..."
 
-#: cmykuitab.cpp:649
+#: cmykuitab.cpp:662
 msgid "File format:"
 msgstr "Format de fichier:"
 
-#: cmykuitab.cpp:654
+#: cmykuitab.cpp:667
 msgid "JPEG"
 msgstr "JPEG"
 
-#: cmykuitab.cpp:654
+#: cmykuitab.cpp:667
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JOEG - Format  perte optimis pour photos"
 
-#: cmykuitab.cpp:655
+#: cmykuitab.cpp:668
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8-bit)"
 
-#: cmykuitab.cpp:655
+#: cmykuitab.cpp:668
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF - 8-bits pour une meilleur compatibilit"
 
-#: cmykuitab.cpp:656
+#: cmykuitab.cpp:669
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16-bit)"
 
-#: cmykuitab.cpp:656
+#: cmykuitab.cpp:669
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr "TIFF - 16-bit, pour une qualit optimale"
 
-#: cmykuitab.cpp:666
+#: cmykuitab.cpp:679
 msgid "JPEG Quality:"
 msgstr "Qualit JPEG :"
 
-#: cmykuitab.cpp:682
+#: cmykuitab.cpp:695
 msgid "Resolution:"
 msgstr ""
 
-#: cmykuitab.cpp:698
+#: cmykuitab.cpp:711
 msgid "Embed ICC Profile"
 msgstr "Profil ICC incorpor"
 
-#: cmykuitab.cpp:793
+#: cmykuitab.cpp:806
 msgid "File exists - OK to overwrite?"
 msgstr "Le fichier existe dj : craser ?"
 
-#: cmykuitab.cpp:807 cmykuitab.cpp:870
+#: cmykuitab.cpp:820 cmykuitab.cpp:883
 msgid "Saving"
 msgstr "Enregistrer"
 
-#: cmykuitab.cpp:867
+#: cmykuitab.cpp:880
 msgid "Save image - please choose filename"
 msgstr "Enregistre l'image - choisissez un nom de fichier"
 
@@ -227,7 +227,11 @@ msgid ""
 "recent non-black pixel."
 msgstr ""
 
-#: conversionoptsdialog.cpp:163
+#: conversionoptsdialog.cpp:148
+msgid "Transition width:"
+msgstr ""
+
+#: conversionoptsdialog.cpp:180
 msgid "Choose a name for this preset..."
 msgstr "Choisir un nom pour cette mmorisation"
 
@@ -344,7 +348,7 @@ msgstr "Ajouter..."
 msgid "Remove"
 msgstr "Supprimer"
 
-#: miscwidgets/progressbar.cpp:51
+#: miscwidgets/progressbar.cpp:52
 msgid "Progress..."
 msgstr "Progression..."
 
@@ -391,52 +395,52 @@ msgstr "Erreur  la lecture de `%s': le fichier n'est pas un fichier rgulier"
 msgid "Error creating temporary thumbnail file for `%s': %s"
 msgstr "Erreur de cration d'aperu pour `%s': %s"
 
-#: profilemanager/lcmswrapper.cpp:535
+#: profilemanager/lcmswrapper.cpp:553
 msgid "Perceptual"
 msgstr "Perceptif"
 
-#: profilemanager/lcmswrapper.cpp:536
+#: profilemanager/lcmswrapper.cpp:554
 msgid "Relative Colorimetric"
 msgstr "Relative Colorimetric"
 
-#: profilemanager/lcmswrapper.cpp:537
+#: profilemanager/lcmswrapper.cpp:555
 msgid "Relative Colorimetric with BPC"
 msgstr "Relative Colorimetric avec BPC"
 
-#: profilemanager/lcmswrapper.cpp:538
+#: profilemanager/lcmswrapper.cpp:556
 msgid "Saturation"
 msgstr "Saturation"
 
-#: profilemanager/lcmswrapper.cpp:539
+#: profilemanager/lcmswrapper.cpp:557
 msgid "Absolute Colorimetric"
 msgstr "Colorimtrie absolue"
 
-#: profilemanager/lcmswrapper.cpp:544
+#: profilemanager/lcmswrapper.cpp:562
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:545
+#: profilemanager/lcmswrapper.cpp:563
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:546
+#: profilemanager/lcmswrapper.cpp:564
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
 "and shadows."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:547
+#: profilemanager/lcmswrapper.cpp:565
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:548
+#: profilemanager/lcmswrapper.cpp:566
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
@@ -454,15 +458,15 @@ msgstr "Impossible sans un profil moniteur valide!"
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr "Impossible sans un profil RVB par dfaut valide!"
 
-#: profilemanager/profilemanager.cpp:494
+#: profilemanager/profilemanager.cpp:497
 msgid "No Proof profile provided!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:828
+#: profilemanager/profilemanager.cpp:831
 msgid "Default"
 msgstr "Defaut"
 
-#: profilemanager/profilemanager.cpp:836
+#: profilemanager/profilemanager.cpp:839
 msgid "Default rendering intent"
 msgstr "Intention de rendu par dfaut"
 
