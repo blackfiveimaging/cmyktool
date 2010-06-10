@@ -32,8 +32,7 @@ msgstr "Convertir"
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:236
-#: dialogs.cpp:87
+#: cmyktool.cpp:236 dialogs.cpp:87
 msgid "Preferences..."
 msgstr "Preferencias..."
 
@@ -41,8 +40,7 @@ msgstr "Preferencias..."
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:343
-#: profilemanager/profileselector.cpp:193
+#: cmyktool.cpp:343 profilemanager/profileselector.cpp:193
 msgid "None"
 msgstr "Ninguno"
 
@@ -54,8 +52,7 @@ msgstr "Sin conversión"
 msgid "<unknown>"
 msgstr "<desconocido>"
 
-#: cmyktool.cpp:372
-#: miscwidgets/imageselector.cpp:478
+#: cmyktool.cpp:372 miscwidgets/imageselector.cpp:478
 #: profilemanager/profileselector.cpp:39
 msgid "Other..."
 msgstr "Otro..."
@@ -68,8 +65,7 @@ msgstr "Crear un nuevo ajuste predefinido"
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:524
-#: cmyktool.cpp:681
+#: cmyktool.cpp:524 cmyktool.cpp:681
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 
@@ -78,24 +74,40 @@ msgid "Inspect"
 msgstr "Inspeccionar"
 
 #: cmykuitab.cpp:451
-msgid "Displays image data without conversion from target space to monitor, allowing you to see how the data has been modified by the conversion."
-msgstr "Muestra los información de imagen sin conversión desde el espacio de destino al monitor, permitiendo ver cómo la información ha sido modificada por la conversión."
+msgid ""
+"Displays image data without conversion from target space to monitor, "
+"allowing you to see how the data has been modified by the conversion."
+msgstr ""
+"Muestra los información de imagen sin conversión desde el espacio de destino "
+"al monitor, permitiendo ver cómo la información ha sido modificada por la "
+"conversión."
 
 #: cmykuitab.cpp:453
 msgid "Simulate print, adapt white"
 msgstr "Simular impresión, adaptar blanco"
 
 #: cmykuitab.cpp:453
-msgid "Simulates printed colours but uses the monitor's white point. (Conversion from destination to monitor profiles, using Relative Colorimetric intent with BlackPoint Compensation.)"
-msgstr "Simula los colores impresos, pero usa el punto blanco del monitor. (Conversión desde el perfil de destino al perfil del monitor, usando el intento Colorimétrico Relativo con Compensación de Punto Negro.)"
+msgid ""
+"Simulates printed colours but uses the monitor's white point. (Conversion "
+"from destination to monitor profiles, using Relative Colorimetric intent "
+"with BlackPoint Compensation.)"
+msgstr ""
+"Simula los colores impresos, pero usa el punto blanco del monitor. "
+"(Conversión desde el perfil de destino al perfil del monitor, usando el "
+"intento Colorimétrico Relativo con Compensación de Punto Negro.)"
 
 #: cmykuitab.cpp:455
 msgid "Simulate print"
 msgstr "Simular impresión"
 
 #: cmykuitab.cpp:455
-msgid "Simulates printed colours, using paper white. (Conversion from destination to monitor profiles, using Absolute Colorimetric intent.)"
-msgstr "Simula los colores impresos, usando el blanco del papel. (Conversión desde el perfil de destino al perfil del monitor, usando el intento Colorimétrico Absoluto.)"
+msgid ""
+"Simulates printed colours, using paper white. (Conversion from destination "
+"to monitor profiles, using Absolute Colorimetric intent.)"
+msgstr ""
+"Simula los colores impresos, usando el blanco del papel. (Conversión desde "
+"el perfil de destino al perfil del monitor, usando el intento Colorimétrico "
+"Absoluto.)"
 
 #: cmykuitab.cpp:491
 msgid "Save..."
@@ -149,8 +161,7 @@ msgstr "Incrustar Perfil ICC"
 msgid "File exists - OK to overwrite?"
 msgstr "El archivo existe - Desea sobreescribirlo?"
 
-#: cmykuitab.cpp:820
-#: cmykuitab.cpp:883
+#: cmykuitab.cpp:820 cmykuitab.cpp:883
 msgid "Saving"
 msgstr "Guardando"
 
@@ -215,8 +226,12 @@ msgid "Overprint"
 msgstr "Sompreimprimir"
 
 #: conversionoptsdialog.cpp:130
-msgid "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most recent non-black pixel."
-msgstr "Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-negros más recientes."
+msgid ""
+"Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
+"recent non-black pixel."
+msgstr ""
+"Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-"
+"negros más recientes."
 
 #: conversionoptsdialog.cpp:148
 msgid "Transition width:"
@@ -256,7 +271,8 @@ msgstr "Utilidades externas"
 
 #: dialogs.cpp:217
 msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
-msgstr "Rutas de búsqueda para las utilidades Argyll (TIFFGamut, ColLink, etc.)"
+msgstr ""
+"Rutas de búsqueda para las utilidades Argyll (TIFFGamut, ColLink, etc.)"
 
 #: dialogs.cpp:234
 msgid "Search paths for GhostScript executable"
@@ -364,8 +380,11 @@ msgstr "Error leyendo `%s': %s"
 
 #: pixbufthumbnail/egg-pixbuf-thumbnail.c:540
 #, c-format
-msgid "Failed to load image '%s': reason not known, probably a corrupt image file"
-msgstr "Falló al cargar la imagen '%s': razón desconocida, probablemente el archivo de imagen está dañado"
+msgid ""
+"Failed to load image '%s': reason not known, probably a corrupt image file"
+msgstr ""
+"Falló al cargar la imagen '%s': razón desconocida, probablemente el archivo "
+"de imagen está dañado"
 
 #: pixbufthumbnail/egg-pixbuf-thumbnail.c:613
 #, c-format
@@ -375,7 +394,8 @@ msgstr "Error verificando `%s': %s"
 #: pixbufthumbnail/egg-pixbuf-thumbnail.c:629
 #, c-format
 msgid "Error reading `%s': file is not a regular file or symbolic link."
-msgstr "Error leyendo `%s': El archivo no es un archivo común o un enlace simbólico."
+msgstr ""
+"Error leyendo `%s': El archivo no es un archivo común o un enlace simbólico."
 
 #: pixbufthumbnail/egg-pixbuf-thumbnail.c:1071
 #, c-format
@@ -403,24 +423,47 @@ msgid "Absolute Colorimetric"
 msgstr "Colorimétrico Absoluto"
 
 #: profilemanager/lcmswrapper.cpp:562
-msgid "Aims for pleasing photographic results by preserving relationships between colours, and avoiding clipping of unattainable colours"
-msgstr "Apunta a resultados fotográficos agradables mediante la preservación de las relaciones entre colores y evitando el recorte de colores no reproducibles"
+msgid ""
+"Aims for pleasing photographic results by preserving relationships between "
+"colours, and avoiding clipping of unattainable colours"
+msgstr ""
+"Apunta a resultados fotográficos agradables mediante la preservación de las "
+"relaciones entre colores y evitando el recorte de colores no reproducibles"
 
 #: profilemanager/lcmswrapper.cpp:563
-msgid "Attempts to preserve the original colours, relative to white-point differences."
-msgstr "Intenta preservar los colores originales, relativos a las diferencias de punto blanco."
+msgid ""
+"Attempts to preserve the original colours, relative to white-point "
+"differences."
+msgstr ""
+"Intenta preservar los colores originales, relativos a las diferencias de "
+"punto blanco."
 
 #: profilemanager/lcmswrapper.cpp:564
-msgid "Attempts to preserve the original colours, relative to white-point differences.  Uses Black Point Compensation to avoid clipping of highlights and shadows."
-msgstr "Intenta preservar los colores originales, relativos a las diferencias de punto blanco. Usa Compensación de Punto Negro para evitar el recorte de luces y sombras."
+msgid ""
+"Attempts to preserve the original colours, relative to white-point "
+"differences.  Uses Black Point Compensation to avoid clipping of highlights "
+"and shadows."
+msgstr ""
+"Intenta preservar los colores originales, relativos a las diferencias de "
+"punto blanco. Usa Compensación de Punto Negro para evitar el recorte de "
+"luces y sombras."
 
 #: profilemanager/lcmswrapper.cpp:565
-msgid "Attempts to provide brighter, more saturated colours, at the expense of colour relationships."
-msgstr "Intenta proveer colores más brillantes y saturados, a expensas de las relaciones entre ellos."
+msgid ""
+"Attempts to provide brighter, more saturated colours, at the expense of "
+"colour relationships."
+msgstr ""
+"Intenta proveer colores más brillantes y saturados, a expensas de las "
+"relaciones entre ellos."
 
 #: profilemanager/lcmswrapper.cpp:566
-msgid "Mimics the original colours (including white point) as closely as possible, for side-by-side comparisons.  Clips unattainable colours."
-msgstr "Imita los colores originales (incluyendo el punto blanco) de la forma más aproximada posible, para comparaciones lado a lado. Recorta los colores no reproducibles."
+msgid ""
+"Mimics the original colours (including white point) as closely as possible, "
+"for side-by-side comparisons.  Clips unattainable colours."
+msgstr ""
+"Imita los colores originales (incluyendo el punto blanco) de la forma más "
+"aproximada posible, para comparaciones lado a lado. Recorta los colores no "
+"reproducibles."
 
 #: profilemanager/profilemanager.cpp:207
 msgid "Can't do proofing without a valid Printer profile!"
@@ -432,7 +475,8 @@ msgstr "No se puede realizar una prueba sin un perfil de Monitor válido!"
 
 #: profilemanager/profilemanager.cpp:217
 msgid "Can't do proofing without a valid Default RGB profile!"
-msgstr "No se puede realizar una prueba sin un perfil RGB predeterminado válido!"
+msgstr ""
+"No se puede realizar una prueba sin un perfil RGB predeterminado válido!"
 
 #: profilemanager/profilemanager.cpp:497
 msgid "No Proof profile provided!"
@@ -457,4 +501,3 @@ msgstr "Archivo de Ripeado."
 #: psripui.cpp:120
 msgid "PSRip Test"
 msgstr "Prueba de PSRip"
-
