@@ -22,7 +22,7 @@ using namespace std;
 class PSRip_TempFile : public TempFile
 {
 	public:
-	PSRip_TempFile(TempFileTracker *header,const char *fname) : TempFile(header)
+	PSRip_TempFile(TempFileTracker &header,const char *fname) : TempFile(&header)
 	{
 		filename=strdup(fname);
 	}
@@ -108,7 +108,7 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 					if((rfn=rip.GetRippedFilename(page)))
 					{
 						Debug[TRACE] << "So now safe to add: " << rfn << std::endl;
-						new PSRip_TempFile(&rip,rfn);
+						new PSRip_TempFile(rip,rfn);
 						++page;
 						free(rfn);
 						cerr << "Triggering event" << endl;
@@ -130,7 +130,7 @@ class Thread_PSRipFileMonitor : public ThreadFunction, public Thread
 			{
 				rfn=rip.GetRippedFilename(page);
 				cerr << "Thread finished -- adding file: " << rfn << endl;
-				new PSRip_TempFile(&rip,rfn);
+				new PSRip_TempFile(rip,rfn);
 				++page;
 				free(rfn);
 			}
