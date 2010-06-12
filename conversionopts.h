@@ -2,14 +2,23 @@
 #define CONVERSIONOPTS_H
 
 #include <string>
+#include <cstdlib>
 #include <cstring>
+#include <deque>
 
+#include "debug.h"
 #include "support/configdb.h"
 #include "support/pathsupport.h"
 #include "imagesource/imagesource.h"
 #include "profilemanager/profilemanager.h"
 #include "support/md5.h"
 #include "support/util.h"
+#include "support/dirtreewalker.h"
+
+#include "config.h"
+#include "gettext.h"
+
+#define _(x) gettext(x)
 
 #define CMYKCONVERSIONOPTS_PRESET_PATH "$XDG_CONFIG_HOME/cmyktool/presets"
 
@@ -143,6 +152,55 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 	}
 	protected:
 	static ConfigTemplate Template[];
+};
+
+
+class PresetList_Entry
+{
+	public:
+	PresetList_Entry(const char *fn,const char *dn) : filename(fn), displayname(dn)
+	{
+	}
+	std::string filename;
+	std::string displayname;
+};
+
+
+class PresetList : public std::deque<PresetList_Entry>
+{
+	public:
+	PresetList() : previdx(-1)
+	{
+		Debug[TRACE] << "Creating preset list..." << std::endl;
+		char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
+		DirTreeWalker dtw(configdir);
+		const char *fn;
+
+		while((fn=dtw.NextFile()))
+		{
+			Debug[TRACE] << "Adding file " << fn << std::endl;
+			CMYKConversionPreset p;
+			p.Load(fn);
+			const char *dn=p.FindString("DisplayName");
+			if(!(dn && strlen(dn)>0))
+				dn=_("<unknown>");
+
+			const char *id=p.FindString("PresetID");
+
+			if(strcmp(id,PRESET_PREVIOUS_ESCAPE)==0)
+				previdx=size();
+
+			PresetList_Entry e(fn,dn);
+			push_back(e);
+		}
+		free(configdir);
+		Debug[TRACE] << "Done - index of previous file is " << previdx << std::endl;
+	}
+	int GetPreviousIndex()
+	{
+		return(previdx);
+	}
+	int previdx;
 };
 
 #endif

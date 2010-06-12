@@ -3,8 +3,10 @@
 #include <gtk/gtk.h>
 
 #include "support/debug.h"
+#include "support/util.h"
 
 #include "miscwidgets/simplecombo.h"
+#include "miscwidgets/simplelistview.h"
 
 #include "profilemanager/profilemanager.h"
 #include "profilemanager/profileselector.h"
@@ -19,6 +21,9 @@
 using namespace std;
 
 #define RESPONSE_SAVE 1
+
+
+#define PRESET_MAXCHARS 17
 
 
 class CMYKConversionOptsDialog
@@ -38,25 +43,69 @@ class CMYKConversionOptsDialog
 		gtk_box_pack_start(GTK_BOX(vbox),hbox,TRUE,TRUE,8);
 		gtk_widget_show(hbox);
 
-		GtkWidget *table=gtk_table_new(2,4,FALSE);
-		gtk_table_set_row_spacings(GTK_TABLE(table),6);
-		gtk_table_set_col_spacing(GTK_TABLE(table),0,6);
-		gtk_box_pack_start(GTK_BOX(hbox),table,FALSE,FALSE,6);
-		gtk_widget_show(table);
+		GtkWidget *listview=simplelistview_new(NULL);
+		gtk_box_pack_start(GTK_BOX(hbox),listview,FALSE,FALSE,8);
+		gtk_widget_show(listview);
 
-		GtkWidget *label;
+
+		// Build a set of SimpleListViewOptions for the presets.
+		// Returns the index of the special "Previous" item, if found.
+
+		SimpleListViewOptions listopts;
+
+		PresetList list;
+		for(int idx=0;idx<list.size();++idx)
+		{
+			const char *fn=list[idx].filename.c_str();
+			const char *dn=list[idx].displayname.c_str();
+
+			if(strlen(dn)<=PRESET_MAXCHARS)
+				listopts.Add(fn,dn,dn);
+			else
+			{
+				char buf[PRESET_MAXCHARS*4+4];
+				utf8ncpy(buf,dn,PRESET_MAXCHARS);
+				int n=strlen(buf);
+				buf[n]=buf[n+1]=buf[n+2]='.';
+				buf[n+3]=0;
+				listopts.Add(fn,buf,dn);
+			}
+		}
+		simplelistview_set_opts(SIMPLELISTVIEW(listview),&listopts);
+
+		vbox=gtk_vbox_new(FALSE,0);
+		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,8);
+		gtk_widget_show(vbox);
+
+		GtkWidget *table=gtk_table_new(5,4,FALSE);
+		gtk_table_set_row_spacings(GTK_TABLE(table),6);
+		gtk_table_set_col_spacings(GTK_TABLE(table),6);
+		gtk_box_pack_start(GTK_BOX(vbox),table,FALSE,FALSE,8);
+		gtk_widget_show(table);
 
 		int row=0;
 
+
+		GtkWidget *label;
+		label=gtk_label_new(_("Input:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+
+		++row;
+
+
 		// Input profile
 
-		label=gtk_label_new(_("Fallback Input Profile (RGB):"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		label=gtk_label_new(_("Fallback RGB Profile:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
 		irps = profileselector_new(&opts.profilemanager,IS_TYPE_RGB);
 		g_signal_connect(irps,"changed",G_CALLBACK(inprofile_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),irps,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),irps,2,5,row,row+1);
 		gtk_widget_show(irps);
 
 
@@ -65,13 +114,14 @@ class CMYKConversionOptsDialog
 
 		// Input CMYK profile
 
-		label=gtk_label_new(_("Fallback Input Profile (CMYK):"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		label=gtk_label_new(_("Fallback CMYK Profile:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
 		icps = profileselector_new(&opts.profilemanager,IS_TYPE_CMYK);
 		g_signal_connect(icps,"changed",G_CALLBACK(inprofile_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),icps,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),icps,2,5,row,row+1);
 		gtk_widget_show(icps);
 
 
@@ -82,22 +132,30 @@ class CMYKConversionOptsDialog
 
 		ignore = gtk_check_button_new_with_label(_("Ignore embedded profiles"));
 		g_signal_connect(ignore,"toggled",G_CALLBACK(ignoreembedded_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),ignore,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),ignore,2,5,row,row+1);
 		gtk_widget_show(ignore);
 
 
 		++row;
 
+		label=gtk_label_new(_("Output:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+
+		++row;
 
 		// Output profile
 
 		label=gtk_label_new(_("Output Profile:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
 		ps = profileselector_new(&opts.profilemanager,IS_TYPE_NULL,true,true);
 		g_signal_connect(ps,"changed",G_CALLBACK(profile_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),ps,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),ps,2,5,row,row+1);
 		gtk_widget_show(ps);
 
 
@@ -106,21 +164,33 @@ class CMYKConversionOptsDialog
 		// Rendering intent
 
 		label=gtk_label_new(_("Rendering intent:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
 		is = intentselector_new(&opts.profilemanager);
 		g_signal_connect(is,"changed",G_CALLBACK(intent_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),is,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),is,2,5,row,row+1);
 		gtk_widget_show(is);
 
 
 		++row;
 
+
+		label=gtk_label_new(_("Processing:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+
+		++row;
+
+
 		// Conversion mode
 
 		label=gtk_label_new(_("Conversion mode:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
 		SimpleComboOptions scopts;
@@ -131,7 +201,7 @@ class CMYKConversionOptsDialog
 
 		combo=simplecombo_new(scopts);
 		g_signal_connect(combo,"changed",G_CALLBACK(combo_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),combo,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),combo,2,3,row,row+1);
 		gtk_widget_show(combo);
 
 		for(int i=0;i<int(CMYKCONVERSIONMODE_MAX);++i)
@@ -141,17 +211,18 @@ class CMYKConversionOptsDialog
 		}
 
 
-		++row;
+//		++row;
 
 		// Conversion width
 
 		label=gtk_label_new(_("Transition width:"));
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,3,4,row,row+1);
 		gtk_widget_show(label);
 
 		widthbutton=gtk_spin_button_new_with_range(0.0,32.0,1.0);
 		g_signal_connect(widthbutton,"value-changed",G_CALLBACK(width_changed),this);
-		gtk_table_attach_defaults(GTK_TABLE(table),widthbutton,1,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),widthbutton,4,5,row,row+1);
 		gtk_widget_show(widthbutton);
 
 

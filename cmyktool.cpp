@@ -294,80 +294,34 @@ void TestUI::SaveConfig()
 
 #define PRESET_MAXCHARS 17
 
-
-// Routine to copy UTF-8 characters into a buffer.
-// Note, the buffer should be 4 times the number of characters to
-// accommodate the worst-case scenario.
-// Always null-terminates the result, so allow space for the terminating null.
-static void utf8ncpy(char *out,const char *in,int count)
-{
-	int count2=0;
-	while(count)
-	{
-		char c=*out++=*in++;
-		if(c==0)
-			return;
-		if(c&0x80)	// multi-byte sequence
-		{
-			if((c&0xe0)==0xc0)	// 2-byte sequence
-				count2=2;
-			if((c&0xf0)==0xc0)	// 3-byte sequence
-				count2=3;
-			if((c&0xf8)==0xf0)	// 4-byte sequence
-				count2=4;
-								// If none of these conditions is met, we have a continuation byte
-		}
-		else
-			count2=1;	// 1-byte sequence
-
-		--count2;
-		if(count2==0)
-			--count;
-	}
-	*out++=0;	// Null terminate if required.
-}
-
-
 // Builds a set of ComboOpts for the presets.
 // Returns the index of the special "Previous" item, if found.
 
 int TestUI::BuildComboOpts(SimpleComboOptions &opts)
 {
 	int previdx=0;
-	int idx=1;
 
-	char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
-	DirTreeWalker dtw(configdir);
-	const char *fn;
-
+	PresetList list;
 	opts.Add(PRESET_NONE_ESCAPE,_("None"),_("No conversion"),true);
+	previdx=list.GetPreviousIndex()+1;
 
-	while((fn=dtw.NextFile()))
+	for(int idx=0;idx<list.size();++idx)
 	{
-		CMYKConversionPreset p;
-		p.Load(fn);
-		const char *dn=p.FindString("DisplayName");
-		if(!(dn && strlen(dn)>0))
-			dn=_("<unknown>");
-
-		if(strcmp(p.FindString("PresetID"),PRESET_PREVIOUS_ESCAPE)==0)
-			previdx=idx;
+		const char *fn=list[idx].filename.c_str();
+		const char *dn=list[idx].displayname.c_str();
 
 		if(strlen(dn)<=PRESET_MAXCHARS)
 			opts.Add(fn,dn,dn);
 		else
 		{
 			char buf[PRESET_MAXCHARS*4+4];
-//			char *p=buf;
 			utf8ncpy(buf,dn,PRESET_MAXCHARS);
 			int n=strlen(buf);
 			buf[n]=buf[n+1]=buf[n+2]='.';
 			buf[n+3]=0;
 			opts.Add(fn,buf,dn);
 		}
-		++idx;
 	}
-	free(configdir);
 
 	opts.Add(PRESET_OTHER_ESCAPE,_("Other..."),_("Create a new preset"),true);
 
