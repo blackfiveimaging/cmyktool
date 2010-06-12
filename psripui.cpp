@@ -93,12 +93,13 @@ class PSRipUIThread : public ThreadFunction, public Thread
 		PSRipUIThread *t=(PSRipUIThread *)ud;
 		cerr << "Event received - updating image list..." << endl;
 
-		TempFile *temp=t->session->FirstTempFile();
-		while(temp)
+		t->session->TempFileTracker::ObtainMutex();
+		for(unsigned int idx;idx<t->session->size();++idx)
 		{
+			TempFile *temp=(*t->session)[idx];
 			imageselector_add_filename(IMAGESELECTOR(t->ripui.imgsel),temp->Filename());
-			temp=temp->NextTempFile();
 		}
+		t->session->TempFileTracker::ReleaseMutex();
 		return(FALSE);
 	}
 	ThreadCondition sync;
