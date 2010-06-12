@@ -80,7 +80,10 @@ class DnDTray
 	~DnDTray()
 	{
 		while(targets.size())
+		{
 			delete targets[0];
+			targets.pop_front();
+		}
 	}
 	void MarkEnter()
 	{
@@ -142,8 +145,8 @@ DropTarget::DropTarget(DnDTray *parent) : parent(parent), widget(NULL)
 
 DropTarget::~DropTarget()
 {
-	if(widget)
-		gtk_widget_destroy(GTK_WIDGET(widget));
+//	if(widget)
+//		gtk_widget_destroy(GTK_WIDGET(widget));
 }
 
 void DropTarget::MakeWidget()
