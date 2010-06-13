@@ -85,8 +85,25 @@ class CMYKConversionOptsDialog
 
 		int row=0;
 
-
 		GtkWidget *label;
+
+		label=gtk_button_new_with_label(_("<- Save"));
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		gtk_widget_show(label);
+
+		label=gtk_label_new(_("Name:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,1,2,row,row+1);
+		gtk_widget_show(label);
+
+		description=gtk_entry_new();
+		gtk_table_attach_defaults(GTK_TABLE(table),description,2,5,row,row+1);
+		gtk_widget_show(description);
+
+
+		++row;
+
+
 		label=gtk_label_new(_("Input:"));
 		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
@@ -186,6 +203,20 @@ class CMYKConversionOptsDialog
 		++row;
 
 
+		usedevicelink=gtk_check_button_new_with_label(_("Use DeviceLink:"));
+		gtk_table_attach_defaults(GTK_TABLE(table),usedevicelink,0,2,row,row+1);
+		gtk_widget_show(usedevicelink);
+		
+		SimpleComboOptions devlinks;
+		devlinks.Add("",_("Other..."),_("Choose or create a DeviceLink profile..."));
+		devicelink=simplecombo_new(devlinks);
+//		g_signal_connect(devicelink,"changed",G_CALLBACK(combo_changed),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),devicelink,2,5,row,row+1);
+		gtk_widget_show(devicelink);
+
+		++row;
+
+
 		// Conversion mode
 
 		label=gtk_label_new(_("Conversion mode:"));
@@ -200,7 +231,6 @@ class CMYKConversionOptsDialog
 		scopts.Add("",_("Overprint"),_("Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most recent non-black pixel."));
 
 		combo=simplecombo_new(scopts);
-		g_signal_connect(combo,"changed",G_CALLBACK(combo_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),combo,2,3,row,row+1);
 		gtk_widget_show(combo);
 
@@ -209,6 +239,7 @@ class CMYKConversionOptsDialog
 			if(convmodes[i]==opts.GetMode())
 				simplecombo_set_index(SIMPLECOMBO(combo),i);
 		}
+		g_signal_connect(combo,"changed",G_CALLBACK(combo_changed),this);
 
 
 //		++row;
@@ -303,6 +334,7 @@ class CMYKConversionOptsDialog
 	private:
 	CMYKConversionOptions &opts;
 	GtkWidget *window;
+	GtkWidget *description;
 	GtkWidget *irps;
 	GtkWidget *icps;
 	GtkWidget *ignore;
@@ -310,6 +342,8 @@ class CMYKConversionOptsDialog
 	GtkWidget *is;
 	GtkWidget *combo;
 	GtkWidget *widthbutton;
+	GtkWidget *usedevicelink;
+	GtkWidget *devicelink;
 
 	static void	profile_changed(GtkWidget *widget,gpointer user_data)
 	{
