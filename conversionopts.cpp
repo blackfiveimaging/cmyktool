@@ -26,10 +26,12 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 	ConfigTemplate("InRGBProfile",BUILTINSRGB_ESCAPESTRING),
 	ConfigTemplate("InCMYKProfile","USWebCoatedSWOP.icc"),
 	ConfigTemplate("OutProfile","USWebCoatedSWOP.icc"),
-	ConfigTemplate("IgnoreEmbedded",0),
-	ConfigTemplate("Intent",0),
-	ConfigTemplate("Mode",1),
-	ConfigTemplate("Width",10),
+	ConfigTemplate("IgnoreEmbedded",int(0)),
+	ConfigTemplate("UseDevicelink",int(0)),
+	ConfigTemplate("Devicelink",""),
+	ConfigTemplate("Intent",int(0)),
+	ConfigTemplate("Mode",int(1)),
+	ConfigTemplate("Width",int(10)),
 	ConfigTemplate()
 };
 
@@ -107,6 +109,18 @@ int CMYKConversionOptions::GetWidth()
 }
 
 
+bool CMYKConversionOptions::GetUseDeviceLink()
+{
+	return(usedevicelink);
+}
+
+
+const char *CMYKConversionOptions::GetDeviceLink()
+{
+	return(devicelink.c_str());
+}
+
+
 void CMYKConversionOptions::SetIntent(LCMSWrapper_Intent intent)
 {
 	this->intent=intent;
@@ -152,9 +166,21 @@ void CMYKConversionOptions::SetWidth(int w)
 }
 
 
-void CMYKConversionOptions::Save(const char *presetname)
+void CMYKConversionOptions::SetUseDeviceLink(bool usedl)
 {
+	usedevicelink=usedl;
 }
+
+
+void CMYKConversionOptions::SetDeviceLink(const char *dl)
+{
+	devicelink=dl;
+}
+
+
+//void CMYKConversionOptions::Save(const char *presetname)
+//{
+//}
 
 
 IS_TYPE CMYKConversionOptions::GetOutputType(IS_TYPE type)

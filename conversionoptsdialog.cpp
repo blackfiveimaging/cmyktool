@@ -7,12 +7,14 @@
 
 #include "miscwidgets/simplecombo.h"
 #include "miscwidgets/simplelistview.h"
+#include "miscwidgets/generaldialogs.h"
 
 #include "profilemanager/profilemanager.h"
 #include "profilemanager/profileselector.h"
 #include "profilemanager/intentselector.h"
 
 #include "conversionoptsdialog.h"
+#include "devicelink.h"
 
 #include "config.h"
 #include "gettext.h"
@@ -29,7 +31,7 @@ using namespace std;
 class CMYKConversionOptsDialog
 {
 	public:
-	CMYKConversionOptsDialog(CMYKConversionOptions &opts, GtkWidget *parent) : opts(opts)
+	CMYKConversionOptsDialog(CMYKConversionOptions &opts, GtkWidget *parent) : opts(opts), blockupdates(false)
 	{
 		window=gtk_dialog_new_with_buttons(_("Colour conversion options"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
@@ -43,35 +45,29 @@ class CMYKConversionOptsDialog
 		gtk_box_pack_start(GTK_BOX(vbox),hbox,TRUE,TRUE,8);
 		gtk_widget_show(hbox);
 
-		GtkWidget *listview=simplelistview_new(NULL);
-		gtk_box_pack_start(GTK_BOX(hbox),listview,FALSE,FALSE,8);
+		vbox=gtk_vbox_new(FALSE,0);
+		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,0);
+		gtk_widget_show(vbox);
+
+		listview=simplelistview_new(NULL);
+		gtk_box_pack_start(GTK_BOX(vbox),listview,TRUE,TRUE,8);
 		gtk_widget_show(listview);
 
+		build_presetlist();
 
-		// Build a set of SimpleListViewOptions for the presets.
-		// Returns the index of the special "Previous" item, if found.
+		// FIXME - preselect the current preset in the listview...
+		g_signal_connect(listview,"changed",G_CALLBACK(preset_changed),this);
 
-		SimpleListViewOptions listopts;
 
-		PresetList list;
-		for(int idx=0;idx<list.size();++idx)
-		{
-			const char *fn=list[idx].filename.c_str();
-			const char *dn=list[idx].displayname.c_str();
+		// Create Delete button
 
-			if(strlen(dn)<=PRESET_MAXCHARS)
-				listopts.Add(fn,dn,dn);
-			else
-			{
-				char buf[PRESET_MAXCHARS*4+4];
-				utf8ncpy(buf,dn,PRESET_MAXCHARS);
-				int n=strlen(buf);
-				buf[n]=buf[n+1]=buf[n+2]='.';
-				buf[n+3]=0;
-				listopts.Add(fn,buf,dn);
-			}
-		}
-		simplelistview_set_opts(SIMPLELISTVIEW(listview),&listopts);
+		GtkWidget *label;
+		label=gtk_button_new_with_label(_("Delete"));
+		gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,0);
+		g_signal_connect(label,"clicked",G_CALLBACK(delete_preset),this);
+		gtk_widget_show(label);
+
+		// Now a vbox to contain the table
 
 		vbox=gtk_vbox_new(FALSE,0);
 		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,8);
@@ -84,8 +80,6 @@ class CMYKConversionOptsDialog
 		gtk_widget_show(table);
 
 		int row=0;
-
-		GtkWidget *label;
 
 		label=gtk_button_new_with_label(_("<- Save"));
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
@@ -202,13 +196,14 @@ class CMYKConversionOptsDialog
 
 		++row;
 
-
+		// DeviceLink settings
 		usedevicelink=gtk_check_button_new_with_label(_("Use DeviceLink:"));
+		g_signal_connect(usedevicelink,"toggled",G_CALLBACK(usedevicelink_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),usedevicelink,0,2,row,row+1);
 		gtk_widget_show(usedevicelink);
 		
 		SimpleComboOptions devlinks;
-		devlinks.Add("",_("Other..."),_("Choose or create a DeviceLink profile..."));
+		devlinks.Add(NULL,_("Other..."),_("Choose or create a DeviceLink profile..."));
 		devicelink=simplecombo_new(devlinks);
 //		g_signal_connect(devicelink,"changed",G_CALLBACK(combo_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),devicelink,2,5,row,row+1);
@@ -263,16 +258,7 @@ class CMYKConversionOptsDialog
 
 		gtk_widget_show(window);
 
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ignore),opts.GetIgnoreEmbedded());
-
-		intentselector_setintent(INTENTSELECTOR(is),opts.GetIntent());
-
-		profileselector_set_filename(PROFILESELECTOR(irps),opts.GetInRGBProfile());
-		profileselector_set_filename(PROFILESELECTOR(icps),opts.GetInCMYKProfile());
-		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
-		SetSensitive();
-
-		gtk_spin_button_set_value(GTK_SPIN_BUTTON(widthbutton),opts.GetWidth());
+		update_dialog();
 
 		gint result=gtk_dialog_run(GTK_DIALOG(window));
 		switch(result)
@@ -334,6 +320,7 @@ class CMYKConversionOptsDialog
 	private:
 	CMYKConversionOptions &opts;
 	GtkWidget *window;
+	GtkWidget *listview;
 	GtkWidget *description;
 	GtkWidget *irps;
 	GtkWidget *icps;
@@ -344,6 +331,91 @@ class CMYKConversionOptsDialog
 	GtkWidget *widthbutton;
 	GtkWidget *usedevicelink;
 	GtkWidget *devicelink;
+	bool blockupdates;
+
+	void update_dialog()
+	{
+		if(blockupdates)
+			return;
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ignore),opts.GetIgnoreEmbedded());
+
+		intentselector_setintent(INTENTSELECTOR(is),opts.GetIntent());
+
+		profileselector_set_filename(PROFILESELECTOR(irps),opts.GetInRGBProfile());
+		profileselector_set_filename(PROFILESELECTOR(icps),opts.GetInCMYKProfile());
+		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
+		SetSensitive();
+
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(widthbutton),opts.GetWidth());
+	}
+
+	void build_presetlist()
+	{
+		// Build a set of SimpleListViewOptions for the presets.
+		// Returns the index of the special "Previous" item, if found.
+		blockupdates=true;
+		SimpleListViewOptions listopts;
+		listopts.Add(NULL,_("New preset"),_("New preset"));
+		PresetList list;
+		for(int idx=0;idx<list.size();++idx)
+		{
+			const char *fn=list[idx].filename.c_str();
+			const char *dn=list[idx].displayname.c_str();
+
+			if(strlen(dn)<=PRESET_MAXCHARS)
+				listopts.Add(fn,dn,dn);
+			else
+			{
+				char buf[PRESET_MAXCHARS*4+4];
+				utf8ncpy(buf,dn,PRESET_MAXCHARS);
+				int n=strlen(buf);
+				buf[n]=buf[n+1]=buf[n+2]='.';
+				buf[n+3]=0;
+				listopts.Add(fn,buf,buf);
+			}
+		}
+		simplelistview_set_opts(SIMPLELISTVIEW(listview),&listopts);
+		blockupdates=false;
+	}
+
+
+	static void delete_preset(GtkWidget *widget,gpointer user_data)
+	{
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+		dlg->blockupdates=true;
+		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(dlg->listview));
+		if(opt->key)
+		{
+			if(Query_Dialog(_("Are you sure you want to delete this preset?"),dlg->window))
+			{
+				simplelistview_set_index(SIMPLELISTVIEW(dlg->listview),0);
+				remove(opt->key);
+				dlg->build_presetlist();
+			}
+		}
+		dlg->blockupdates=false;
+	}
+
+
+	static void preset_changed(GtkWidget *widget,gpointer user_data)
+	{
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+		if(dlg->blockupdates)
+			return;
+		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(dlg->listview));
+		CMYKConversionPreset p;
+		if(opt->key)
+		{
+			Debug[TRACE] << "Got key: " << opt->key << " (" << opt->displayname << ")" << std::endl;
+			p.Load(opt->key);
+			p.Retrieve(dlg->opts);
+			dlg->update_dialog();
+		}
+		// We update the description field even if there's no preset to load - that way we get the default
+		// preset description when the user clicks "New preset", but all other options remain as previously set.
+		gtk_entry_set_text(GTK_ENTRY(dlg->description),p.FindString("DisplayName"));
+		usedevicelink_changed(widget,user_data);
+	}
 
 	static void	profile_changed(GtkWidget *widget,gpointer user_data)
 	{
@@ -359,6 +431,8 @@ class CMYKConversionOptsDialog
 		}
 		else
 			Debug[WARN] << "No profile selected... " << endl;
+
+		usedevicelink_changed(widget,user_data);
 	}
 
 	static void	inprofile_changed(GtkWidget *widget,gpointer user_data)
@@ -385,6 +459,8 @@ class CMYKConversionOptsDialog
 		else
 			Debug[WARN] << "No profile selected... " << endl;
 
+
+		usedevicelink_changed(widget,user_data);
 	}
 
 	static void	intent_changed(GtkWidget *widget,gpointer user_data)
@@ -398,6 +474,7 @@ class CMYKConversionOptsDialog
 		dlg->opts.SetIntent(intent);
 
 		Debug[TRACE] << "Intent " << intent << ": " << dlg->opts.profilemanager.GetIntentName(intent) << endl;
+		usedevicelink_changed(widget,user_data);
 	}
 
 
@@ -445,6 +522,51 @@ class CMYKConversionOptsDialog
 		dlg->opts.SetIgnoreEmbedded(state);
 
 		Debug[TRACE] << "Set IgnoreEmbedded to " << state << endl;
+	}
+
+
+	static void usedevicelink_changed(GtkWidget *widget,gpointer user_data)
+	{
+		try
+		{
+			Debug[TRACE] << "Received toggled signal from dl check button" << endl;
+			CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+			bool state=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg->usedevicelink));
+
+			dlg->opts.SetUseDeviceLink(state);
+
+			gtk_widget_set_sensitive(dlg->devicelink,state);
+
+			SimpleComboOptions opts;
+			CMSProfile *srcrgb=dlg->opts.profilemanager.GetProfile(dlg->opts.GetInRGBProfile());
+			CMSProfile *srccmyk=dlg->opts.profilemanager.GetProfile(dlg->opts.GetInCMYKProfile());
+			CMSProfile *dst=dlg->opts.profilemanager.GetProfile(dlg->opts.GetOutProfile());
+			LCMSWrapper_Intent intent=dlg->opts.GetIntent();
+			if(srcrgb)
+			{
+				DeviceLinkList dllist(srcrgb,dst,intent);
+				for(unsigned int idx=0;idx<dllist.size();++idx)
+				{
+					DeviceLinkList_Entry *dl=&dllist[idx];
+					opts.Add(dl->filename.c_str(),TruncateUTF8(dl->displayname.c_str(),42).c_str());
+				}
+			}
+			if(srccmyk)
+			{
+				DeviceLinkList dllist(srccmyk,dst,intent);
+				for(unsigned int idx=0;idx<dllist.size();++idx)
+				{
+					DeviceLinkList_Entry *dl=&dllist[idx];
+					opts.Add(dl->filename.c_str(),TruncateUTF8(dl->displayname.c_str(),42).c_str());
+				}
+			}
+			opts.Add(NULL,_("Other..."));
+			simplecombo_set_opts(SIMPLECOMBO(dlg->devicelink),opts);
+		}
+		catch(const char *err)
+		{
+			Debug[ERROR] << "Error: " << err << endl;
+		}
 	}
 
 	static CMYKConversionMode convmodes[];

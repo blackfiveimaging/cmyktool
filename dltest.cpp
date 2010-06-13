@@ -34,7 +34,8 @@ int main(int argc,char **argv)
 		dltest.SetString("SourceProfile",pm.FindString("DefaultRGBProfile"));
 		dltest.SetString("DestProfile",pm.FindString("DefaultCMYKProfile"));
 
-//		dltest.CreateDeviceLink(pm);
+		if(argc>1)
+			dltest.CreateDeviceLink(pm);
 
 		if(src)
 			delete src;

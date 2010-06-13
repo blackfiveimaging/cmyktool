@@ -53,6 +53,8 @@ class CMYKConversionOptions
 	IS_TYPE GetOutputType(IS_TYPE deflt=IS_TYPE_RGB);
 	bool GetIgnoreEmbedded();
 	int GetWidth();
+	bool GetUseDeviceLink();
+	const char *GetDeviceLink();
 
 	void SetIntent(LCMSWrapper_Intent intent);
 	void SetMode(CMYKConversionMode mode);
@@ -61,8 +63,10 @@ class CMYKConversionOptions
 	void SetOutProfile(const char *out);
 	void SetIgnoreEmbedded(bool ignore);
 	void SetWidth(int w);
+	void SetUseDeviceLink(bool usedl);
+	void SetDeviceLink(const char *dl);
 
-	void Save(const char *presetname);
+//	void Save(const char *presetname);
 
 	ImageSource *Apply(ImageSource *src,ImageSource *mask=NULL,CMTransformFactory *factory=NULL);
 
@@ -71,9 +75,11 @@ class CMYKConversionOptions
 	std::string inrgbprofile;
 	std::string incmykprofile;
 	std::string outprofile;
+	std::string devicelink;
 	LCMSWrapper_Intent intent;
 	CMYKConversionMode mode;
 	bool ignoreembedded;
+	bool usedevicelink;
 	int width;
 };
 
@@ -139,6 +145,8 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 		SetInt("Mode",opts.GetMode());
 		SetInt("Width",opts.GetWidth());
 		SetInt("IgnoreEmbedded",opts.GetIgnoreEmbedded());
+		SetInt("UseDeviceLink",opts.GetUseDeviceLink());
+		SetString("DeviceLink",opts.GetDeviceLink());
 	}
 	void Retrieve(CMYKConversionOptions &opts)
 	{
@@ -149,6 +157,8 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 		opts.SetMode(CMYKConversionMode(FindInt("Mode")));	
 		opts.SetWidth(FindInt("Width"));
 		opts.SetIgnoreEmbedded(FindInt("IgnoreEmbedded"));
+		opts.SetUseDeviceLink(FindInt("UseDeviceLink"));
+		opts.SetDeviceLink(FindString("DeviceLink"));
 	}
 	protected:
 	static ConfigTemplate Template[];
