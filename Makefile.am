@@ -28,6 +28,8 @@ libdeflatten_la_SOURCES = \
 	externalghostscript.h \
 	psrip_core.cpp	\
 	psrip_core.h	\
+	devicelink.cpp	\
+	devicelink.h	\
 	gettext.h
 
 
@@ -41,10 +43,11 @@ libdeflattenui_la_SOURCES = \
 	dialogs.cpp	\
 	dialogs.h
 
-bin_PROGRAMS = cmyktool rspltest
+bin_PROGRAMS = cmyktool dltest
 
-check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test
+check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest 
 
+rspltest_SOURCES = dltest.cpp
 rspltest_SOURCES = rspltest.cpp
 test_SOURCES = test.cpp
 convertcmyk_SOURCES = convertcmyk.cpp

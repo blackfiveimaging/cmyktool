@@ -1,8 +1,23 @@
 #ifndef DEVICELINK_H
 
+#include <string>
+#include <deque>
+#include <cstring>
+
+#include "configdb.h"
+#include "dirtreewalker.h"
+#include "pathsupport.h"
+#include "argyllsupport/argyllbg.h"
+#include "profilemanager/profilemanager.h"
+#include "profilemanager/lcmswrapper.h"
+
+#include "config.h"
+#include "gettext.h"
+#define _(x) gettext(x)
+
 // Devicelink caching:
 // Store devicelinks and metadata in $XDG_CONFIG_HOME/cmyktool/devicelinks
-DEVICELINK_CACHE_PATH=$XDG_CONFIG_HOME/cmyktool/devicelinks
+#define DEVICELINK_CACHE_PATH "$XDG_CONFIG_HOME/cmyktool/devicelinks"
 
 
 class DeviceLink : public ConfigFile, public ConfigDB
@@ -12,23 +27,13 @@ class DeviceLink : public ConfigFile, public ConfigDB
 	~DeviceLink();
 	void Save(const char *filename=NULL);
 	Argyll_BlackGenerationCurve blackgen;
-	void CreateDeviceLink();
-	CMTransform *GetTransform();
+	void CreateDeviceLink(ProfileManager &pm);
+	CMSTransform *GetTransform();
 	private:
-	string fn;
+	std::string fn;
+	std::string metadata_fn;
 	static ConfigTemplate configtemplate[];
 };
-
-ConfigTemplate DeviceLink::configtemplate[]=
-{
-	ConfigTemplate("Description",""),
-	ConfigTemplate("SrcProfile",""),
-	ConfigTemplate("DestProfile",""),
-	ConfigTemplate("SourceViewingConditions",""),
-	ConfigTemplate("DestViewingConditions",""),
-	ConfigTemplate("BlackGeneration",""),
-	ConfigTemplate();
-}
 
 
 class DeviceLinkList_Entry
@@ -45,27 +50,29 @@ class DeviceLinkList_Entry
 class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 {
 	public:
-	DeviceLinkList() : previdx(-1)
+	DeviceLinkList()
 	{
-		Debug[TRACE] << "Creating preset list..." << std::endl;
-		char *configdir=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
+		Debug[TRACE] << "Creating devicelink list..." << std::endl;
+		char *configdir=substitute_xdgconfighome(DEVICELINK_CACHE_PATH);
 		DirTreeWalker dtw(configdir);
 		const char *fn;
 
 		while((fn=dtw.NextFile()))
 		{
-			Debug[TRACE] << "Adding file " << fn << std::endl;
-			DeviceLink dl(fn);
+			if(strcmp(".dlm",fn+strlen(fn)-4)==0)
+			{
+				Debug[TRACE] << "Adding file " << fn << std::endl;
+				DeviceLink dl(fn);
 
-			const char *dn=dl.FindString("Description");
-			if(!(dn && strlen(dn)>0))
-				dn=_("<unknown>");
+				const char *dn=dl.FindString("Description");
+				if(!(dn && strlen(dn)>0))
+					dn=_("<unknown>");
 
-			DeviceLinkList_Entry e(fn,dn);
-			push_back(e);
+				DeviceLinkList_Entry e(fn,dn);
+				push_back(e);
+			}
 		}
 		free(configdir);
-		Debug[TRACE] << "Done - index of previous file is " << previdx << std::endl;
 	}
 };
 
