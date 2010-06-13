@@ -47,7 +47,7 @@ bin_PROGRAMS = cmyktool dltest
 
 check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest 
 
-rspltest_SOURCES = dltest.cpp
+dltest_SOURCES = dltest.cpp
 rspltest_SOURCES = rspltest.cpp
 test_SOURCES = test.cpp
 convertcmyk_SOURCES = convertcmyk.cpp
