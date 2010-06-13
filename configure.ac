@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([cmyktool], [0.1.3], [blackfive@fakenhamweb.co.uk])
+AC_INIT([cmyktool], [0.1.4], [blackfive@fakenhamweb.co.uk])
 AC_CONFIG_AUX_DIR([scripts])
 AC_CONFIG_SRCDIR([deflatten.cpp])
 AM_CONFIG_HEADER([config.h])
