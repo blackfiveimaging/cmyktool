@@ -101,10 +101,10 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 	void Save(const char *presetid=NULL)
 	{
 		// If a presetid is provided we store it, otherwise retrieve the existing one
-		if(presetid)
-			SetString("PresetID",presetid);
-		else
-			presetid=FindString("PresetID");
+//		if(presetid)
+//			SetString("PresetID",presetid);
+//		else
+//			presetid=FindString("PresetID");
 
 		char *path=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
 
@@ -125,13 +125,17 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 				}
 				presetname=path + std::string("/") + dig.GetPrintableDigest();
 			} while(CheckFileExists(presetname.c_str()));
-			SetString("PresetID",dig.GetPrintableDigest());
-			presetid=FindString("PresetID");
+//			SetString("PresetID",dig.GetPrintableDigest());
+			presetid=presetname.c_str();
+			Debug[TRACE] << "Saving file under new filename " << presetid << std::endl;
+			SaveConfigFile(presetid);
 		}
-		if(presetid)
+		else
 		{
-			std::string presetname=path + std::string("/") + presetid;
-			SaveConfigFile(presetname.c_str());
+//			std::string presetname=path + std::string("/") + presetid;
+			Debug[TRACE] << "Saving file under name " << presetid << std::endl;
+//			SaveConfigFile(presetname.c_str());
+			SaveConfigFile(presetid);
 		}
 
 		free(path);
@@ -195,9 +199,7 @@ class PresetList : public std::deque<PresetList_Entry>
 			if(!(dn && strlen(dn)>0))
 				dn=_("<unknown>");
 
-			const char *id=p.FindString("PresetID");
-
-			if(strcmp(id,PRESET_PREVIOUS_ESCAPE)==0)
+			if(strncmp(fn+(strlen(fn)-strlen(PRESET_PREVIOUS_ESCAPE)),PRESET_PREVIOUS_ESCAPE,strlen(PRESET_PREVIOUS_ESCAPE))==0)
 				previdx=size();
 
 			PresetList_Entry e(fn,dn);
@@ -209,6 +211,19 @@ class PresetList : public std::deque<PresetList_Entry>
 	int GetPreviousIndex()
 	{
 		return(previdx);
+	}
+	PresetList_Entry &operator[](int idx)
+	{
+		return(std::deque<PresetList_Entry>::operator[](idx));
+	}
+	PresetList_Entry &operator[](const char *displayname)
+	{
+		for(unsigned int idx=0;idx<size();++idx)
+		{
+			if(std::string(displayname)==(*this)[idx].displayname)
+				return((*this)[idx]);
+		}
+		throw "Can't find preset with supplied key";
 	}
 	int previdx;
 };

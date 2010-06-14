@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-06-02 23:13+0100\n"
+"POT-Creation-Date: 2010-06-14 00:37+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -45,32 +45,28 @@ msgstr "Параметры CMYKTool"
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:343 profilemanager/profileselector.cpp:193
+#: cmyktool.cpp:305 profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:343
+#: cmyktool.cpp:305
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:351
-msgid "<unknown>"
-msgstr "<неизвестно>"
-
-#: cmyktool.cpp:372 miscwidgets/imageselector.cpp:478
-#: profilemanager/profileselector.cpp:39
+#: cmyktool.cpp:326 conversionoptsdialog.cpp:206 conversionoptsdialog.cpp:563
+#: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:372
+#: cmyktool.cpp:326
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:494
+#: cmyktool.cpp:448
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:524 cmyktool.cpp:681
+#: cmyktool.cpp:478 cmyktool.cpp:635
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -169,63 +165,100 @@ msgstr ""
 msgid "Save image - please choose filename"
 msgstr ""
 
-#: conversionoptsdialog.cpp:29
+#: conversionoptsdialog.cpp:36
 msgid "Colour conversion options"
 msgstr "Параметры преобразования цвета"
 
-#: conversionoptsdialog.cpp:53
-msgid "Fallback Input Profile (RGB):"
-msgstr "Откатный профиль ввода (RGB):"
+#: conversionoptsdialog.cpp:65
+#, fuzzy
+msgid "Delete"
+msgstr "По умолчанию"
 
-#: conversionoptsdialog.cpp:68
-msgid "Fallback Input Profile (CMYK):"
-msgstr "Откатный профиль ввода (CMYK):"
+#: conversionoptsdialog.cpp:84
+msgid "<- Save"
+msgstr ""
 
-#: conversionoptsdialog.cpp:83
+#: conversionoptsdialog.cpp:88
+msgid "Name:"
+msgstr ""
+
+#: conversionoptsdialog.cpp:101
+#, fuzzy
+msgid "Input:"
+msgstr "Исследование"
+
+#: conversionoptsdialog.cpp:112
+#, fuzzy
+msgid "Fallback RGB Profile:"
+msgstr "Профиль RGB по умолчанию:"
+
+#: conversionoptsdialog.cpp:128
+#, fuzzy
+msgid "Fallback CMYK Profile:"
+msgstr "Профиль CMYK по умолчанию:"
+
+#: conversionoptsdialog.cpp:144
 msgid "Ignore embedded profiles"
 msgstr "Игнорировать встроенные профили"
 
-#: conversionoptsdialog.cpp:94
+#: conversionoptsdialog.cpp:152
+#, fuzzy
+msgid "Output:"
+msgstr "Профиль вывода:"
+
+#: conversionoptsdialog.cpp:162
 msgid "Output Profile:"
 msgstr "Профиль вывода:"
 
-#: conversionoptsdialog.cpp:108
+#: conversionoptsdialog.cpp:177
 msgid "Rendering intent:"
 msgstr "Цветопередача:"
 
-#: conversionoptsdialog.cpp:122
+#: conversionoptsdialog.cpp:191
+msgid "Processing:"
+msgstr ""
+
+#: conversionoptsdialog.cpp:200
+msgid "Use DeviceLink:"
+msgstr ""
+
+#: conversionoptsdialog.cpp:206
+msgid "Choose or create a DeviceLink profile..."
+msgstr ""
+
+#: conversionoptsdialog.cpp:217
 msgid "Conversion mode:"
 msgstr "Режим преобразования:"
 
-#: conversionoptsdialog.cpp:127
+#: conversionoptsdialog.cpp:223
 msgid "Normal"
 msgstr "Обычный"
 
-#: conversionoptsdialog.cpp:127
+#: conversionoptsdialog.cpp:223
 msgid "A regular conversion from source to destination profile"
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#: conversionoptsdialog.cpp:128
+#: conversionoptsdialog.cpp:224
 msgid "Hold Black"
 msgstr "Сохранить чёрный цвет"
 
-#: conversionoptsdialog.cpp:128
+#: conversionoptsdialog.cpp:224
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Приравнять входящий чистый чёрный цвет к CMYK (0,0,0,100)"
 
-#: conversionoptsdialog.cpp:129
+#: conversionoptsdialog.cpp:225
 msgid "Hold Grey"
 msgstr "Сохранить серый цвет"
 
-#: conversionoptsdialog.cpp:129
+#: conversionoptsdialog.cpp:225
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Приравнять входящий серый цвет (R=G=B) только к каналу K"
 
-#: conversionoptsdialog.cpp:130
+#: conversionoptsdialog.cpp:226
 msgid "Overprint"
 msgstr "Надпечатка"
 
-#: conversionoptsdialog.cpp:130
+#: conversionoptsdialog.cpp:226
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
@@ -233,13 +266,22 @@ msgstr ""
 "Приравнять чистый чёрный цвет к CMYK (0,0,0,100) и скопировать C, M и Y из "
 "последнего нечёрного пиксела."
 
-#: conversionoptsdialog.cpp:148
+#: conversionoptsdialog.cpp:244
 msgid "Transition width:"
 msgstr "Ширина перехода:"
 
-#: conversionoptsdialog.cpp:180
+#: conversionoptsdialog.cpp:268
 msgid "Choose a name for this preset..."
 msgstr "Дайте профилю название..."
+
+#: conversionoptsdialog.cpp:358
+#, fuzzy
+msgid "New preset"
+msgstr "Создать новый профиль"
+
+#: conversionoptsdialog.cpp:389
+msgid "Are you sure you want to delete this preset?"
+msgstr ""
 
 #: dialogs.cpp:102
 msgid "Colour Management"
@@ -473,7 +515,7 @@ msgstr "По умолчанию"
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
-#: profilemanager/profileselector.cpp:392
+#: profilemanager/profileselector.cpp:394
 msgid "Please choose a valid ICC profile"
 msgstr "Выберите корректный цветовой профиль"
 
@@ -481,9 +523,18 @@ msgstr "Выберите корректный цветовой профиль"
 msgid "Ripping File..."
 msgstr ""
 
-#: psripui.cpp:120
+#: psripui.cpp:121
 msgid "PSRip Test"
 msgstr ""
+
+#~ msgid "<unknown>"
+#~ msgstr "<неизвестно>"
+
+#~ msgid "Fallback Input Profile (RGB):"
+#~ msgstr "Откатный профиль ввода (RGB):"
+
+#~ msgid "Fallback Input Profile (CMYK):"
+#~ msgstr "Откатный профиль ввода (CMYK):"
 
 #~ msgid "Paths"
 #~ msgstr "Расположение данных"

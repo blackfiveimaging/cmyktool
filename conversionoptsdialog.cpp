@@ -83,6 +83,7 @@ class CMYKConversionOptsDialog
 
 		label=gtk_button_new_with_label(_("<- Save"));
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+		g_signal_connect(label,"clicked",G_CALLBACK(save_preset),this);
 		gtk_widget_show(label);
 
 		label=gtk_label_new(_("Name:"));
@@ -357,7 +358,7 @@ class CMYKConversionOptsDialog
 		SimpleListViewOptions listopts;
 		listopts.Add(NULL,_("New preset"),_("New preset"));
 		PresetList list;
-		for(int idx=0;idx<list.size();++idx)
+		for(unsigned int idx=0;idx<list.size();++idx)
 		{
 			const char *fn=list[idx].filename.c_str();
 			const char *dn=list[idx].displayname.c_str();
@@ -376,6 +377,45 @@ class CMYKConversionOptsDialog
 		}
 		simplelistview_set_opts(SIMPLELISTVIEW(listview),&listopts);
 		blockupdates=false;
+	}
+
+
+	static void save_preset(GtkWidget *widget,gpointer user_data)
+	{
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+		try
+		{
+			PresetList list;
+			const char *txt=gtk_entry_get_text(GTK_ENTRY(dlg->description));
+			if(!txt)
+				throw "Please enter a descriptive name for the preset before swaving...";
+			// FIXME - present the user with a dialog containing a suitable widget for entering the description
+
+			CMYKConversionPreset p;
+			p.Store(dlg->opts);
+			p.SetString("DisplayName",txt);
+
+			Debug[TRACE] << "Stored preset details using name " << txt << endl;
+
+			try
+			{
+				PresetList_Entry &entry=list[txt];
+				Debug[TRACE] << "Successfully got entry for " << txt << endl;
+				// If we got here the preset already exists, so save using the existing preset's filename...
+				p.Save(entry.filename.c_str());
+			}
+			catch(const char *err)
+			{
+				Debug[TRACE] << "Unable to fetch entry for " << txt << endl;
+				// If we got here, the preset doesn't exist yet - so...
+ 				p.Save(PRESET_NEW_ESCAPE);
+			}
+		}
+		catch(const char *err)
+		{
+			ErrorMessage_Dialog(err,dlg->window);
+		}
+		dlg->build_presetlist();
 	}
 
 
