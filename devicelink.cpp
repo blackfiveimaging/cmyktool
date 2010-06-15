@@ -171,6 +171,5 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 	collink.AddArg(fn);
 	collink.RunProgram();
 	Save();
-	sleep(30);
 }
 

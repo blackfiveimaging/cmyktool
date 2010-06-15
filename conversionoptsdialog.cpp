@@ -35,7 +35,6 @@ class CMYKConversionOptsDialog
 	{
 		window=gtk_dialog_new_with_buttons(_("Colour conversion options"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
-			GTK_STOCK_SAVE,RESPONSE_SAVE,
 			GTK_STOCK_OK,GTK_RESPONSE_OK,
 			NULL);
 
@@ -264,41 +263,6 @@ class CMYKConversionOptsDialog
 		gint result=gtk_dialog_run(GTK_DIALOG(window));
 		switch(result)
 		{
-			case RESPONSE_SAVE:
-				{
-					GtkWidget *savedlg=gtk_dialog_new_with_buttons(_("Choose a name for this preset..."),
-						GTK_WINDOW(window),GtkDialogFlags(0),
-						GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
-						GTK_STOCK_OK,GTK_RESPONSE_OK,
-						NULL);
-
-					GtkWidget *vbox = GTK_DIALOG(savedlg)->vbox;
-
-					GtkWidget *hbox = gtk_hbox_new(FALSE,8);
-					gtk_box_pack_start(GTK_BOX(vbox),hbox,TRUE,TRUE,8);
-					gtk_widget_show(hbox);
-
-					GtkWidget *entry = gtk_entry_new();
-					gtk_box_pack_start(GTK_BOX(hbox),entry,TRUE,TRUE,8);
-					gtk_widget_show(entry);
-
-					gint result=gtk_dialog_run(GTK_DIALOG(savedlg));
-					switch(result)
-					{
-						case GTK_RESPONSE_OK:
-							{
-								CMYKConversionPreset p;
-								p.Store(opts);
-								p.SetString("DisplayName",gtk_entry_get_text(GTK_ENTRY(entry)));
-								p.Save(PRESET_NEW_ESCAPE);
-							}
-							break;
-						default:
-							break;
-					}
-					gtk_widget_destroy(savedlg);
-				}
-				break;
 			default:
 				break;
 		}
@@ -386,23 +350,63 @@ class CMYKConversionOptsDialog
 		try
 		{
 			PresetList list;
-			const char *txt=gtk_entry_get_text(GTK_ENTRY(dlg->description));
-			if(!txt)
-				throw "Please enter a descriptive name for the preset before swaving...";
-			// FIXME - present the user with a dialog containing a suitable widget for entering the description
 
 			CMYKConversionPreset p;
 			p.Store(dlg->opts);
-			p.SetString("DisplayName",txt);
 
-			Debug[TRACE] << "Stored preset details using name " << txt << endl;
+			const char *txt=gtk_entry_get_text(GTK_ENTRY(dlg->description));
+			if(txt && strlen(txt) && strcmp(txt,"unnamed preset")!=0)
+			{
+				p.SetString("DisplayName",txt);
+				Debug[TRACE] << "Stored preset details using name " << txt << endl;
+			}
+			else
+			{
+				GtkWidget *savedlg=gtk_dialog_new_with_buttons(_("Choose a name for this preset..."),
+					GTK_WINDOW(dlg->window),GtkDialogFlags(0),
+					GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+					GTK_STOCK_OK,GTK_RESPONSE_OK,
+					NULL);
 
+				GtkWidget *vbox = GTK_DIALOG(savedlg)->vbox;
+
+				GtkWidget *hbox = gtk_hbox_new(FALSE,8);
+				gtk_box_pack_start(GTK_BOX(vbox),hbox,TRUE,TRUE,8);
+				gtk_widget_show(hbox);
+
+				GtkWidget *entry = gtk_entry_new();
+				gtk_box_pack_start(GTK_BOX(hbox),entry,TRUE,TRUE,8);
+				gtk_widget_show(entry);
+
+				gint result=gtk_dialog_run(GTK_DIALOG(savedlg));
+				switch(result)
+				{
+					case GTK_RESPONSE_OK:
+						{
+							CMYKConversionPreset p;
+							p.Store(dlg->opts);
+							const char *desc=gtk_entry_get_text(GTK_ENTRY(entry));
+							p.SetString("DisplayName",desc);
+							gtk_entry_set_text(GTK_ENTRY(dlg->description),desc);
+							p.Save(PRESET_NEW_ESCAPE);
+							gtk_widget_destroy(savedlg);
+						}
+						break;
+					default:
+						gtk_widget_destroy(savedlg);
+						return;
+						break;
+				}
+			}
+
+			txt=p.FindString("DisplayName");
 			try
 			{
 				PresetList_Entry &entry=list[txt];
 				Debug[TRACE] << "Successfully got entry for " << txt << endl;
 				// If we got here the preset already exists, so save using the existing preset's filename...
-				p.Save(entry.filename.c_str());
+				if(Query_Dialog(_("Overwrite existing preset?"),dlg->window))
+					p.Save(entry.filename.c_str());
 			}
 			catch(const char *err)
 			{
