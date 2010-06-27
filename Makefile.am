@@ -38,6 +38,8 @@ libdeflattenui_la_SOURCES = \
 	cmykuitab.h	\
 	conversionoptsdialog.cpp \
 	conversionoptsdialog.h \
+	devicelinkdialog.cpp \
+	devicelinkdialog.h \
 	psripui.cpp	\
 	psripui.h	\
 	dialogs.cpp	\
