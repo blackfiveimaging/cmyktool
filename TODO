@@ -1,5 +1,7 @@
 Add proper support for greyscale images and profiles.
 
+Fix issue with X libs not being linked on some platforms
+
 | Need to be able to remove images from the left hand tray.
 
 | Add newly-created presets to the preset list.

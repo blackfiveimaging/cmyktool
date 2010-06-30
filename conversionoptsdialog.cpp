@@ -15,6 +15,7 @@
 
 #include "conversionoptsdialog.h"
 #include "devicelink.h"
+#include "devicelinkdialog.h"
 
 #include "config.h"
 #include "gettext.h"
@@ -45,7 +46,7 @@ class CMYKConversionOptsDialog
 		gtk_widget_show(hbox);
 
 		vbox=gtk_vbox_new(FALSE,0);
-		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,0);
+		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,8);
 		gtk_widget_show(vbox);
 
 		listview=simplelistview_new(NULL);
@@ -205,7 +206,7 @@ class CMYKConversionOptsDialog
 		SimpleComboOptions devlinks;
 		devlinks.Add(NULL,_("Other..."),_("Choose or create a DeviceLink profile..."));
 		devicelink=simplecombo_new(devlinks);
-//		g_signal_connect(devicelink,"changed",G_CALLBACK(combo_changed),this);
+		g_signal_connect(devicelink,"changed",G_CALLBACK(devicelink_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),devicelink,2,5,row,row+1);
 		gtk_widget_show(devicelink);
 
@@ -309,6 +310,9 @@ class CMYKConversionOptsDialog
 		profileselector_set_filename(PROFILESELECTOR(irps),opts.GetInRGBProfile());
 		profileselector_set_filename(PROFILESELECTOR(icps),opts.GetInCMYKProfile());
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
+
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usedevicelink),opts.GetUseDeviceLink());
+		simplecombo_set(SIMPLECOMBO(devicelink),opts.GetDeviceLink());
 		SetSensitive();
 
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(widthbutton),opts.GetWidth());
@@ -554,6 +558,28 @@ class CMYKConversionOptsDialog
 		}
 
 		Debug[TRACE] << "Conversion mode set to: " << convmodes[idx] << endl;
+	}
+
+
+	static void	devicelink_changed(GtkWidget *widget,gpointer user_data)
+	{
+		Debug[TRACE] << "Received changed signal from devicelink" << endl;
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+
+		dlg->blockupdates=true;
+
+		SimpleCombo *c=SIMPLECOMBO(dlg->devicelink);
+
+		const char *dl=simplecombo_get(c);
+		if(dl)
+		{
+			dlg->opts.SetDeviceLink(dl);
+		}
+		else
+		{
+			DeviceLink_Dialog(dlg->opts,dlg->window);
+		}
+		dlg->blockupdates=false;
 	}
 
 

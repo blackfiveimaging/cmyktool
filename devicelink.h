@@ -52,7 +52,7 @@ class DeviceLinkList_Entry
 class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 {
 	public:
-	DeviceLinkList(CMSProfile *src=NULL,CMSProfile *dst=NULL,LCMSWrapper_Intent intent=LCMSWRAPPER_INTENT_PERCEPTUAL)
+	DeviceLinkList(CMSProfile *src=NULL,CMSProfile *dst=NULL,LCMSWrapper_Intent intent=LCMSWRAPPER_INTENT_NONE)
 	{
 		Debug[TRACE] << "Creating devicelink list..." << std::endl;
 		char *configdir=substitute_xdgconfighome(DEVICELINK_CACHE_PATH);
@@ -83,7 +83,8 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 					if(strcmp(dstd,dl.FindString("DestProfileHash"))!=0)
 						match=false;
 					Debug[TRACE] << "Match: " << match << " - Comparing " << intent << " against " << dl.FindInt("RenderingIntent") << std::endl;
-					if(dl.FindInt("RenderingIntent")!=intent)
+					int dlintent=dl.FindInt("RenderingIntent");
+					if(dlintent!=intent && dlintent!=LCMSWRAPPER_INTENT_NONE)
 						match=false;
 					Debug[TRACE] << "Match: " << match << std::endl;
 				}
