@@ -6,6 +6,11 @@
 #include "devicelink.h"
 #include "devicelinkdialog.h"
 
+#include "profileselector.h"
+#include "intentselector.h"
+
+#include "argyllsupport/viewingcondselector.h"
+#include "argyllsupport/blackgenselector.h"
 
 class DeviceLinkDialog
 {
@@ -24,7 +29,7 @@ class DeviceLinkDialog
 		gtk_widget_show(hbox);
 
 		vbox=gtk_vbox_new(FALSE,0);
-		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,8);
+		gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE,FALSE,8);
 		gtk_widget_show(vbox);
 
 		devicelinklist=simplelistview_new();
@@ -39,6 +44,140 @@ class DeviceLinkDialog
 		gtk_widget_show(label);
 
 		buildlist();
+
+
+		vbox=gtk_vbox_new(FALSE,0);
+		gtk_box_pack_start(GTK_BOX(hbox),vbox,TRUE,TRUE,8);
+		gtk_widget_show(vbox);
+
+		GtkWidget *table=gtk_table_new(2,5,FALSE);
+		gtk_table_set_row_spacings(GTK_TABLE(table),4);
+		gtk_table_set_col_spacings(GTK_TABLE(table),4);
+		gtk_box_pack_start(GTK_BOX(vbox),table,TRUE,TRUE,8);
+
+		int row=0;
+
+
+// Source Profile
+
+		label=gtk_label_new(_("Input options:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+
+
+		++row;
+
+
+		label=gtk_label_new(_("Profile"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+		inprofile=profileselector_new(&opts.profilemanager);
+		gtk_table_attach_defaults(GTK_TABLE(table),inprofile,2,3,row,row+1);
+
+		++row;
+
+// Viewing conditions
+
+		label=gtk_label_new(_("Viewing Conditions"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+		inputvc=viewingcondselector_new();
+		gtk_table_attach_defaults(GTK_TABLE(table),inputvc,2,3,row,row+1);
+
+		++row;
+		++row;
+
+
+// Destination Profile
+
+		label=gtk_label_new(_("Output options:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+
+
+		++row;
+
+
+		label=gtk_label_new(_("Profile:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+		outprofile=profileselector_new(&opts.profilemanager);
+		gtk_table_attach_defaults(GTK_TABLE(table),outprofile,2,3,row,row+1);
+
+		++row;
+
+// Viewing conditions
+
+		label=gtk_label_new(_("Viewing Conditions"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+		outputvc=viewingcondselector_new();
+		gtk_table_attach_defaults(GTK_TABLE(table),outputvc,2,3,row,row+1);
+
+		++row;
+		++row;
+
+
+// Link options
+
+		label=gtk_label_new(_("Link options:"));
+		gtk_misc_set_alignment(GTK_MISC(label),0.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,1,row,row+1);
+
+
+		++row;
+
+
+// Rendering Intent
+
+		label=gtk_label_new(_("Rendering Intent"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+		intent=intentselector_new(&opts.profilemanager);
+		gtk_table_attach_defaults(GTK_TABLE(table),intent,2,3,row,row+1);
+
+		++row;
+
+		blackgen=blackgenselector_new();
+		gtk_table_attach_defaults(GTK_TABLE(table),blackgen,0,3,row,row+1);
+
+		++row;
+
+
+		label=gtk_label_new(_("Ink Limit:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+
+		++row;
+
+
+		label=gtk_label_new(_("Quality:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+
+		++row;
+
+		label=gtk_label_new(_("Description:"));
+		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+
+
+		++row;
+
+
+		GtkWidget *tmp=gtk_vbox_new(FALSE,0);
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,TRUE,TRUE,0);
+		gtk_widget_show(tmp);
+
+
+		gtk_widget_show_all(table);
 
 		g_signal_connect(devicelinklist,"changed",G_CALLBACK(devicelink_changed),this);
 
@@ -77,6 +216,12 @@ class DeviceLinkDialog
 	}
 	CMYKConversionOptions &opts;
 	GtkWidget *devicelinklist;
+	GtkWidget *inprofile;
+	GtkWidget *inputvc;
+	GtkWidget *outprofile;
+	GtkWidget *outputvc;
+	GtkWidget *intent;
+	GtkWidget *blackgen;
 	
 	GtkWidget *parent;
 	GtkWidget *window;
