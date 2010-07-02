@@ -8,6 +8,7 @@
 
 #include "profileselector.h"
 #include "intentselector.h"
+#include "simplecombo.h"
 
 #include "argyllsupport/viewingcondselector.h"
 #include "argyllsupport/blackgenselector.h"
@@ -21,6 +22,8 @@ class DeviceLinkDialog
 			GTK_WINDOW(parent),GtkDialogFlags(0),
 			GTK_STOCK_OK,GTK_RESPONSE_OK,
 			NULL);
+
+		gtk_window_set_default_size(GTK_WINDOW(window),800,450);
 
 		GtkWidget *vbox = GTK_DIALOG(window)->vbox;
 
@@ -73,7 +76,7 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		inprofile=profileselector_new(&opts.profilemanager);
-		gtk_table_attach_defaults(GTK_TABLE(table),inprofile,2,3,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),inprofile,2,5,row,row+1);
 
 		++row;
 
@@ -84,7 +87,7 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		inputvc=viewingcondselector_new();
-		gtk_table_attach_defaults(GTK_TABLE(table),inputvc,2,3,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),inputvc,2,5,row,row+1);
 
 		++row;
 		++row;
@@ -105,7 +108,7 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		outprofile=profileselector_new(&opts.profilemanager);
-		gtk_table_attach_defaults(GTK_TABLE(table),outprofile,2,3,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),outprofile,2,5,row,row+1);
 
 		++row;
 
@@ -116,7 +119,7 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		outputvc=viewingcondselector_new();
-		gtk_table_attach_defaults(GTK_TABLE(table),outputvc,2,3,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),outputvc,2,5,row,row+1);
 
 		++row;
 		++row;
@@ -139,28 +142,39 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		intent=intentselector_new(&opts.profilemanager);
-		gtk_table_attach_defaults(GTK_TABLE(table),intent,2,3,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),intent,2,5,row,row+1);
 
 		++row;
 
 		blackgen=blackgenselector_new();
-		gtk_table_attach_defaults(GTK_TABLE(table),blackgen,0,3,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),blackgen,0,5,row,row+1);
 
 		++row;
 
+
+		// Ink limit
 
 		label=gtk_label_new(_("Ink Limit:"));
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
+		inklimit=gtk_spin_button_new_with_range(200,400,10);
+		gtk_table_attach_defaults(GTK_TABLE(table),inklimit,2,3,row,row+1);
 
-		++row;
 
+		// Quality
 
 		label=gtk_label_new(_("Quality:"));
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
-		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
+		gtk_table_attach_defaults(GTK_TABLE(table),label,3,4,row,row+1);
 
+		SimpleComboOptions comboopts;
+		comboopts.Add(NULL,_("Low"),_("Fastest mode at the expense of quality"));
+		comboopts.Add(NULL,_("Medium"),_("Balances speed and quality"));
+		comboopts.Add(NULL,_("High"),_("Highest quality at the expense of speed"));
+
+		quality=simplecombo_new(comboopts);
+		gtk_table_attach_defaults(GTK_TABLE(table),quality,4,5,row,row+1);
 
 		++row;
 
@@ -168,6 +182,9 @@ class DeviceLinkDialog
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
+		description=gtk_entry_new();
+		gtk_table_attach_defaults(GTK_TABLE(table),description,2,5,row,row+1);
+		
 
 		++row;
 
@@ -222,6 +239,9 @@ class DeviceLinkDialog
 	GtkWidget *outputvc;
 	GtkWidget *intent;
 	GtkWidget *blackgen;
+	GtkWidget *inklimit;
+	GtkWidget *quality;
+	GtkWidget *description;
 	
 	GtkWidget *parent;
 	GtkWidget *window;
