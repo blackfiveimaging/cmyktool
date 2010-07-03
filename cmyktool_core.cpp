@@ -11,6 +11,8 @@ ConfigTemplate CMYKTool_Core::Template[]=
 	ConfigTemplate("SaveJPEGQuality",95),
 	ConfigTemplate("SaveResolution",72),
 	ConfigTemplate("SaveEmbedProfile",1),
+	ConfigTemplate("ArgyllPath",""),
+	ConfigTemplate("GhostscriptPath",""),
 	ConfigTemplate()
 };
 

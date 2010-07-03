@@ -254,6 +254,7 @@ class DeviceLinkDialog
 	{
 		DeviceLinkList list;
 		SimpleListViewOptions lvo;
+		lvo.Add(NULL,_("New Devicelink"));
 		for(unsigned int idx=0;idx<list.size();++idx)
 		{
 			DeviceLinkList_Entry &e=list[idx];
@@ -268,6 +269,14 @@ class DeviceLinkDialog
 	static void delete_devicelink(GtkWidget *wid,gpointer userdata)
 	{
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(dlg->devicelinklist));
+		char *fn;
+		if(opt && (fn=opt->key) && Query_Dialog(_("Are you sure you want to delete this devicelink profile?"),dlg->window))
+		{
+			DeviceLink dl(fn);
+			dl.Delete();
+			dlg->buildlist();
+		}
 	}
 	CMYKConversionOptions &opts;
 	GtkWidget *devicelinklist;

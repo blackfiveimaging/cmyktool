@@ -28,10 +28,12 @@ class DeviceLink : public ConfigFile, public ConfigDB
 	DeviceLink(const char *filename=NULL);
 	~DeviceLink();
 	void Save(const char *filename=NULL);
+	void Delete();	// Removes the files from disk, but doesn't delete the object itself.
 	Argyll_BlackGenerationCurve blackgen;
 	void CreateDeviceLink(ProfileManager &pm);
 	CMSTransform *GetTransform();
 	private:
+	void makefilename();
 	std::string fn;
 	std::string metadata_fn;
 	static ConfigTemplate configtemplate[];
