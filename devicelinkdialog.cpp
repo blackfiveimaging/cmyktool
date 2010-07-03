@@ -110,6 +110,7 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		outprofile=profileselector_new(&opts.profilemanager);
+		g_signal_connect(G_OBJECT(outprofile),"changed",G_CALLBACK(outprofile_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),outprofile,2,5,row,row+1);
 
 		++row;
@@ -204,6 +205,8 @@ class DeviceLinkDialog
 
 		g_signal_connect(devicelinklist,"changed",G_CALLBACK(devicelink_changed),this);
 
+		set_defaults();
+
 		gtk_widget_show(window);
 	}
 	~DeviceLinkDialog()
@@ -235,6 +238,7 @@ class DeviceLinkDialog
 			ErrorMessage_Dialog(err,dlg->window);
 		}
 	}
+
 	void dialog_to_devicelink(DeviceLink &dl)
 	{
 		dl.blackgen=blackgenselector_get(BLACKGENSELECTOR(blackgen));
@@ -247,9 +251,36 @@ class DeviceLinkDialog
 		dl.SetInt("InkLimit",gtk_spin_button_get_value(GTK_SPIN_BUTTON(inklimit)));
 		dl.SetInt("Quality",simplecombo_get_index(SIMPLECOMBO(quality)));
 	}
+
 	void devicelink_to_dialog(DeviceLink &dl)
 	{
+		blackgenselector_set(BLACKGENSELECTOR(blackgen),dl.blackgen);
+		gtk_entry_set_text(GTK_ENTRY(description),dl.FindString("Description"));
+		profileselector_set_filename(PROFILESELECTOR(inprofile),dl.FindString("SourceProfile"));
+		viewingcondselector_set(VIEWINGCONDSELECTOR(inputvc),dl.FindString("SourceViewingConditions"));
+		profileselector_set_filename(PROFILESELECTOR(outprofile),dl.FindString("DestProfile"));
+		viewingcondselector_set(VIEWINGCONDSELECTOR(outputvc),dl.FindString("DestViewingConditions"));
+		intentselector_setintent(INTENTSELECTOR(intent),LCMSWrapper_Intent(dl.FindInt("RenderingIntent")));
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(inklimit),dl.FindInt("InkLimit"));
+		simplecombo_set_index(SIMPLECOMBO(quality),dl.FindInt("Quality"));
+		outprofile_changed(outprofile,this);
 	}
+
+	void set_defaults()
+	{
+		Argyll_BlackGenerationCurve curve;
+		blackgenselector_set(BLACKGENSELECTOR(blackgen),curve);
+		gtk_entry_set_text(GTK_ENTRY(description),_("New devicelink"));
+		profileselector_set_filename(PROFILESELECTOR(inprofile),opts.GetInRGBProfile());
+		viewingcondselector_set(VIEWINGCONDSELECTOR(inputvc),"mt");
+		profileselector_set_filename(PROFILESELECTOR(outprofile),opts.GetOutProfile());
+		viewingcondselector_set(VIEWINGCONDSELECTOR(outputvc),"pp");
+		intentselector_setintent(INTENTSELECTOR(intent),opts.GetIntent());
+		gtk_spin_button_set_value(GTK_SPIN_BUTTON(inklimit),270);
+		simplecombo_set_index(SIMPLECOMBO(quality),DEVICELINK_QUALITY_MEDIUM);
+		outprofile_changed(outprofile,this);
+	}
+
 	void buildlist()
 	{
 		DeviceLinkList list;
@@ -262,10 +293,43 @@ class DeviceLinkDialog
 		}
 		simplelistview_set_opts(SIMPLELISTVIEW(devicelinklist),&lvo);
 	}
+
 	static void devicelink_changed(GtkWidget *wid,gpointer userdata)
 	{
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(dlg->devicelinklist));
+		char *fn;
+		if(opt && (fn=opt->key))
+		{
+			DeviceLink dl(fn);
+			dlg->devicelink_to_dialog(dl);
+		}
+		else
+		{
+			dlg->set_defaults();
+		}
 	}
+
+	static void outprofile_changed(GtkWidget *wid,gpointer userdata)
+	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		try
+		{
+			// Neither black generation and ink limiting are applicable when the target is RGB,
+			// so we grey out those widgets if the output space is RGB.
+			CMSProfile *p=dlg->opts.profilemanager.GetProfile(profileselector_get_filename(PROFILESELECTOR(dlg->outprofile)));
+			if(p)
+			{
+				gtk_widget_set_sensitive(dlg->blackgen,p->GetColourSpace()==IS_TYPE_CMYK);
+				gtk_widget_set_sensitive(dlg->inklimit,p->GetColourSpace()==IS_TYPE_CMYK);
+			}
+		}
+		catch (const char *err)
+		{
+			Debug[ERROR] << "Error: " << err << std::endl;
+		}
+	}
+
 	static void delete_devicelink(GtkWidget *wid,gpointer userdata)
 	{
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;

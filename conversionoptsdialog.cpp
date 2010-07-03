@@ -199,14 +199,12 @@ class CMYKConversionOptsDialog
 
 		// DeviceLink settings
 		usedevicelink=gtk_check_button_new_with_label(_("Use DeviceLink:"));
-		g_signal_connect(usedevicelink,"toggled",G_CALLBACK(usedevicelink_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),usedevicelink,0,2,row,row+1);
 		gtk_widget_show(usedevicelink);
 		
 		SimpleComboOptions devlinks;
 		devlinks.Add(NULL,_("Other..."),_("Choose or create a DeviceLink profile..."));
 		devicelink=simplecombo_new(devlinks);
-		g_signal_connect(devicelink,"changed",G_CALLBACK(devicelink_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),devicelink,2,5,row,row+1);
 		gtk_widget_show(devicelink);
 
@@ -261,12 +259,11 @@ class CMYKConversionOptsDialog
 
 		update_dialog();
 
+		g_signal_connect(usedevicelink,"toggled",G_CALLBACK(usedevicelink_changed),this);
+		g_signal_connect(devicelink,"changed",G_CALLBACK(devicelink_changed),this);
+
 		gint result=gtk_dialog_run(GTK_DIALOG(window));
-		switch(result)
-		{
-			default:
-				break;
-		}
+		blockupdates=true;
 	}
 	~CMYKConversionOptsDialog()
 	{
@@ -480,7 +477,7 @@ class CMYKConversionOptsDialog
 		else
 			Debug[WARN] << "No profile selected... " << endl;
 
-		usedevicelink_changed(widget,user_data);
+		dlg->updatedevicelinklist();
 	}
 
 	static void	inprofile_changed(GtkWidget *widget,gpointer user_data)
@@ -508,7 +505,7 @@ class CMYKConversionOptsDialog
 			Debug[WARN] << "No profile selected... " << endl;
 
 
-		usedevicelink_changed(widget,user_data);
+		dlg->updatedevicelinklist();
 	}
 
 	static void	intent_changed(GtkWidget *widget,gpointer user_data)
@@ -522,7 +519,7 @@ class CMYKConversionOptsDialog
 		dlg->opts.SetIntent(intent);
 
 		Debug[TRACE] << "Intent " << intent << ": " << dlg->opts.profilemanager.GetIntentName(intent) << endl;
-		usedevicelink_changed(widget,user_data);
+		dlg->updatedevicelinklist();
 	}
 
 
@@ -578,6 +575,7 @@ class CMYKConversionOptsDialog
 		else
 		{
 			DeviceLink_Dialog(dlg->opts,dlg->window);
+			dlg->updatedevicelinklist();
 		}
 		dlg->blockupdates=false;
 	}
@@ -601,42 +599,49 @@ class CMYKConversionOptsDialog
 		{
 			Debug[TRACE] << "Received toggled signal from dl check button" << endl;
 			CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)user_data;
+			if(dlg->blockupdates)
+				return;
 			bool state=gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dlg->usedevicelink));
 
 			dlg->opts.SetUseDeviceLink(state);
 
 			gtk_widget_set_sensitive(dlg->devicelink,state);
-
-			SimpleComboOptions opts;
-			CMSProfile *srcrgb=dlg->opts.profilemanager.GetProfile(dlg->opts.GetInRGBProfile());
-			CMSProfile *srccmyk=dlg->opts.profilemanager.GetProfile(dlg->opts.GetInCMYKProfile());
-			CMSProfile *dst=dlg->opts.profilemanager.GetProfile(dlg->opts.GetOutProfile());
-			LCMSWrapper_Intent intent=dlg->opts.GetIntent();
-			if(srcrgb)
-			{
-				DeviceLinkList dllist(srcrgb,dst,intent);
-				for(unsigned int idx=0;idx<dllist.size();++idx)
-				{
-					DeviceLinkList_Entry *dl=&dllist[idx];
-					opts.Add(dl->filename.c_str(),TruncateUTF8(dl->displayname.c_str(),42).c_str());
-				}
-			}
-			if(srccmyk)
-			{
-				DeviceLinkList dllist(srccmyk,dst,intent);
-				for(unsigned int idx=0;idx<dllist.size();++idx)
-				{
-					DeviceLinkList_Entry *dl=&dllist[idx];
-					opts.Add(dl->filename.c_str(),TruncateUTF8(dl->displayname.c_str(),42).c_str());
-				}
-			}
-			opts.Add(NULL,_("Other..."));
-			simplecombo_set_opts(SIMPLECOMBO(dlg->devicelink),opts);
+			dlg->updatedevicelinklist();
 		}
 		catch(const char *err)
 		{
 			Debug[ERROR] << "Error: " << err << endl;
 		}
+	}
+
+
+	void updatedevicelinklist()
+	{
+		SimpleComboOptions scopts;
+		CMSProfile *srcrgb=opts.profilemanager.GetProfile(opts.GetInRGBProfile());
+		CMSProfile *srccmyk=opts.profilemanager.GetProfile(opts.GetInCMYKProfile());
+		CMSProfile *dst=opts.profilemanager.GetProfile(opts.GetOutProfile());
+		LCMSWrapper_Intent intent=opts.GetIntent();
+		if(srcrgb)
+		{
+			DeviceLinkList dllist(srcrgb,dst,intent);
+			for(unsigned int idx=0;idx<dllist.size();++idx)
+			{
+				DeviceLinkList_Entry *dl=&dllist[idx];
+				scopts.Add(dl->filename.c_str(),TruncateUTF8(dl->displayname.c_str(),42).c_str());
+			}
+		}
+		if(srccmyk)
+		{
+			DeviceLinkList dllist(srccmyk,dst,intent);
+			for(unsigned int idx=0;idx<dllist.size();++idx)
+			{
+				DeviceLinkList_Entry *dl=&dllist[idx];
+				scopts.Add(dl->filename.c_str(),TruncateUTF8(dl->displayname.c_str(),42).c_str());
+			}
+		}
+		scopts.Add(NULL,_("Other..."));
+		simplecombo_set_opts(SIMPLECOMBO(devicelink),scopts);
 	}
 
 	static CMYKConversionMode convmodes[];

@@ -38,15 +38,18 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 
 CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm)
 	: profilemanager(pm), inrgbprofile("sRGB Color Space Profile.icm"), incmykprofile("USWebCoatedSWOP.icc"),
-	outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL), ignoreembedded(false), width(0)
+	outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL),
+	ignoreembedded(false), usedevicelink(false), width(0)
 {
 }
 
 
 CMYKConversionOptions::CMYKConversionOptions(const CMYKConversionOptions &other)
 	: profilemanager(other.profilemanager), inrgbprofile(other.inrgbprofile), incmykprofile(other.incmykprofile),
-	outprofile(other.outprofile), intent(other.intent), mode(other.mode), ignoreembedded(false)
+	outprofile(other.outprofile), devicelink(other.devicelink), intent(other.intent), mode(other.mode),
+	ignoreembedded(other.ignoreembedded), usedevicelink(other.usedevicelink)
 {
+	Debug[TRACE] << "*** Copy constructor sees usedevicelink flag as " << usedevicelink << std::endl;
 }
 
 
@@ -62,7 +65,10 @@ CMYKConversionOptions &CMYKConversionOptions::operator=(const CMYKConversionOpti
 	inrgbprofile=other.inrgbprofile;
 	incmykprofile=other.incmykprofile;
 	outprofile=other.outprofile;
+	devicelink=other.devicelink;
 	ignoreembedded=other.ignoreembedded;
+	usedevicelink=other.usedevicelink;
+	Debug[TRACE] << "*** Assignment operator sees usedevicelink flag as " << usedevicelink << std::endl;
 	return(*this);
 }
 
@@ -111,12 +117,14 @@ int CMYKConversionOptions::GetWidth()
 
 bool CMYKConversionOptions::GetUseDeviceLink()
 {
+	Debug[TRACE] << std::endl << "Getting usedl flag : " << usedevicelink << endl;
 	return(usedevicelink);
 }
 
 
 const char *CMYKConversionOptions::GetDeviceLink()
 {
+	Debug[TRACE] << std::endl << "Getting devicelink name " << devicelink << endl;
 	return(devicelink.c_str());
 }
 
@@ -168,12 +176,17 @@ void CMYKConversionOptions::SetWidth(int w)
 
 void CMYKConversionOptions::SetUseDeviceLink(bool usedl)
 {
+	Debug[TRACE] << "Setting usedl flag to " << usedl << std::endl;
 	usedevicelink=usedl;
 }
 
 
 void CMYKConversionOptions::SetDeviceLink(const char *dl)
 {
+	if(dl)
+		Debug[TRACE] << "Setting dl to " << dl << std::endl;
+	else
+		Debug[WARN] << "Setting dl but no filename!" << std::endl;
 	devicelink=dl;
 }
 
@@ -235,11 +248,17 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 		if(!inprof)
 			throw "Can't open input profile";
 	}
-
-	Debug[TRACE] << "Opening profile: " << outprofile << endl;
 	CMSProfile *outprof=NULL;
-	if(outprofile!=NOPROFILE_ESCAPESTRING)
-		outprof=profilemanager.GetProfile(outprofile.c_str());
+	Debug[TRACE] << "Opening profile: " << outprofile << endl;
+	if(GetUseDeviceLink())
+	{
+		outprof=profilemanager.GetProfile(GetDeviceLink());
+	}
+	else
+	{
+		if(outprofile!=NOPROFILE_ESCAPESTRING)
+			outprof=profilemanager.GetProfile(outprofile.c_str());
+	}
 	if(outprof)
 	{
 		if(outprof->IsDeviceLink())

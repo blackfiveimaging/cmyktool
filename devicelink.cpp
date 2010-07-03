@@ -103,6 +103,7 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 	delete tmp;
 
 	tmp=pm.GetProfile(FindString("DestProfile"));
+	IS_TYPE type=tmp->GetColourSpace();
 	TempProfile dst(tmp);
 	SetString("DestProfileHash",tmp->GetMD5()->GetPrintableDigest());
 	delete tmp;
@@ -138,6 +139,7 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 		case LCMSWRAPPER_INTENT_SATURATION:
 			intentarg="-is";
 			break;
+		case LCMSWRAPPER_INTENT_NONE:
 		case LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC:
 		case LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC_BPC:
 			intentarg="-ir";
@@ -159,12 +161,16 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 	if(blackgen.size()>0)
 		collink.AddArg(blackgen);
 
-	int inklimit=FindInt("InkLimit");
-	if(inklimit>0)
+	// We only use ink limiting if linking to a CMYK target - we disable it for RGB.
+	if(type==IS_TYPE_CMYK)
 	{
-		char buf[10];
-		sprintf(buf,"-l%d",inklimit);
-		collink.AddArg(buf);
+		int inklimit=FindInt("InkLimit");
+		if(inklimit>0)
+		{
+			char buf[10];
+			sprintf(buf,"-l%d",inklimit);
+			collink.AddArg(buf);
+		}
 	}
 	collink.AddArg(src.Filename());
 	collink.AddArg(dst.Filename());
