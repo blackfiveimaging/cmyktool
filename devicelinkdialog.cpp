@@ -9,6 +9,7 @@
 #include "profileselector.h"
 #include "intentselector.h"
 #include "simplecombo.h"
+#include "generaldialogs.h"
 
 #include "argyllsupport/viewingcondselector.h"
 #include "argyllsupport/blackgenselector.h"
@@ -25,6 +26,7 @@ class DeviceLinkDialog
 
 		gtk_window_set_default_size(GTK_WINDOW(window),800,450);
 
+		GtkWidget *tmp;
 		GtkWidget *vbox = GTK_DIALOG(window)->vbox;
 
 		GtkWidget *hbox = gtk_hbox_new(FALSE,8);
@@ -183,13 +185,17 @@ class DeviceLinkDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		description=gtk_entry_new();
-		gtk_table_attach_defaults(GTK_TABLE(table),description,2,5,row,row+1);
-		
+		gtk_table_attach_defaults(GTK_TABLE(table),description,2,4,row,row+1);
+
+
+		tmp=gtk_button_new_with_label(_("Build Devicelink"));
+		g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(build_devicelink),this);
+		gtk_table_attach_defaults(GTK_TABLE(table),tmp,4,5,row,row+1);
 
 		++row;
 
 
-		GtkWidget *tmp=gtk_vbox_new(FALSE,0);
+		tmp=gtk_vbox_new(FALSE,0);
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,TRUE,TRUE,0);
 		gtk_widget_show(tmp);
 
@@ -214,6 +220,36 @@ class DeviceLinkDialog
 		}
 	}
 	protected:
+	static void build_devicelink(GtkWidget *wid,gpointer userdata)
+	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		try
+		{
+			DeviceLink dl;
+			dlg->dialog_to_devicelink(dl);
+			dl.CreateDeviceLink(dlg->opts.profilemanager);
+			dlg->buildlist();
+		}
+		catch (const char *err)
+		{
+			ErrorMessage_Dialog(err,dlg->window);
+		}
+	}
+	void dialog_to_devicelink(DeviceLink &dl)
+	{
+		dl.blackgen=blackgenselector_get(BLACKGENSELECTOR(blackgen));
+		dl.SetString("Description",gtk_entry_get_text(GTK_ENTRY(description)));
+		dl.SetString("SourceProfile",profileselector_get_filename(PROFILESELECTOR(inprofile)));
+		dl.SetString("SourceViewingConditions",viewingcondselector_get(VIEWINGCONDSELECTOR(inputvc)));
+		dl.SetString("DestProfile",profileselector_get_filename(PROFILESELECTOR(outprofile)));
+		dl.SetString("DestViewingConditions",viewingcondselector_get(VIEWINGCONDSELECTOR(outputvc)));
+		dl.SetInt("RenderingIntent",intentselector_getintent(INTENTSELECTOR(intent)));
+		dl.SetInt("InkLimit",gtk_spin_button_get_value(GTK_SPIN_BUTTON(inklimit)));
+		dl.SetInt("Quality",simplecombo_get_index(SIMPLECOMBO(quality)));
+	}
+	void devicelink_to_dialog(DeviceLink &dl)
+	{
+	}
 	void buildlist()
 	{
 		DeviceLinkList list;
@@ -227,9 +263,11 @@ class DeviceLinkDialog
 	}
 	static void devicelink_changed(GtkWidget *wid,gpointer userdata)
 	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
 	}
 	static void delete_devicelink(GtkWidget *wid,gpointer userdata)
 	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
 	}
 	CMYKConversionOptions &opts;
 	GtkWidget *devicelinklist;
