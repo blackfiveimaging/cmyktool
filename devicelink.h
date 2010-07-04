@@ -43,11 +43,12 @@ class DeviceLink : public ConfigFile, public ConfigDB
 class DeviceLinkList_Entry
 {
 	public:
-	DeviceLinkList_Entry(const char *fn,const char *dn) : filename(fn), displayname(dn)
+	DeviceLinkList_Entry(const char *fn,const char *dn,int pending) : filename(fn), displayname(dn), pending(pending)
 	{
 	}
 	std::string filename;
 	std::string displayname;
+	bool pending;
 };
 
 
@@ -73,13 +74,21 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 
 		while((fn=dtw.NextFile()))
 		{
-			if(strcmp(".icc",fn+strlen(fn)-4)==0 || strcmp(".icm",fn+strlen(fn)-4)==0)
+			if(strcasecmp(".icc",fn+strlen(fn)-4)==0 || strcasecmp(".icm",fn+strlen(fn)-4)==0 || strcasecmp(".dlm",fn+strlen(fn)-4)==0)
 			{
 				Debug[TRACE] << "Adding file " << fn << std::endl;
 				DeviceLink dl(fn);
 
 				bool match=true;
-				if(src && dst)
+
+				// FIXME: Yuk - find a better way to do this...
+				if(strcasecmp(".dlm",fn+strlen(fn)-4)==0)
+				{
+					if(dl.FindInt("Pending")==0)
+						match=false;
+				}
+
+				if(match && src && dst)
 				{
 					Debug[TRACE] << "Comparing " << srcd << " against " << dl.FindString("SourceProfileHash") << std::endl;
 					if(strcmp(srcd,dl.FindString("SourceProfileHash"))!=0)
@@ -103,7 +112,7 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 					if(!(dn && strlen(dn)>0))
 						dn=_("<unknown>");
 
-					DeviceLinkList_Entry e(fn,dn);
+					DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
 					push_back(e);
 				}
 			}

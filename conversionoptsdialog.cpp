@@ -32,7 +32,7 @@ using namespace std;
 class CMYKConversionOptsDialog
 {
 	public:
-	CMYKConversionOptsDialog(CMYKConversionOptions &opts, GtkWidget *parent) : opts(opts), blockupdates(false)
+	CMYKConversionOptsDialog(CMYKTool_Core &core, GtkWidget *parent) : core(core), opts(core.GetOptions()), blockupdates(false)
 	{
 		window=gtk_dialog_new_with_buttons(_("Colour conversion options"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
@@ -281,6 +281,7 @@ class CMYKConversionOptsDialog
 		gtk_widget_set_sensitive(GTK_WIDGET(combo),active);
 	}
 	private:
+	CMYKTool_Core &core;
 	CMYKConversionOptions &opts;
 	GtkWidget *window;
 	GtkWidget *listview;
@@ -574,7 +575,7 @@ class CMYKConversionOptsDialog
 		}
 		else
 		{
-			DeviceLink_Dialog(dlg->opts,dlg->window);
+			DeviceLink_Dialog(dlg->core,dlg->window);
 			dlg->updatedevicelinklist();
 		}
 		dlg->blockupdates=false;
@@ -657,9 +658,9 @@ CMYKConversionMode CMYKConversionOptsDialog::convmodes[]=
 };
 
 
-void CMYKConversionOptions_Dialog(CMYKConversionOptions &opts,GtkWidget *parent)
+void CMYKConversionOptions_Dialog(CMYKTool_Core &core,GtkWidget *parent)
 {
-	CMYKConversionOptsDialog dialog(opts,parent);
+	CMYKConversionOptsDialog dialog(core,parent);
 }
 
 

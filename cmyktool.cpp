@@ -305,7 +305,7 @@ int TestUI::BuildComboOpts(SimpleComboOptions &opts)
 	opts.Add(PRESET_NONE_ESCAPE,_("None"),_("No conversion"),true);
 	previdx=list.GetPreviousIndex()+1;
 
-	for(int idx=0;idx<list.size();++idx)
+	for(unsigned int idx=0;idx<list.size();++idx)
 	{
 		const char *fn=list[idx].filename.c_str();
 		const char *dn=list[idx].displayname.c_str();
@@ -362,7 +362,7 @@ void TestUI::combochanged(GtkWidget *wid,gpointer userdata)
 		const char *key=simplecombo_get(SIMPLECOMBO(ui->combo));
 		if(strcmp(key,PRESET_OTHER_ESCAPE)==0)
 		{
-			CMYKConversionOptions_Dialog(ui->convopts,ui->window);
+			CMYKConversionOptions_Dialog(*ui,ui->window);
 			Debug[TRACE] << "Updating combo..." << endl;
 
 			SimpleComboOptions opts;

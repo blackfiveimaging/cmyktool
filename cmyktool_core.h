@@ -8,15 +8,15 @@
 
 #include "profilemanager/profilemanager.h"
 #include "cmtransformworker.h"
-
+#include "threadevent.h"
 #include "conversionopts.h"
 
 
-class CMYKTool_Core : public ConfigFile, public ConfigDB
+class CMYKTool_Core : public ConfigFile, public ConfigDB, public ThreadEventHandler
 {
 	public:
 	CMYKTool_Core() : ConfigFile(), ConfigDB(Template), profilemanager(this,"[ColourManagement]"),
-		dispatcher(0),factory(profilemanager), convopts(profilemanager)
+		dispatcher(0),factory(profilemanager), convopts(profilemanager), UpdateUI(*this,"UpdateUI")
 	{
 		new ConfigDBHandler(this,"[CMYKTool]",this);
 		profilemanager.SetInt("DefaultCMYKProfileActive",1);
@@ -60,6 +60,7 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB
 	CMTransformFactory factory;
 	CMYKConversionOptions convopts;
 	std::string confname;
+	ThreadEvent UpdateUI;
 	static ConfigTemplate Template[];
 };
 

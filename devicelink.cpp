@@ -21,6 +21,7 @@ ConfigTemplate DeviceLink::configtemplate[]=
 	ConfigTemplate("BlackGeneration",""),
 	ConfigTemplate("InkLimit",0),
 	ConfigTemplate("Quality",0),
+	ConfigTemplate("Pending",1),
 	ConfigTemplate()
 };
 
@@ -51,6 +52,8 @@ DeviceLink::DeviceLink(const char *filename) : ConfigFile(), ConfigDB(configtemp
 		Debug[TRACE] << "Loading metadata from file " << fn2 << std::endl;
 		ParseConfigFile(fn2);
 		free(fn2);
+		if(FindInt("Pending"))
+			fn="";
 	}
 	else
 		makefilename();
@@ -109,8 +112,12 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 	delete tmp;
 
 	ExternalProgram collink;
+	// FIXME - get this from the core...
 	collink.AddPath("/usr/local/bin:/usr/bin/");
 	collink.AddArg("collink");
+
+	SetInt("Pending",1);
+	Save();
 
 	switch(DeviceLink_Quality(FindInt("Quality")))
 	{
@@ -176,7 +183,8 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 	collink.AddArg(dst.Filename());
 	collink.AddArg(fn);
 	collink.RunProgram();
-	Save();
+	SetInt("Pending",0);
+	Save();		// Save a second time with the pending flag removed.
 }
 
 

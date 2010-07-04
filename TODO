@@ -1,5 +1,6 @@
 Make devicelink generation a background task
 Set up some kind of event to be triggered when a job finishes.
+Mark the devicelink metadata file as "pending" while it's being generated, and "done" when it's complete.
 
 Make ArgyllPath available to devicelink generation.
 

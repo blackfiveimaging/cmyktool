@@ -14,10 +14,34 @@
 #include "argyllsupport/viewingcondselector.h"
 #include "argyllsupport/blackgenselector.h"
 
-class DeviceLinkDialog
+class DeviceLinkJob : public Job
 {
 	public:
-	DeviceLinkDialog(CMYKConversionOptions &opts,GtkWidget *parent) : opts(opts), parent(parent)
+	DeviceLinkJob(CMYKTool_Core &core,DeviceLink *dl) : core(core), dl(dl)
+	{
+	}
+	virtual ~DeviceLinkJob()
+	{
+		if(dl)
+			delete dl;
+	}
+	virtual void Run(Worker *worker)
+	{
+		dl->CreateDeviceLink(core.GetProfileManager());
+		ThreadEvent *ev=core.FindEvent("UpdateUI");
+		if(ev)
+			ev->Trigger();
+	}
+	protected:
+	CMYKTool_Core &core;
+	DeviceLink *dl;
+};
+
+
+class DeviceLinkDialog : public ThreadFunction, public Thread
+{
+	public:
+	DeviceLinkDialog(CMYKTool_Core &core,GtkWidget *parent) : ThreadFunction(), Thread(this), core(core), opts(core.GetOptions()), parent(parent)
 	{
 		window=gtk_dialog_new_with_buttons(_("DeviceLink manager"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
@@ -208,19 +232,62 @@ class DeviceLinkDialog
 		set_defaults();
 
 		gtk_widget_show(window);
+
+		Start();
 	}
 	~DeviceLinkDialog()
 	{
+		// Cancel monitoring thread
+		Stop();
+		ThreadEvent *ev=core.FindEvent("UpdateUI");
+		if(ev)
+			ev->Trigger();
+
 		gtk_widget_destroy(window);
 	}
-	void Run()
+
+	// Thread function - hangs around waiting for signal from ThreadEvent, and triggers a list update when received...
+	virtual int Entry(Thread &t)
 	{
-		gint result=gtk_dialog_run(GTK_DIALOG(window));
-		switch(result)
+		ThreadEvent *ev=core.FindEvent("UpdateUI");
+		while(!TestBreak())
 		{
-			default:
-				break;
+			ev->WaitEvent();
+			if(!TestBreak())
+				g_timeout_add(1,updatefunc,this);
 		}
+		return(0);
+	}
+	// Function to trigger a list rebuild.  Called on the main thread's context.
+	static gboolean updatefunc(gpointer ud)
+	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)ud;
+		dlg->buildlist();
+		return(FALSE);
+	}
+
+	std::string Run()	// Returns the filename of the currently-selected devicelink.
+	{
+		bool done=false;
+		while(!done)
+		{
+			gint result=gtk_dialog_run(GTK_DIALOG(window));
+			switch(result)
+			{
+				default:
+					break;
+			}
+			// FIXME - check the current options against the DeviceLinkList.
+			// If none of the list entries is a match, prompt the user that there are unsaved changes.
+			done=true;
+		}
+		std::string result;
+		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(devicelinklist));
+		if(opt && opt->key)
+		{
+			result=opt->key;
+		}
+		return(result);
 	}
 	protected:
 	static void build_devicelink(GtkWidget *wid,gpointer userdata)
@@ -228,9 +295,14 @@ class DeviceLinkDialog
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
 		try
 		{
-			DeviceLink dl;
-			dlg->dialog_to_devicelink(dl);
-			dl.CreateDeviceLink(dlg->opts.profilemanager);
+			// FIXME - compare DisplayName against DeviceLink list and prompt user if the same as an existing one.
+			if(0)
+				Query_Dialog(_("Are you sure you want to overwrite an existing devicelink?"),dlg->window);
+			DeviceLink *dl=new DeviceLink;
+			dlg->dialog_to_devicelink(*dl);
+			dl->Save();	// Save metadata before generating the file...
+			dlg->core.GetDispatcher().AddJob(new DeviceLinkJob(dlg->core,dl));
+//			dl.CreateDeviceLink(dlg->opts.profilemanager);
 			dlg->buildlist();
 		}
 		catch (const char *err)
@@ -289,7 +361,12 @@ class DeviceLinkDialog
 		for(unsigned int idx=0;idx<list.size();++idx)
 		{
 			DeviceLinkList_Entry &e=list[idx];
-			lvo.Add(e.filename.c_str(),e.displayname.c_str());
+			std::string dn;
+			if(e.pending)
+				dn="("+e.displayname+")";
+			else
+				dn=e.displayname;
+			lvo.Add(e.filename.c_str(),dn.c_str());
 		}
 		simplelistview_set_opts(SIMPLELISTVIEW(devicelinklist),&lvo);
 	}
@@ -342,6 +419,7 @@ class DeviceLinkDialog
 			dlg->buildlist();
 		}
 	}
+	CMYKTool_Core &core;
 	CMYKConversionOptions &opts;
 	GtkWidget *devicelinklist;
 	GtkWidget *inprofile;
@@ -359,9 +437,10 @@ class DeviceLinkDialog
 };
 
 
-void DeviceLink_Dialog(CMYKConversionOptions &opts,GtkWidget *parent)
+std::string DeviceLink_Dialog(CMYKTool_Core &core,GtkWidget *parent)
 {
-	DeviceLinkDialog dlg(opts,parent);
-	dlg.Run();
+	DeviceLinkDialog dlg(core,parent);
+	std::string result=dlg.Run();
+	return(result);
 }
 

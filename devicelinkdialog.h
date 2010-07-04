@@ -1,10 +1,14 @@
 #ifndef DEVICELINKDIALOG_H
 #define DEVICELINKDIALOG_H
 
-#include <gtk/gtkwidget.h>
-#include "conversionopts.h"
+#include <string>
 
-void DeviceLink_Dialog(CMYKConversionOptions &opts,GtkWidget *parent);
+#include <gtk/gtkwidget.h>
+
+#include "conversionopts.h"
+#include "cmyktool_core.h"
+
+std::string DeviceLink_Dialog(CMYKTool_Core &core,GtkWidget *parent);
 
 #endif
 
