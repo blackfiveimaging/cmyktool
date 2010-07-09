@@ -1,14 +1,19 @@
-Make devicelink generation a background task
-Set up some kind of event to be triggered when a job finishes.
-Mark the devicelink metadata file as "pending" while it's being generated, and "done" when it's complete.
+| Make devicelink generation a background task
+| Set up some kind of event to be triggered when a job finishes.
+| Mark the devicelink metadata file as "pending" while it's being generated, and "done" when it's complete.
 
-Make ArgyllPath available to devicelink generation.
+| Make ArgyllPath available to devicelink generation.
 
-Make DeviceLink dialog return name of chosen devicelink.
+| Make DeviceLink dialog return name of chosen devicelink.
 
 If the user quits the devicelink dialog without generating a devicelink, prompt.
 (Could compare the settings against the current list and only prompt if there's no match...)
 
+When generating a devicelink complain if there's already one with the current name
+
+If the user tries to use a devicelink that's not yet generated, complain.
+
+Sort out proofing of devicelinked images - currently resembles "inspect" mode.
 
 Add proper support for greyscale images and profiles.
 

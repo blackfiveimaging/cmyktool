@@ -571,11 +571,13 @@ class CMYKConversionOptsDialog
 		const char *dl=simplecombo_get(c);
 		if(dl)
 		{
+			Debug[TRACE] << "Setting devicelink to " << dl << endl;
 			dlg->opts.SetDeviceLink(dl);
 		}
 		else
 		{
-			DeviceLink_Dialog(dlg->core,dlg->window);
+			std::string result=DeviceLink_Dialog(dlg->core,dlg->window);
+			dlg->opts.SetDeviceLink(result.c_str());
 			dlg->updatedevicelinklist();
 		}
 		dlg->blockupdates=false;
@@ -608,6 +610,10 @@ class CMYKConversionOptsDialog
 
 			gtk_widget_set_sensitive(dlg->devicelink,state);
 			dlg->updatedevicelinklist();
+			if(state)
+			{
+				dlg->devicelink_changed(dlg->devicelink,dlg);
+			}
 		}
 		catch(const char *err)
 		{
@@ -643,6 +649,8 @@ class CMYKConversionOptsDialog
 		}
 		scopts.Add(NULL,_("Other..."));
 		simplecombo_set_opts(SIMPLECOMBO(devicelink),scopts);
+		std::string dl=opts.GetDeviceLink();
+		simplecombo_set(SIMPLECOMBO(devicelink),dl.c_str());
 	}
 
 	static CMYKConversionMode convmodes[];

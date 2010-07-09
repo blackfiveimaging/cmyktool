@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-04 11:48+0100\n"
+"POT-Creation-Date: 2010-07-04 11:51+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -564,7 +564,7 @@ msgid "Can't open file for saving"
 msgstr ""
 
 #: imageutils/jpegsave.cpp:221
-msgid "JPEG Saver can currently only save RGB or Greyscale images."
+msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr ""
 
 #: miscwidgets/imageselector.cpp:458 miscwidgets/simplelistview.cpp:150

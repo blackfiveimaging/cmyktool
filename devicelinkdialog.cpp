@@ -27,7 +27,7 @@ class DeviceLinkJob : public Job
 	}
 	virtual void Run(Worker *worker)
 	{
-		dl->CreateDeviceLink(core.GetProfileManager());
+		dl->CreateDeviceLink(core.FindString("ArgyllPath"),core.GetProfileManager());
 		ThreadEvent *ev=core.FindEvent("UpdateUI");
 		if(ev)
 			ev->Trigger();

@@ -156,7 +156,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			if(tab.view.displaymode==CMYKDISPLAY_INSPECT && STRIP_ALPHA(is->type)==IS_TYPE_RGB)
 				is->SetEmbeddedProfile(NULL);
 
-			Debug[TRACE] << "Opts output space" << tab.core.GetOptions().GetOutProfile() << endl;
+			Debug[TRACE] << "Opts output space " << tab.core.GetOptions().GetOutProfile() << endl;
 
 			LCMSWrapper_Intent intent=LCMSWRAPPER_INTENT_DEFAULT;
 			switch(tab.view.displaymode)
@@ -247,7 +247,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 	}
 	bool DoProgress(int i, int maxi)
 	{
-		Debug[TRACE] << "In customised DoProgress function - JobStatus: " << GetJobStatus() << endl;
+//		Debug[TRACE] << "In customised DoProgress function - JobStatus: " << GetJobStatus() << endl;
 		return(GetJobStatus()!=JOBSTATUS_CANCELLED);
 	}
 	protected:

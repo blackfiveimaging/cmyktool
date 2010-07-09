@@ -35,7 +35,7 @@ int main(int argc,char **argv)
 		dltest.SetString("DestProfile",pm.FindString("DefaultCMYKProfile"));
 
 		if(argc>1)
-			dltest.CreateDeviceLink(pm);
+			dltest.CreateDeviceLink("/usr/local/bin/:/usr/bin",pm);
 
 		if(src)
 			delete src;

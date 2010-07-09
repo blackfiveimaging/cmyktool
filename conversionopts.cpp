@@ -186,7 +186,7 @@ void CMYKConversionOptions::SetDeviceLink(const char *dl)
 	if(dl)
 		Debug[TRACE] << "Setting dl to " << dl << std::endl;
 	else
-		Debug[WARN] << "Setting dl but no filename!" << std::endl;
+		Debug[WARN] << "WARNING: Setting dl but no filename!" << std::endl;
 	devicelink=dl;
 }
 
@@ -249,66 +249,51 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 			throw "Can't open input profile";
 	}
 	CMSProfile *outprof=NULL;
+	CMSProfile *dlprof=NULL;
+
 	Debug[TRACE] << "Opening profile: " << outprofile << endl;
+	if(outprofile!=NOPROFILE_ESCAPESTRING)
+		outprof=profilemanager.GetProfile(outprofile.c_str());
 	if(GetUseDeviceLink())
+		dlprof=profilemanager.GetProfile(GetDeviceLink());
+
+	if(outprof->IsDeviceLink() && !dlprof)
 	{
-		outprof=profilemanager.GetProfile(GetDeviceLink());
+		dlprof=outprof;
+		outprof=NULL;
 	}
-	else
+
+	// If we have a devicelink profile, we embed the output profile.
+	if(dlprof)
 	{
-		if(outprofile!=NOPROFILE_ESCAPESTRING)
-			outprof=profilemanager.GetProfile(outprofile.c_str());
-	}
-	if(outprof)
-	{
-		if(outprof->IsDeviceLink())
+		Debug[TRACE] << "Using DeviceLink profile" << endl;
+		if(factory)
 		{
-			Debug[TRACE] << "Using DeviceLink profile" << endl;
-			if(factory)
-			{
-				Debug[TRACE] << "Getting transform from factory" << endl;
-				CMSTransform *trans=factory->GetTransform(outprof,NULL,intent);
-				if(trans)
-					src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
-						mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
-			}
-			else
-				src=new ImageSource_Deflatten(src,outprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+			Debug[TRACE] << "Getting transform from factory" << endl;
+			CMSTransform *trans=factory->GetTransform(dlprof,NULL,intent);
+			if(trans)
+				src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 					mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
-
-			CMSProfile *embprof=NULL;
-
-			switch(STRIP_ALPHA(src->type))
-			{
-				case IS_TYPE_RGB:
-					embprof=profilemanager.GetProfile(inrgbprofile.c_str());
-					Debug[TRACE] << "Using default RGB profile to embed, since output profile is a DeviceLink" << endl;
-					break;
-				case IS_TYPE_CMYK:
-					embprof=profilemanager.GetProfile(incmykprofile.c_str());
-					Debug[TRACE] << "Using default CMYK profile to embed, since output profile is a DeviceLink" << endl;
-					break;
-				default:
-					throw "Image type not (yet) supported";
-					break;
-			}
-			src->SetEmbeddedProfile(embprof,true);
-			delete outprof;
 		}
 		else
+			src=new ImageSource_Deflatten(src,dlprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+				mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
+
+		src->SetEmbeddedProfile(outprof,true);
+	}
+	else if(outprof)
+	{
+		if(factory)
 		{
-			if(factory)
-			{
-				CMSTransform *trans=factory->GetTransform(outprof,inprof,intent);
-				if(trans)
-					src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
-						mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
-			}
-			else
-				src=new ImageSource_Deflatten(src,inprof,outprof,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+			CMSTransform *trans=factory->GetTransform(outprof,inprof,intent);
+			if(trans)
+				src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 					mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
-			src->SetEmbeddedProfile(outprof,true);
 		}
+		else
+			src=new ImageSource_Deflatten(src,inprof,outprof,mode==CMYKCONVERSIONMODE_HOLDBLACK,
+				mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
+		src->SetEmbeddedProfile(outprof,true);
 	}
 	else
 	{

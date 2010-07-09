@@ -222,8 +222,8 @@ void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core)
 				patheditor_get_paths(PATHEDITOR(dd.gspatheditor),&test_sp2);
 				char *gspath=test_sp2.GetPaths();
 				Debug[TRACE] << "GhostscriptPath: " << gspath << endl;
-				core.SetString("GhostscriptPath",argyllpath);
-				free(argyllpath);
+				core.SetString("GhostscriptPath",gspath);
+				free(gspath);
 
 				if(result==RESPONSE_SAVE)
 				{

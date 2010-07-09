@@ -97,7 +97,7 @@ void DeviceLink::Delete()
 }
 
 
-void DeviceLink::CreateDeviceLink(ProfileManager &pm)
+void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 {
 	CMSProfile *tmp;
 	tmp=pm.GetProfile(FindString("SourceProfile"));
@@ -112,8 +112,8 @@ void DeviceLink::CreateDeviceLink(ProfileManager &pm)
 	delete tmp;
 
 	ExternalProgram collink;
-	// FIXME - get this from the core...
-	collink.AddPath("/usr/local/bin:/usr/bin/");
+	collink.AddPath(argyllpath.c_str());
+//	collink.AddPath("/usr/local/bin:/usr/bin/");
 	collink.AddArg("collink");
 
 	SetInt("Pending",1);
