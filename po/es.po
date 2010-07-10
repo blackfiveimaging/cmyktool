@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-04 11:51+0100\n"
+"POT-Creation-Date: 2010-07-10 11:47+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -121,56 +121,115 @@ msgstr ""
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr ""
 
-#: cmyktool.cpp:152
+#: cmyktool.cpp:107
+msgid "_File"
+msgstr ""
+
+#: cmyktool.cpp:109
+#, fuzzy
+msgid "_Quit"
+msgstr "Calidad JPEG:"
+
+#: cmyktool.cpp:109
+msgid "Exit the program"
+msgstr ""
+
+#: cmyktool.cpp:111
+msgid "_Edit"
+msgstr ""
+
+#: cmyktool.cpp:113
+msgid "Select _All"
+msgstr ""
+
+#: cmyktool.cpp:113
+msgid "Select all images"
+msgstr ""
+
+#: cmyktool.cpp:114
+msgid "Select _None"
+msgstr ""
+
+#: cmyktool.cpp:114
+msgid "Deselect all images"
+msgstr ""
+
+#: cmyktool.cpp:115
+#, fuzzy
+msgid "Preset _Editor..."
+msgstr "Seleccionar directorio..."
+
+#: cmyktool.cpp:115
+msgid "Open the preset editor"
+msgstr ""
+
+#: cmyktool.cpp:116
+msgid "_DeviceLink Editor..."
+msgstr ""
+
+#: cmyktool.cpp:116
+msgid "Open the DeviceLink management dialog"
+msgstr ""
+
+#: cmyktool.cpp:117
+#, fuzzy
+msgid "Pre_ferences..."
+msgstr "Preferencias..."
+
+#: cmyktool.cpp:117
+msgid "Set paths for colour profiles and external utilities"
+msgstr ""
+
+#: cmyktool.cpp:196
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:180
+#: cmyktool.cpp:254
 msgid "Add Images..."
 msgstr "Agregar Imágenes"
 
-#: cmyktool.cpp:187
+#: cmyktool.cpp:261
 msgid "Remove Images"
 msgstr "Quitar Imágenes"
 
-#: cmyktool.cpp:206
+#: cmyktool.cpp:280
 msgid "Convert"
 msgstr "Convertir"
 
-#: cmyktool.cpp:214
+#: cmyktool.cpp:288
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:236 dialogs.cpp:69
+#: cmyktool.cpp:310 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferencias..."
 
-#: cmyktool.cpp:267
+#: cmyktool.cpp:341
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:305 profilemanager/profileselector.cpp:195
+#: cmyktool.cpp:379 profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Ninguno"
 
-#: cmyktool.cpp:305
+#: cmyktool.cpp:379
 msgid "No conversion"
 msgstr "Sin conversión"
 
-#: cmyktool.cpp:326 conversionoptsdialog.cpp:206 conversionoptsdialog.cpp:644
+#: cmyktool.cpp:400 conversionoptsdialog.cpp:206 conversionoptsdialog.cpp:650
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Otro..."
 
-#: cmyktool.cpp:326
+#: cmyktool.cpp:400
 msgid "Create a new preset"
 msgstr "Crear un nuevo ajuste predefinido"
 
-#: cmyktool.cpp:448
+#: cmyktool.cpp:555
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:478 cmyktool.cpp:635
+#: cmyktool.cpp:585 cmyktool.cpp:742
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 
@@ -278,7 +337,7 @@ msgstr "Guardar imagen - por favor ingrese un nombre de archivo"
 msgid "Colour conversion options"
 msgstr "Opciones de conversión de color"
 
-#: conversionoptsdialog.cpp:65 devicelinkdialog.cpp:70
+#: conversionoptsdialog.cpp:65 devicelinkdialog.cpp:84
 #, fuzzy
 msgid "Delete"
 msgstr "Predeterminado"
@@ -396,98 +455,98 @@ msgstr ""
 msgid "Are you sure you want to delete this preset?"
 msgstr ""
 
-#: devicelinkdialog.cpp:46
+#: devicelinkdialog.cpp:60
 msgid "DeviceLink manager"
 msgstr ""
 
-#: devicelinkdialog.cpp:92
+#: devicelinkdialog.cpp:106
 #, fuzzy
 msgid "Input options:"
 msgstr "Inspeccionar"
 
-#: devicelinkdialog.cpp:100
+#: devicelinkdialog.cpp:114
 #, fuzzy
 msgid "Profile"
 msgstr "Perfil de Salida:"
 
-#: devicelinkdialog.cpp:111 devicelinkdialog.cpp:144
+#: devicelinkdialog.cpp:125 devicelinkdialog.cpp:158
 msgid "Viewing Conditions"
 msgstr ""
 
-#: devicelinkdialog.cpp:124
+#: devicelinkdialog.cpp:138
 #, fuzzy
 msgid "Output options:"
 msgstr "Perfil de Salida:"
 
-#: devicelinkdialog.cpp:132
+#: devicelinkdialog.cpp:146
 #, fuzzy
 msgid "Profile:"
 msgstr "Perfil de Salida:"
 
-#: devicelinkdialog.cpp:157
+#: devicelinkdialog.cpp:171
 msgid "Link options:"
 msgstr ""
 
-#: devicelinkdialog.cpp:167
+#: devicelinkdialog.cpp:181
 #, fuzzy
 msgid "Rendering Intent"
 msgstr "Intento de Renderizado:"
 
-#: devicelinkdialog.cpp:184
+#: devicelinkdialog.cpp:198
 msgid "Ink Limit:"
-msgstr ""
-
-#: devicelinkdialog.cpp:194
-#, fuzzy
-msgid "Quality:"
-msgstr "Calidad JPEG:"
-
-#: devicelinkdialog.cpp:199
-msgid "Low"
-msgstr ""
-
-#: devicelinkdialog.cpp:199
-msgid "Fastest mode at the expense of quality"
-msgstr ""
-
-#: devicelinkdialog.cpp:200
-msgid "Medium"
-msgstr ""
-
-#: devicelinkdialog.cpp:200
-msgid "Balances speed and quality"
-msgstr ""
-
-#: devicelinkdialog.cpp:201
-msgid "High"
-msgstr ""
-
-#: devicelinkdialog.cpp:201
-msgid "Highest quality at the expense of speed"
 msgstr ""
 
 #: devicelinkdialog.cpp:208
 #, fuzzy
+msgid "Quality:"
+msgstr "Calidad JPEG:"
+
+#: devicelinkdialog.cpp:213
+msgid "Low"
+msgstr ""
+
+#: devicelinkdialog.cpp:213
+msgid "Fastest mode at the expense of quality"
+msgstr ""
+
+#: devicelinkdialog.cpp:214
+msgid "Medium"
+msgstr ""
+
+#: devicelinkdialog.cpp:214
+msgid "Balances speed and quality"
+msgstr ""
+
+#: devicelinkdialog.cpp:215
+msgid "High"
+msgstr ""
+
+#: devicelinkdialog.cpp:215
+msgid "Highest quality at the expense of speed"
+msgstr ""
+
+#: devicelinkdialog.cpp:222
+#, fuzzy
 msgid "Description:"
 msgstr "Resolución:"
 
-#: devicelinkdialog.cpp:216
+#: devicelinkdialog.cpp:230
 msgid "Build Devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:300
+#: devicelinkdialog.cpp:330
 msgid "Are you sure you want to overwrite an existing devicelink?"
 msgstr ""
 
-#: devicelinkdialog.cpp:345
+#: devicelinkdialog.cpp:382
 msgid "New devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:360
+#: devicelinkdialog.cpp:397
 msgid "New Devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:415
+#: devicelinkdialog.cpp:458
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr ""
 
