@@ -1,3 +1,8 @@
+When the user selects a preset from the preset editor then clicks OK,
+the main window's combo should be set to that preset
+
+Add "Select All" and "Select None" features to the ImageSelector.
+
 | Make devicelink generation a background task
 | Set up some kind of event to be triggered when a job finishes.
 | Mark the devicelink metadata file as "pending" while it's being generated, and "done" when it's complete.
@@ -9,11 +14,11 @@
 If the user quits the devicelink dialog without generating a devicelink, prompt.
 (Could compare the settings against the current list and only prompt if there's no match...)
 
-When generating a devicelink complain if there's already one with the current name
+| When generating a devicelink complain if there's already one with the current name
 
 If the user tries to use a devicelink that's not yet generated, complain.
 
-Sort out proofing of devicelinked images - currently resembles "inspect" mode.
+| Sort out proofing of devicelinked images - currently resembles "inspect" mode.
 
 Add proper support for greyscale images and profiles.
 
@@ -23,50 +28,50 @@ Fix issue with X libs not being linked on some platforms
 
 | Add newly-created presets to the preset list.
 
-Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
-Dialog should have a list of presets on the left hand side, each with an icon to show the source and dest spaces,
-and preferably the conversion mode too.
-  Need icons for:
-    Straight RGB -> CMYK
-    Hold Black
-    Hold Grey
-    Overprint
-    DeviceLink
-On the right hand pane, the editor needs to have
-  Preset Name
-  Mark out a group, called "Input"
-    Fallback RGB Profile
-    Fallback CMYK Profile
-    Ignore embedded profiles
-  Mark out a group, called "Output"
-	Output profile
-    Rendering intent
-  Mark out a group called "Processing"
-    Use Devicelink checkbox, and list of devicelinks
-    Update the list automatically from input/output profile and rendering intent.
-    (What about files with embedded profiles?  Convert to DL input space first?)
-    Conversion mode
-	Transition width
+| Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
+| Dialog should have a list of presets on the left hand side, each with an icon to show the source and dest spaces,
+| and preferably the conversion mode too.
+|   Need icons for:
+|     Straight RGB -> CMYK
+|     Hold Black
+|     Hold Grey
+|     Overprint
+|     DeviceLink
+| On the right hand pane, the editor needs to have
+|   Preset Name
+|   Mark out a group, called "Input"
+|     Fallback RGB Profile
+|     Fallback CMYK Profile
+|     Ignore embedded profiles
+|   Mark out a group, called "Output"
+|	Output profile
+|   Rendering intent
+|  Mark out a group called "Processing"
+|    Use Devicelink checkbox, and list of devicelinks
+|    Update the list automatically from input/output profile and rendering intent.
+|    (What about files with embedded profiles?  Convert to DL input space first?)
+|    Conversion mode
+|	Transition width
 
-Need to have two levels of DeviceLink selector:
-  Combo box from which a compatible DL can be selected, plus "Other...", which will pop up a:
-  Dialog, containing a listview of all DeviceLinks known to the system, with a button to create a new one.
+| Need to have two levels of DeviceLink selector:
+|  Combo box from which a compatible DL can be selected, plus "Other...", which will pop up a:
+|  Dialog, containing a listview of all DeviceLinks known to the system, with a button to create a new one.
 
 
-Add support for creatng DeviceLinks.
-  Cache them in cmyktool/devicelinks, and store them using random filenames, and a metadata file
-  alongside each one.
-  (Need to place a description in the collink "-D" parameter.  Build automatically from source/dest profiles?)
+| Add support for creatng DeviceLinks.
+|  Cache them in cmyktool/devicelinks, and store them using random filenames, and a metadata file
+|  alongside each one.
+|  (Need to place a description in the collink "-D" parameter.  Build automatically from source/dest profiles?)
 
-Need to maintain a list of available devicelinks, which will be made available in the conversionoptsdialog.
+| Need to maintain a list of available devicelinks, which will be made available in the conversionoptsdialog.
 
-The devicelinks are defined by:
-* Source Profile
-* Destination Profile
-* Rendering Intent
-* Black Generation
-* Viewing conditions
-Also need a "Description" field.
+| The devicelinks are defined by:
+| * Source Profile
+| * Destination Profile
+| * Rendering Intent
+| * Black Generation
+| * Viewing conditions
+| Also need a "Description" field.
 
 
 Preserve clipping paths, as per latest Separate+

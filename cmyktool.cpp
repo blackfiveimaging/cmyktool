@@ -47,6 +47,7 @@
 
 #include "conversionopts.h"
 #include "conversionoptsdialog.h"
+#include "devicelinkdialog.h"
 
 #include "cmyktool_core.h"
 #include "dialogs.h"
@@ -55,6 +56,7 @@
 #include "config.h"
 #include "gettext.h"
 #define _(x) gettext(x)
+#define N_(x) gettext_noop(x)
 
 #define PRESET_OTHER_ESCAPE "<other>"
 
@@ -82,14 +84,56 @@ class TestUI : public CMYKTool_Core
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
 	GtkWidget *window;
+	// Menu callback functions:
+	static void edit_selectall(GtkAction *action,gpointer ob);
+	static void edit_selectnone(GtkAction *action,gpointer ob);
+	static void edit_preseteditor(GtkAction *action,gpointer ob);
+	static void edit_devicelinkeditor(GtkAction *action,gpointer ob);
+	static void file_quit(GtkAction *action,gpointer ob);
 	protected:
+	GtkUIManager *uimanager;
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	GtkWidget *combo;
 	GdkPixbuf *rgbpb;
 	GdkPixbuf *cmykpb;
 	GdkPixbuf *profpb;
+	static GtkActionEntry menu_entries[];
+	static const char *menu_ui_description;
 };
+
+
+GtkActionEntry TestUI::menu_entries[] = {
+  { "FileMenu", NULL, N_("_File") },
+
+  { "Quit", GTK_STOCK_QUIT, N_("_Quit"), "<control>Q", N_("Exit the program"), G_CALLBACK(file_quit) },
+
+  { "EditMenu", NULL, N_("_Edit") },
+  
+  { "SelectAll", NULL, N_("Select _All"), "<control>A", N_("Select all images"), G_CALLBACK(edit_selectall) },
+  { "SelectNone", NULL, N_("Select _None"), NULL, N_("Deselect all images"), G_CALLBACK(edit_selectnone) },
+  { "PresetEditor", NULL, N_("Preset _Editor..."), NULL, N_("Open the preset editor"), G_CALLBACK(edit_preseteditor) },
+  { "DeviceLinkEditor", NULL, N_("_DeviceLink Editor..."), NULL, N_("Open the DeviceLink management dialog"), G_CALLBACK(edit_devicelinkeditor) },
+  { "Preferences", NULL, N_("Pre_ferences..."), NULL, N_("Set paths for colour profiles and external utilities"), G_CALLBACK(showpreferencesdialog) },
+};
+
+const char *TestUI::menu_ui_description =
+"<ui>"
+"  <menubar name='MainMenu'>"
+"    <menu action='FileMenu'>"
+"      <menuitem action='Quit'/>"
+"    </menu>"
+"    <menu action='EditMenu'>"
+//"      <menuitem action='SelectAll'/>"
+//"      <menuitem action='SelectNone'/>"
+//"      <separator/>"
+"      <menuitem action='PresetEditor'/>"
+"      <menuitem action='DeviceLinkEditor'/>"
+"      <menuitem action='Preferences'/>"
+"    </menu>"
+"  </menubar>"
+"</ui>";
+
 
 
 #define TARGET_URI_LIST 1
@@ -154,9 +198,39 @@ TestUI::TestUI() : CMYKTool_Core()
 		(GtkSignalFunc) gtk_main_quit, NULL);
 	gtk_widget_show(window);
 
+	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
+	gtk_container_add(GTK_CONTAINER(window),vbox);
+	gtk_widget_show(vbox);
+
+
+	// Build menus
+
+	GtkAccelGroup *accel_group;
+	uimanager = gtk_ui_manager_new ();
+
+	GError *error=NULL;
+	GtkActionGroup *action_group;
+	action_group = gtk_action_group_new ("MenuActions");
+	gtk_action_group_set_translation_domain(action_group,PACKAGE);
+	gtk_action_group_add_actions (action_group, menu_entries, G_N_ELEMENTS (menu_entries), this);
+	gtk_ui_manager_insert_action_group (uimanager, action_group, 0);
+	
+	if (!gtk_ui_manager_add_ui_from_string (uimanager, menu_ui_description, -1, &error))
+		throw error->message;
+
+	accel_group = gtk_ui_manager_get_accel_group(uimanager);
+	gtk_window_add_accel_group (GTK_WINDOW (window), accel_group);
+
+	GtkWidget *menubar = gtk_ui_manager_get_widget (uimanager, "/MainMenu");
+	gtk_box_pack_start(GTK_BOX(vbox),menubar,FALSE,TRUE,0);
+	gtk_widget_show(menubar);
+
+
+	// HBox to contain image list and preview pane
+
 
 	GtkWidget *hbox=gtk_hbox_new(FALSE,0);
-	gtk_container_add(GTK_CONTAINER(window),hbox);
+	gtk_box_pack_start(GTK_BOX(vbox),hbox,TRUE,TRUE,0);
 	gtk_widget_show(hbox);
 
 	gtk_drag_dest_set(GTK_WIDGET(hbox),
@@ -169,7 +243,7 @@ TestUI::TestUI() : CMYKTool_Core()
 
 	// Leftmost column - imageselector + buttons
 
-	GtkWidget *vbox=gtk_vbox_new(FALSE,0);
+	vbox=gtk_vbox_new(FALSE,0);
 	gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE,FALSE,0);
 	gtk_widget_show(vbox);
 
@@ -408,6 +482,39 @@ void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
 	}
 }
 #endif
+
+
+
+// Menu callback functions
+
+void TestUI::edit_selectall(GtkAction *action,gpointer ob)
+{
+}
+
+
+void TestUI::edit_selectnone(GtkAction *action,gpointer ob)
+{
+}
+
+
+void TestUI::file_quit(GtkAction *action,gpointer ob)
+{
+	gtk_main_quit();
+}
+
+
+void TestUI::edit_preseteditor(GtkAction *action,gpointer ob)
+{
+	TestUI *ui=(TestUI *)ob;
+	CMYKConversionOptions_Dialog(*ui,ui->window);
+}
+
+
+void TestUI::edit_devicelinkeditor(GtkAction *action,gpointer ob)
+{
+	TestUI *ui=(TestUI *)ob;
+	DeviceLink_Dialog(*ui,ui->window);
+}
 
 
 
