@@ -78,6 +78,16 @@ void DeviceLink::Save(const char *filename)
 }
 
 
+void DeviceLink::Save(DeviceLinkList_Entry &entry)
+{
+	fn=entry.filename;
+	char *fn2=BuildFilename(fn.c_str(),NULL,"dlm");
+	metadata_fn=fn2;
+	free(fn2);
+	SaveConfigFile(metadata_fn.c_str());
+}
+
+
 void DeviceLink::Delete()
 {
 	if(fn.size())

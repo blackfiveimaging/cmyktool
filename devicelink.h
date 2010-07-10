@@ -21,6 +21,7 @@
 
 enum DeviceLink_Quality {DEVICELINK_QUALITY_LOW=0,DEVICELINK_QUALITY_MEDIUM,DEVICELINK_QUALITY_HIGH};
 
+class DeviceLinkList_Entry;
 
 class DeviceLink : public ConfigFile, public ConfigDB
 {
@@ -28,6 +29,7 @@ class DeviceLink : public ConfigFile, public ConfigDB
 	DeviceLink(const char *filename=NULL);
 	~DeviceLink();
 	void Save(const char *filename=NULL);
+	void Save(DeviceLinkList_Entry &entry);	// Take filenames from an existing DeviceLink entry.
 	void Delete();	// Removes the files from disk, but doesn't delete the object itself.
 	Argyll_BlackGenerationCurve blackgen;
 	void CreateDeviceLink(std::string agyllpath,ProfileManager &pm);
@@ -112,12 +114,24 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 					if(!(dn && strlen(dn)>0))
 						dn=_("<unknown>");
 
-					DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
-					push_back(e);
+					if(!Find(dn))	// Only create a new entry if there isn't already one by this name...
+					{
+						DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
+						push_back(e);
+					}
 				}
 			}
 		}
 		free(configdir);
+	}
+	DeviceLinkList_Entry *Find(std::string displayname)
+	{
+		for(unsigned int idx=0;idx<size();++idx)
+		{
+			if(displayname==(*this)[idx].displayname)
+				return(&(*this)[idx]);
+		}
+		return(NULL);
 	}
 };
 

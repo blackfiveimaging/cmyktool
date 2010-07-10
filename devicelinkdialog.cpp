@@ -10,6 +10,9 @@
 #include "intentselector.h"
 #include "simplecombo.h"
 #include "generaldialogs.h"
+#include "errordialogqueue.h"
+#include "gfx/hourglass.cpp"
+#include "miscwidgets/pixbuf_from_imagedata.h"
 
 #include "argyllsupport/viewingcondselector.h"
 #include "argyllsupport/blackgenselector.h"
@@ -27,7 +30,14 @@ class DeviceLinkJob : public Job
 	}
 	virtual void Run(Worker *worker)
 	{
-		dl->CreateDeviceLink(core.FindString("ArgyllPath"),core.GetProfileManager());
+		try
+		{
+			dl->CreateDeviceLink(core.FindString("ArgyllPath"),core.GetProfileManager());
+		}
+		catch (const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
+		}
 		ThreadEvent *ev=core.FindEvent("UpdateUI");
 		if(ev)
 			ev->Trigger();
@@ -43,6 +53,10 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 	public:
 	DeviceLinkDialog(CMYKTool_Core &core,GtkWidget *parent) : ThreadFunction(), Thread(this), core(core), opts(core.GetOptions()), parent(parent)
 	{
+
+		// Create pixbufs from icons in gfx/*.cpp
+		hourglass=PixbufFromImageData(hourglass_data,sizeof(hourglass_data));
+
 		window=gtk_dialog_new_with_buttons(_("DeviceLink manager"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
 			GTK_STOCK_OK,GTK_RESPONSE_OK,
@@ -244,6 +258,9 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 			ev->Trigger();
 
 		gtk_widget_destroy(window);
+
+		if(hourglass)
+			g_object_unref(G_OBJECT(hourglass));
 	}
 
 	// Thread function - hangs around waiting for signal from ThreadEvent, and triggers a list update when received...
@@ -295,14 +312,34 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
 		try
 		{
-			// FIXME - compare DisplayName against DeviceLink list and prompt user if the same as an existing one.
-			if(0)
-				Query_Dialog(_("Are you sure you want to overwrite an existing devicelink?"),dlg->window);
+			// Compare DisplayName against DeviceLink list and prompt user if the same as an existing one.
+
+			const char *desc=gtk_entry_get_text(GTK_ENTRY(dlg->description));
+			if(!desc || strlen(desc)==0)
+				throw ("Please enter a descriptive name for the devicelink");
+
 			DeviceLink *dl=new DeviceLink;
 			dlg->dialog_to_devicelink(*dl);
+
+			DeviceLinkList dll;
+			for(unsigned int idx=0;idx<dll.size();++idx)
+			{
+				std::string dname=dll[idx].displayname;
+				if(dname.compare(desc)==0)
+				{
+					if(Query_Dialog(_("Are you sure you want to overwrite an existing devicelink?"),dlg->window))
+					{
+						// Provide the DeviceLink_Entry in lieu of filename.
+						dl->Save(dll[idx]);
+					}
+					else
+						return; // bail out since the user declined.
+				}
+			}
+
 			dl->Save();	// Save metadata before generating the file...
 			dlg->core.GetDispatcher().AddJob(new DeviceLinkJob(dlg->core,dl));
-//			dl.CreateDeviceLink(dlg->opts.profilemanager);
+
 			dlg->buildlist();
 		}
 		catch (const char *err)
@@ -363,10 +400,16 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 			DeviceLinkList_Entry &e=list[idx];
 			std::string dn;
 			if(e.pending)
+			{
 				dn="("+e.displayname+")";
+				lvo.Add(e.filename.c_str(),dn.c_str(),NULL,hourglass);
+			}
 			else
+			{
+				// FIXME - pick an RGB / CMYK icon here...
 				dn=e.displayname;
-			lvo.Add(e.filename.c_str(),dn.c_str());
+				lvo.Add(e.filename.c_str(),dn.c_str());
+			}
 		}
 		simplelistview_set_opts(SIMPLELISTVIEW(devicelinklist),&lvo);
 	}
@@ -431,6 +474,9 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 	GtkWidget *inklimit;
 	GtkWidget *quality;
 	GtkWidget *description;
+
+	// Icons for the listview
+	GdkPixbuf *hourglass;
 	
 	GtkWidget *parent;
 	GtkWidget *window;
