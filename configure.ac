@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT([cmyktool], [0.1.4-pre1], [blackfive@fakenhamweb.co.uk])
+AC_INIT([cmyktool], [0.1.4-pre2], [blackfive@fakenhamweb.co.uk])
 AC_CONFIG_AUX_DIR([scripts])
 AC_CONFIG_SRCDIR([deflatten.cpp])
 AM_CONFIG_HEADER([config.h])
@@ -29,6 +29,11 @@ PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
 PKG_CHECK_MODULES([GTK2], [gtk+-2.0])
 PKG_CHECK_MODULES([GDKPIXBUF2], [gdk-pixbuf-2.0])
 PKG_CHECK_MODULES([LCMS], [lcms])
+
+# Since the ProfileManager fetches an X atom from the server, we need to link with X11
+# explicitly on some systems
+PKG_CHECK_MODULES(X11, x11, [HAVE_X11=yes], [HAVE_X11=no])
+
 AC_CHECK_LIB(m,pow, LIBM_LIBS="-lm")
 AC_SUBST([LIBM_LIBS])
 AC_CHECK_LIB([pnm], [pnm_readpaminit],,,[-lm])

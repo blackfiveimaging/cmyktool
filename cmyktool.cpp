@@ -545,6 +545,8 @@ void TestUI::showaboutdialog(GtkAction *action,gpointer ob)
 		"authors", authors,
 		"website", "http://www.blackfiveimaging.co.uk",
 		"version", VERSION,
+		"copyright", _("Copyright (c) 2009-2010 Alastair M. Robinson"),
+		"comments",_("A utility for conversion of images using ICC colour profiles."),
 		NULL);
 }
 

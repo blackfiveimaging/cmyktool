@@ -1,7 +1,11 @@
+Add ability to export a devicelink for use in other programs.
+
+Place the "display name" for the devicelink in the argyll command line - must escape it though.
+
 When the user selects a preset from the preset editor then clicks OK,
 the main window's combo should be set to that preset
 
-Add "Select All" and "Select None" features to the ImageSelector.
+| Add "Select All" and "Select None" features to the ImageSelector.
 
 | Make devicelink generation a background task
 | Set up some kind of event to be triggered when a job finishes.
@@ -11,7 +15,7 @@ Add "Select All" and "Select None" features to the ImageSelector.
 
 | Make DeviceLink dialog return name of chosen devicelink.
 
-If the user quits the devicelink dialog without generating a devicelink, prompt.
+| If the user quits the devicelink dialog without generating a devicelink, prompt.
 (Could compare the settings against the current list and only prompt if there's no match...)
 
 | When generating a devicelink complain if there's already one with the current name
@@ -22,7 +26,7 @@ If the user tries to use a devicelink that's not yet generated, complain.
 
 Add proper support for greyscale images and profiles.
 
-Fix issue with X libs not being linked on some platforms
+| Fix issue with X libs not being linked on some platforms
 
 | Need to be able to remove images from the left hand tray.
 
