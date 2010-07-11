@@ -73,7 +73,7 @@ LDADD = \
 	pixbufthumbnail/libpixbufthumbnail.la	\
 	rspl/librspl.la  \
 	numlib/libargyllnum.la  \
-	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS)
+	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS) $(X11_LIBS)
 
 
 imagesource/libimagesource.la:
