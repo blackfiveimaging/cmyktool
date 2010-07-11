@@ -1,6 +1,9 @@
 AM_CXXFLAGS = -Wall $(GTK2_CFLAGS)
 
-BUILT_SOURCES = chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp sigma.cpp hourglass.cpp
+BUILT_SOURCES = chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp sigma.cpp hourglass.cpp logo.cpp
+
+logo.cpp:
+	gdk-pixbuf-csource --name=logo_data >logo.cpp logo.png
 
 hourglass.cpp:
 	gdk-pixbuf-csource --name=hourglass_data >hourglass.cpp hourglass.png

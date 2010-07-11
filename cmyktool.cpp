@@ -90,6 +90,7 @@ class TestUI : public CMYKTool_Core
 	static void edit_preseteditor(GtkAction *action,gpointer ob);
 	static void edit_devicelinkeditor(GtkAction *action,gpointer ob);
 	static void file_quit(GtkAction *action,gpointer ob);
+	static void showaboutdialog(GtkAction *action,gpointer userdata);
 	protected:
 	GtkUIManager *uimanager;
 	GtkWidget *imgsel;
@@ -113,8 +114,12 @@ GtkActionEntry TestUI::menu_entries[] = {
   { "SelectAll", NULL, N_("Select _All"), "<control>A", N_("Select all images"), G_CALLBACK(edit_selectall) },
   { "SelectNone", NULL, N_("Select _None"), NULL, N_("Deselect all images"), G_CALLBACK(edit_selectnone) },
   { "PresetEditor", NULL, N_("Preset _Editor..."), NULL, N_("Open the preset editor"), G_CALLBACK(edit_preseteditor) },
-  { "DeviceLinkEditor", NULL, N_("_DeviceLink Editor..."), NULL, N_("Open the DeviceLink management dialog"), G_CALLBACK(edit_devicelinkeditor) },
+  { "DeviceLinkEditor", NULL, N_("_Device Link Editor..."), NULL, N_("Open the Device Link editor"), G_CALLBACK(edit_devicelinkeditor) },
   { "Preferences", NULL, N_("Pre_ferences..."), NULL, N_("Set paths for colour profiles and external utilities"), G_CALLBACK(showpreferencesdialog) },
+
+  { "HelpMenu", NULL, N_("_Help") },
+
+  { "About", GTK_STOCK_ABOUT, N_("_About"), NULL, N_("Show the About dialog"), G_CALLBACK(showaboutdialog) }
 };
 
 const char *TestUI::menu_ui_description =
@@ -124,12 +129,15 @@ const char *TestUI::menu_ui_description =
 "      <menuitem action='Quit'/>"
 "    </menu>"
 "    <menu action='EditMenu'>"
-//"      <menuitem action='SelectAll'/>"
-//"      <menuitem action='SelectNone'/>"
-//"      <separator/>"
+"      <menuitem action='SelectAll'/>"
+"      <menuitem action='SelectNone'/>"
+"      <separator/>"
 "      <menuitem action='PresetEditor'/>"
 "      <menuitem action='DeviceLinkEditor'/>"
 "      <menuitem action='Preferences'/>"
+"    </menu>"
+"    <menu action='HelpMenu'>"
+"      <menuitem action='About'/>"
 "    </menu>"
 "  </menubar>"
 "</ui>";
@@ -489,11 +497,15 @@ void TestUI::batchprocess(GtkWidget *wid,gpointer userdata)
 
 void TestUI::edit_selectall(GtkAction *action,gpointer ob)
 {
+	TestUI *ui=(TestUI *)ob;
+	imageselector_select_all(IMAGESELECTOR(ui->imgsel));
 }
 
 
 void TestUI::edit_selectnone(GtkAction *action,gpointer ob)
 {
+	TestUI *ui=(TestUI *)ob;
+	imageselector_select_none(IMAGESELECTOR(ui->imgsel));
 }
 
 
@@ -516,6 +528,12 @@ void TestUI::edit_devicelinkeditor(GtkAction *action,gpointer ob)
 	DeviceLink_Dialog(*ui,ui->window);
 }
 
+
+void TestUI::showaboutdialog(GtkAction *action,gpointer ob)
+{
+	TestUI *ui=(TestUI *)ob;
+	// FIXME show the about dialog here...
+}
 
 
 // Preview widget for file chooser

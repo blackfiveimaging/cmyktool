@@ -57,8 +57,9 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		// Create pixbufs from icons in gfx/*.cpp
 		hourglass=PixbufFromImageData(hourglass_data,sizeof(hourglass_data));
 
-		window=gtk_dialog_new_with_buttons(_("DeviceLink manager"),
+		window=gtk_dialog_new_with_buttons(_("Device Link Editor"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
+			GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OK,GTK_RESPONSE_OK,
 			NULL);
 
@@ -111,22 +112,24 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		++row;
 
 
-		label=gtk_label_new(_("Profile"));
+		label=gtk_label_new(_("Profile:"));
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		inprofile=profileselector_new(&opts.profilemanager);
+		g_signal_connect(G_OBJECT(inprofile),"changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),inprofile,2,5,row,row+1);
 
 		++row;
 
 // Viewing conditions
 
-		label=gtk_label_new(_("Viewing Conditions"));
+		label=gtk_label_new(_("Viewing Conditions:"));
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		inputvc=viewingcondselector_new();
+		g_signal_connect(G_OBJECT(inputvc),"changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),inputvc,2,5,row,row+1);
 
 		++row;
@@ -155,11 +158,12 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 // Viewing conditions
 
-		label=gtk_label_new(_("Viewing Conditions"));
+		label=gtk_label_new(_("Viewing Conditions:"));
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		outputvc=viewingcondselector_new();
+		g_signal_connect(G_OBJECT(outputvc),"changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),outputvc,2,5,row,row+1);
 
 		++row;
@@ -178,16 +182,18 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 // Rendering Intent
 
-		label=gtk_label_new(_("Rendering Intent"));
+		label=gtk_label_new(_("Rendering Intent:"));
 		gtk_misc_set_alignment(GTK_MISC(label),1.0,0.5);
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		intent=intentselector_new(&opts.profilemanager);
+		g_signal_connect(G_OBJECT(intent),"changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),intent,2,5,row,row+1);
 
 		++row;
 
 		blackgen=blackgenselector_new();
+		g_signal_connect(G_OBJECT(blackgen),"changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),blackgen,0,5,row,row+1);
 
 		++row;
@@ -200,6 +206,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 
 		inklimit=gtk_spin_button_new_with_range(200,400,10);
+		g_signal_connect(G_OBJECT(inklimit),"value-changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),inklimit,2,3,row,row+1);
 
 
@@ -215,6 +222,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		comboopts.Add(NULL,_("High"),_("Highest quality at the expense of speed"));
 
 		quality=simplecombo_new(comboopts);
+		g_signal_connect(G_OBJECT(quality),"changed",G_CALLBACK(markdirty),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),quality,4,5,row,row+1);
 
 		++row;
@@ -227,7 +235,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_table_attach_defaults(GTK_TABLE(table),description,2,4,row,row+1);
 
 
-		tmp=gtk_button_new_with_label(_("Build Devicelink"));
+		tmp=gtk_button_new_with_label(_("Build Device Link:"));
 		g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(build_devicelink),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),tmp,4,5,row,row+1);
 
@@ -283,30 +291,44 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		return(FALSE);
 	}
 
-	std::string Run()	// Returns the filename of the currently-selected devicelink.
-	{
+	std::string Run()	// Returns the filename of the currently-selected devicelink
+	{					// unless the dialog was cancelled, in which case an empty string is returned.
 		bool done=false;
+		std::string selected;
 		while(!done)
 		{
 			gint result=gtk_dialog_run(GTK_DIALOG(window));
 			switch(result)
 			{
-				default:
+				case GTK_RESPONSE_OK:
+					if(dirty)
+					{
+						if(Query_Dialog(_("You have changed device link parameters but not generated the actual device link profile.  OK to leave the device link editor?"),window))
+							done=true;
+					}
+					else
+						done=true;
+					if(done)
+					{
+						SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(devicelinklist));
+						if(opt && opt->key)
+							selected=opt->key;
+					}
+					break;
+				case GTK_RESPONSE_CANCEL:
+					done=true;
 					break;
 			}
-			// FIXME - check the current options against the DeviceLinkList.
-			// If none of the list entries is a match, prompt the user that there are unsaved changes.
-			done=true;
 		}
-		std::string result;
-		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(devicelinklist));
-		if(opt && opt->key)
-		{
-			result=opt->key;
-		}
-		return(result);
+		return(selected);
 	}
 	protected:
+	static void markdirty(GtkWidget *wid,gpointer userdata)
+	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		dlg->dirty=true;
+		Debug[WARN] << "Marking devicelink dialog as dirty" << endl;
+	}
 	static void build_devicelink(GtkWidget *wid,gpointer userdata)
 	{
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
@@ -316,7 +338,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 			const char *desc=gtk_entry_get_text(GTK_ENTRY(dlg->description));
 			if(!desc || strlen(desc)==0)
-				throw ("Please enter a descriptive name for the devicelink");
+				throw ("Please enter a descriptive name for the device link");
 
 			DeviceLink *dl=new DeviceLink;
 			dlg->dialog_to_devicelink(*dl);
@@ -327,7 +349,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 				std::string dname=dll[idx].displayname;
 				if(dname.compare(desc)==0)
 				{
-					if(Query_Dialog(_("Are you sure you want to overwrite an existing devicelink?"),dlg->window))
+					if(Query_Dialog(_("Are you sure you want to overwrite an existing device link?"),dlg->window))
 					{
 						// Provide the DeviceLink_Entry in lieu of filename.
 						dl->Save(dll[idx]);
@@ -373,6 +395,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(inklimit),dl.FindInt("InkLimit"));
 		simplecombo_set_index(SIMPLECOMBO(quality),dl.FindInt("Quality"));
 		outprofile_changed(outprofile,this);
+		dirty=false;
 	}
 
 	void set_defaults()
@@ -388,6 +411,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(inklimit),270);
 		simplecombo_set_index(SIMPLECOMBO(quality),DEVICELINK_QUALITY_MEDIUM);
 		outprofile_changed(outprofile,this);
+		dirty=false;
 	}
 
 	void buildlist()
@@ -433,6 +457,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 	static void outprofile_changed(GtkWidget *wid,gpointer userdata)
 	{
 		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		dlg->dirty=true;
 		try
 		{
 			// Neither black generation and ink limiting are applicable when the target is RGB,
@@ -480,6 +505,8 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 	
 	GtkWidget *parent;
 	GtkWidget *window;
+
+	bool dirty;
 };
 
 

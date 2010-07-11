@@ -32,10 +32,11 @@ using namespace std;
 class CMYKConversionOptsDialog
 {
 	public:
-	CMYKConversionOptsDialog(CMYKTool_Core &core, GtkWidget *parent) : core(core), opts(core.GetOptions()), blockupdates(false)
+	CMYKConversionOptsDialog(CMYKTool_Core &core, GtkWidget *parent) : core(core), opts(core.GetOptions()), backupopts(opts), blockupdates(false)
 	{
 		window=gtk_dialog_new_with_buttons(_("Colour conversion options"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
+			GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 			GTK_STOCK_OK,GTK_RESPONSE_OK,
 			NULL);
 
@@ -198,12 +199,12 @@ class CMYKConversionOptsDialog
 		++row;
 
 		// DeviceLink settings
-		usedevicelink=gtk_check_button_new_with_label(_("Use DeviceLink:"));
+		usedevicelink=gtk_check_button_new_with_label(_("Use Device Link:"));
 		gtk_table_attach_defaults(GTK_TABLE(table),usedevicelink,0,2,row,row+1);
 		gtk_widget_show(usedevicelink);
 		
 		SimpleComboOptions devlinks;
-		devlinks.Add(NULL,_("Other..."),_("Choose or create a DeviceLink profile..."));
+		devlinks.Add(NULL,_("Other..."),_("Choose or create a Device Link profile..."));
 		devicelink=simplecombo_new(devlinks);
 		gtk_table_attach_defaults(GTK_TABLE(table),devicelink,2,5,row,row+1);
 		gtk_widget_show(devicelink);
@@ -261,13 +262,17 @@ class CMYKConversionOptsDialog
 
 		g_signal_connect(usedevicelink,"toggled",G_CALLBACK(usedevicelink_changed),this);
 		g_signal_connect(devicelink,"changed",G_CALLBACK(devicelink_changed),this);
-
-		gint result=gtk_dialog_run(GTK_DIALOG(window));
-		blockupdates=true;
 	}
 	~CMYKConversionOptsDialog()
 	{
 		gtk_widget_destroy(window);
+	}
+	void Run()
+	{
+		gint result=gtk_dialog_run(GTK_DIALOG(window));
+		if(result==GTK_RESPONSE_CANCEL)
+			opts=backupopts;
+		blockupdates=true;
 	}
 	void SetSensitive()
 	{
@@ -283,6 +288,7 @@ class CMYKConversionOptsDialog
 	private:
 	CMYKTool_Core &core;
 	CMYKConversionOptions &opts;
+	CMYKConversionOptions backupopts;
 	GtkWidget *window;
 	GtkWidget *listview;
 	GtkWidget *description;
@@ -577,7 +583,8 @@ class CMYKConversionOptsDialog
 		else
 		{
 			std::string result=DeviceLink_Dialog(dlg->core,dlg->window);
-			dlg->opts.SetDeviceLink(result.c_str());
+			if(result.size())
+				dlg->opts.SetDeviceLink(result.c_str());
 			dlg->updatedevicelinklist();
 		}
 		dlg->blockupdates=false;
@@ -669,6 +676,7 @@ CMYKConversionMode CMYKConversionOptsDialog::convmodes[]=
 void CMYKConversionOptions_Dialog(CMYKTool_Core &core,GtkWidget *parent)
 {
 	CMYKConversionOptsDialog dialog(core,parent);
+	dialog.Run();
 }
 
 
