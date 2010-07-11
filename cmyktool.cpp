@@ -42,6 +42,7 @@
 #include "gfx/rgb.cpp"
 #include "gfx/cmyk.cpp"
 #include "gfx/profile.cpp"
+#include "gfx/logo.cpp"
 
 #include "cachedimage.h"
 
@@ -99,6 +100,7 @@ class TestUI : public CMYKTool_Core
 	GdkPixbuf *rgbpb;
 	GdkPixbuf *cmykpb;
 	GdkPixbuf *profpb;
+	GdkPixbuf *logopb;
 	static GtkActionEntry menu_entries[];
 	static const char *menu_ui_description;
 };
@@ -196,6 +198,7 @@ TestUI::TestUI() : CMYKTool_Core()
 	rgbpb=PixbufFromImageData(rgb_data,sizeof(rgb_data));
 	cmykpb=PixbufFromImageData(cmyk_data,sizeof(cmyk_data));
 	profpb=PixbufFromImageData(profile_data,sizeof(profile_data));
+	logopb=PixbufFromImageData(logo_data,sizeof(logo_data));
 
 	window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_default_size(GTK_WINDOW(window),FindInt("Win_W"),FindInt("Win_H"));
@@ -532,7 +535,17 @@ void TestUI::edit_devicelinkeditor(GtkAction *action,gpointer ob)
 void TestUI::showaboutdialog(GtkAction *action,gpointer ob)
 {
 	TestUI *ui=(TestUI *)ob;
-	// FIXME show the about dialog here...
+	const char *authors[]={"Alastair M. Robinson <amr@blackfiveservices.co.uk>",NULL};
+
+	gtk_show_about_dialog (NULL,
+		"program-name", "CMYKTool",
+		"logo", ui->logopb,
+		"title", _("About CMYKTool"),
+		"translator-credits", _("translator-credits"),
+		"authors", authors,
+		"website", "http://www.blackfiveimaging.co.uk",
+		"version", VERSION,
+		NULL);
 }
 
 
