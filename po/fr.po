@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.2\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-10 11:47+0100\n"
+"POT-Creation-Date: 2010-07-11 19:11+0100\n"
 "PO-Revision-Date: 2010-02-05 22:50+0000\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -16,72 +16,107 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: argyllsupport/blackgenselector.cpp:252
+#: argyllsupport/blackgenselector.cpp:254
 msgid "Absolute black generation (target, -k)"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:252
+#: argyllsupport/blackgenselector.cpp:254
 msgid ""
 "The black generation will attempt to use the actual level of black specified "
 "by the curve"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:253
+#: argyllsupport/blackgenselector.cpp:255
 msgid "Proportional black generation (locus, -K)"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:253
+#: argyllsupport/blackgenselector.cpp:255
 msgid ""
 "The black generation will pick a black level between the minimum and maximum "
 "possible, based on the curve"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:263
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Minimum black"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:264
-msgid "Medium black"
-msgstr ""
-
 #: argyllsupport/blackgenselector.cpp:265
-msgid "Maximum black"
+msgid "Aims for 0% black when mixing colours, using just C, M and Y."
 msgstr ""
 
 #: argyllsupport/blackgenselector.cpp:266
-msgid "Ramp min to max"
+msgid "Medium black"
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:266
+msgid "Aims for 50% black when mixing colours"
 msgstr ""
 
 #: argyllsupport/blackgenselector.cpp:267
-msgid "Custom"
+msgid "Maximum black"
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:267
+msgid "Aims to use as much black, and as little C, M and Y as possible."
 msgstr ""
 
 #: argyllsupport/blackgenselector.cpp:268
+msgid "Ramp min to max"
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:268
+msgid ""
+"Uses a transition from 0% black for light colours, and 100% black for dark "
+"colours."
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:269
+msgid "Custom"
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:269
+msgid "Define a custom black-generation curve."
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:270
 #, fuzzy
 msgid "Transfer from source profile"
 msgstr "Une conversion rgulire du profil source vers destination"
 
-#: argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:270
+msgid ""
+"Attempts to retain the black-generation from the source profile (if source "
+"profile is CMYK)"
+msgstr ""
+
+#: argyllsupport/blackgenselector.cpp:271
 msgid "Retain from target profile"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:281
+#: argyllsupport/blackgenselector.cpp:271
+#, fuzzy
+msgid ""
+"Attempts to retain the existing black generation from the destination "
+"profile."
+msgstr "Une conversion rgulire du profil source vers destination"
+
+#: argyllsupport/blackgenselector.cpp:283
 msgid "Start level:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:293
+#: argyllsupport/blackgenselector.cpp:295
 msgid "Start position:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:305
+#: argyllsupport/blackgenselector.cpp:307
 msgid "End position:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:317
+#: argyllsupport/blackgenselector.cpp:319
 msgid "End level:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:329
+#: argyllsupport/blackgenselector.cpp:331
 msgid "Shape:"
 msgstr ""
 
@@ -125,116 +160,146 @@ msgstr ""
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr ""
 
-#: cmyktool.cpp:107
+#: cmyktool.cpp:110
 msgid "_File"
 msgstr ""
 
-#: cmyktool.cpp:109
+#: cmyktool.cpp:112
 #, fuzzy
 msgid "_Quit"
 msgstr "Qualit JPEG :"
 
-#: cmyktool.cpp:109
+#: cmyktool.cpp:112
 msgid "Exit the program"
 msgstr ""
 
-#: cmyktool.cpp:111
+#: cmyktool.cpp:114
 msgid "_Edit"
 msgstr ""
 
-#: cmyktool.cpp:113
+#: cmyktool.cpp:116
 msgid "Select _All"
 msgstr ""
 
-#: cmyktool.cpp:113
+#: cmyktool.cpp:116
 msgid "Select all images"
 msgstr ""
 
-#: cmyktool.cpp:114
+#: cmyktool.cpp:117
 msgid "Select _None"
 msgstr ""
 
-#: cmyktool.cpp:114
+#: cmyktool.cpp:117
 msgid "Deselect all images"
 msgstr ""
 
-#: cmyktool.cpp:115
+#: cmyktool.cpp:118
 #, fuzzy
 msgid "Preset _Editor..."
 msgstr "Choisir le rpertoire..."
 
-#: cmyktool.cpp:115
+#: cmyktool.cpp:118
 msgid "Open the preset editor"
 msgstr ""
 
-#: cmyktool.cpp:116
-msgid "_DeviceLink Editor..."
+#: cmyktool.cpp:119
+#, fuzzy
+msgid "_Device Link Editor..."
+msgstr "Choisir le rpertoire..."
+
+#: cmyktool.cpp:119
+msgid "Open the Device Link editor"
 msgstr ""
 
-#: cmyktool.cpp:116
-msgid "Open the DeviceLink management dialog"
-msgstr ""
-
-#: cmyktool.cpp:117
+#: cmyktool.cpp:120
 #, fuzzy
 msgid "Pre_ferences..."
 msgstr "Prfrences..."
 
-#: cmyktool.cpp:117
+#: cmyktool.cpp:120
 msgid "Set paths for colour profiles and external utilities"
 msgstr ""
 
-#: cmyktool.cpp:196
+#: cmyktool.cpp:122
+msgid "_Help"
+msgstr ""
+
+#: cmyktool.cpp:124
+msgid "_About"
+msgstr ""
+
+#: cmyktool.cpp:124
+msgid "Show the About dialog"
+msgstr ""
+
+#: cmyktool.cpp:207
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:254
+#: cmyktool.cpp:265
 msgid "Add Images..."
 msgstr "Ajouter des images..."
 
-#: cmyktool.cpp:261
+#: cmyktool.cpp:272
 #, fuzzy
 msgid "Remove Images"
 msgstr "Supprimer"
 
-#: cmyktool.cpp:280
+#: cmyktool.cpp:291
 msgid "Convert"
 msgstr "Converti"
 
-#: cmyktool.cpp:288
+#: cmyktool.cpp:299
 msgid "Using conversion preset:"
 msgstr "Utilise les conversions prdfinies"
 
-#: cmyktool.cpp:310 dialogs.cpp:69
+#: cmyktool.cpp:321 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Prfrences..."
 
-#: cmyktool.cpp:341
+#: cmyktool.cpp:352
 msgid "Previous settings"
 msgstr "Paramtres Prcdents"
 
-#: cmyktool.cpp:379 profilemanager/profileselector.cpp:195
+#: cmyktool.cpp:390 profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Aucun"
 
-#: cmyktool.cpp:379
+#: cmyktool.cpp:390
 msgid "No conversion"
 msgstr "Aucune conversion"
 
-#: cmyktool.cpp:400 conversionoptsdialog.cpp:206 conversionoptsdialog.cpp:650
+#: cmyktool.cpp:411 conversionoptsdialog.cpp:207 conversionoptsdialog.cpp:657
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Autre..."
 
-#: cmyktool.cpp:400
+#: cmyktool.cpp:411
 msgid "Create a new preset"
 msgstr "Mmoriser les paramtres"
 
-#: cmyktool.cpp:555
+#: cmyktool.cpp:543
+#, fuzzy
+msgid "About CMYKTool"
+msgstr "CMYKTool"
+
+#: cmyktool.cpp:544
+msgid "translator-credits"
+msgstr ""
+
+#: cmyktool.cpp:548
+msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
+msgstr ""
+
+#: cmyktool.cpp:549
+msgid "A utility for conversion of images using ICC colour profiles."
+msgstr ""
+
+#: cmyktool.cpp:588
 msgid "Open File"
 msgstr "Ouvrir un fichier"
 
-#: cmyktool.cpp:585 cmyktool.cpp:742
+#: cmyktool.cpp:618 cmyktool.cpp:775
 msgid "Adding images..."
 msgstr "Ajotuer des images..."
 
@@ -333,213 +398,214 @@ msgstr "Enregistre l'image - choisissez un nom de fichier"
 msgid "Colour conversion options"
 msgstr "Options de conversion de couleur"
 
-#: conversionoptsdialog.cpp:65 devicelinkdialog.cpp:84
+#: conversionoptsdialog.cpp:66 devicelinkdialog.cpp:85
 #, fuzzy
 msgid "Delete"
 msgstr "Defaut"
 
-#: conversionoptsdialog.cpp:84
+#: conversionoptsdialog.cpp:85
 msgid "<- Save"
 msgstr ""
 
-#: conversionoptsdialog.cpp:89
+#: conversionoptsdialog.cpp:90
 msgid "Name:"
 msgstr ""
 
-#: conversionoptsdialog.cpp:102
+#: conversionoptsdialog.cpp:103
 #, fuzzy
 msgid "Input:"
 msgstr "Inspecter"
 
-#: conversionoptsdialog.cpp:113
+#: conversionoptsdialog.cpp:114
 #, fuzzy
 msgid "Fallback RGB Profile:"
 msgstr "Profil RVB par dfaut:"
 
-#: conversionoptsdialog.cpp:129
+#: conversionoptsdialog.cpp:130
 #, fuzzy
 msgid "Fallback CMYK Profile:"
 msgstr "Profil CMJN par dfaut:"
 
-#: conversionoptsdialog.cpp:145
+#: conversionoptsdialog.cpp:146
 msgid "Ignore embedded profiles"
 msgstr "Ignore les profils incorpors"
 
-#: conversionoptsdialog.cpp:153
+#: conversionoptsdialog.cpp:154
 #, fuzzy
 msgid "Output:"
 msgstr "Profil de sortie:"
 
-#: conversionoptsdialog.cpp:163
+#: conversionoptsdialog.cpp:164
 msgid "Output Profile:"
 msgstr "Profil de sortie:"
 
-#: conversionoptsdialog.cpp:178
+#: conversionoptsdialog.cpp:179
 msgid "Rendering intent:"
 msgstr "Intention de rendu:"
 
-#: conversionoptsdialog.cpp:192
+#: conversionoptsdialog.cpp:193
 msgid "Processing:"
 msgstr ""
 
-#: conversionoptsdialog.cpp:201
-msgid "Use DeviceLink:"
+#: conversionoptsdialog.cpp:202
+msgid "Use Device Link:"
 msgstr ""
 
-#: conversionoptsdialog.cpp:206
-msgid "Choose or create a DeviceLink profile..."
+#: conversionoptsdialog.cpp:207
+msgid "Choose or create a Device Link profile..."
 msgstr ""
 
-#: conversionoptsdialog.cpp:216
+#: conversionoptsdialog.cpp:217
 msgid "Conversion mode:"
 msgstr "Mode de conversion:"
 
-#: conversionoptsdialog.cpp:222
+#: conversionoptsdialog.cpp:223
 msgid "Normal"
 msgstr "Normal"
 
-#: conversionoptsdialog.cpp:222
+#: conversionoptsdialog.cpp:223
 msgid "A regular conversion from source to destination profile"
 msgstr "Une conversion rgulire du profil source vers destination"
 
-#: conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:224
 msgid "Hold Black"
 msgstr "Conserver les noirs"
 
-#: conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:224
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Converti les noirs purs en C0M0J0N100"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Hold Grey"
 msgstr "Conserve les gris"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Converti les gris (R=V=B) en variation de noir seul"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Overprint"
 msgstr "Surimpression"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
 msgstr ""
 
-#: conversionoptsdialog.cpp:243
+#: conversionoptsdialog.cpp:244
 msgid "Transition width:"
 msgstr ""
 
-#: conversionoptsdialog.cpp:325
+#: conversionoptsdialog.cpp:331
 #, fuzzy
 msgid "New preset"
 msgstr "Mmoriser les paramtres"
 
-#: conversionoptsdialog.cpp:367
+#: conversionoptsdialog.cpp:373
 msgid "Choose a name for this preset..."
 msgstr "Choisir un nom pour cette mmorisation"
 
-#: conversionoptsdialog.cpp:410
+#: conversionoptsdialog.cpp:416
 msgid "Overwrite existing preset?"
 msgstr ""
 
-#: conversionoptsdialog.cpp:435
+#: conversionoptsdialog.cpp:441
 msgid "Are you sure you want to delete this preset?"
 msgstr ""
 
 #: devicelinkdialog.cpp:60
-msgid "DeviceLink manager"
+msgid "Device Link Editor"
 msgstr ""
 
-#: devicelinkdialog.cpp:106
+#: devicelinkdialog.cpp:107
 #, fuzzy
 msgid "Input options:"
 msgstr "Inspecter"
 
-#: devicelinkdialog.cpp:114
-#, fuzzy
-msgid "Profile"
-msgstr "Profil de sortie:"
-
-#: devicelinkdialog.cpp:125 devicelinkdialog.cpp:158
-msgid "Viewing Conditions"
-msgstr ""
-
-#: devicelinkdialog.cpp:138
-#, fuzzy
-msgid "Output options:"
-msgstr "Profil de sortie:"
-
-#: devicelinkdialog.cpp:146
+#: devicelinkdialog.cpp:115 devicelinkdialog.cpp:149
 #, fuzzy
 msgid "Profile:"
 msgstr "Profil de sortie:"
 
-#: devicelinkdialog.cpp:171
+#: devicelinkdialog.cpp:127 devicelinkdialog.cpp:161
+msgid "Viewing Conditions:"
+msgstr ""
+
+#: devicelinkdialog.cpp:141
+#, fuzzy
+msgid "Output options:"
+msgstr "Profil de sortie:"
+
+#: devicelinkdialog.cpp:175
 msgid "Link options:"
 msgstr ""
 
-#: devicelinkdialog.cpp:181
+#: devicelinkdialog.cpp:185
 #, fuzzy
-msgid "Rendering Intent"
+msgid "Rendering Intent:"
 msgstr "Intention de rendu:"
 
-#: devicelinkdialog.cpp:198
+#: devicelinkdialog.cpp:204
 msgid "Ink Limit:"
 msgstr ""
 
-#: devicelinkdialog.cpp:208
+#: devicelinkdialog.cpp:215
 #, fuzzy
 msgid "Quality:"
 msgstr "Qualit JPEG :"
 
-#: devicelinkdialog.cpp:213
+#: devicelinkdialog.cpp:220
 msgid "Low"
 msgstr ""
 
-#: devicelinkdialog.cpp:213
+#: devicelinkdialog.cpp:220
 msgid "Fastest mode at the expense of quality"
 msgstr ""
 
-#: devicelinkdialog.cpp:214
+#: devicelinkdialog.cpp:221
 msgid "Medium"
 msgstr ""
 
-#: devicelinkdialog.cpp:214
+#: devicelinkdialog.cpp:221
 msgid "Balances speed and quality"
 msgstr ""
 
-#: devicelinkdialog.cpp:215
+#: devicelinkdialog.cpp:222
 msgid "High"
 msgstr ""
 
-#: devicelinkdialog.cpp:215
+#: devicelinkdialog.cpp:222
 msgid "Highest quality at the expense of speed"
 msgstr ""
 
-#: devicelinkdialog.cpp:222
+#: devicelinkdialog.cpp:230
 msgid "Description:"
 msgstr ""
 
-#: devicelinkdialog.cpp:230
-msgid "Build Devicelink"
+#: devicelinkdialog.cpp:238
+msgid "Build Device Link:"
 msgstr ""
 
-#: devicelinkdialog.cpp:330
-msgid "Are you sure you want to overwrite an existing devicelink?"
+#: devicelinkdialog.cpp:306
+msgid ""
+"You have changed device link parameters but not generated the actual device "
+"link profile.  OK to leave the device link editor?"
 msgstr ""
 
-#: devicelinkdialog.cpp:382
+#: devicelinkdialog.cpp:352
+msgid "Are you sure you want to overwrite an existing device link?"
+msgstr ""
+
+#: devicelinkdialog.cpp:405
 msgid "New devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:397
+#: devicelinkdialog.cpp:421
 msgid "New Devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:458
+#: devicelinkdialog.cpp:483
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr ""
 
@@ -742,6 +808,10 @@ msgstr "Fichier en rasterisation..."
 #: psripui.cpp:121
 msgid "PSRip Test"
 msgstr "Test PSRip"
+
+#, fuzzy
+#~ msgid "Profile"
+#~ msgstr "Profil de sortie:"
 
 #~ msgid "Default RGB Profile:"
 #~ msgstr "Profil RVB par dfaut:"

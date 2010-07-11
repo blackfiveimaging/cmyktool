@@ -1,6 +1,14 @@
 CMYKTool-0.1.4
 
     * Added Spanish translation, thanks to Guillermo Espertino.
+    
+	* Added a list to the preset editor which allows them to be recalled and deleted.
+
+    * Added device link generation capability (using Argyll's collink utility), and an editor to manage them.
+
+	* Added menus - including Select All / None, and menu items to bring up the preset and device link editors.
+
+	* Added About dialog.
 
 
 CMYKTool-0.1.3

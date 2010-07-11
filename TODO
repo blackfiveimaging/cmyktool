@@ -1,4 +1,6 @@
+Add ability to export a devicelink for use in other programs.
 
+Place the "display name" for the devicelink in the argyll command line - must escape it though.
 
 When the user selects a preset from the preset editor then clicks OK,
 the main window's combo should be set to that preset
