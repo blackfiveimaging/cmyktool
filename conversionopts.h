@@ -119,10 +119,8 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 			do
 			{
 				for(int i=0;i<32;++i)
-				{
 					buf[i]=char(RandomSeeded(255));
-					dig.Update(buf,32);
-				}
+				dig.Update(buf,32);
 				presetname=path + std::string("/") + dig.GetPrintableDigest();
 			} while(CheckFileExists(presetname.c_str()));
 //			SetString("PresetID",dig.GetPrintableDigest());

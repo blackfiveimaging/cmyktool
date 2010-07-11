@@ -124,7 +124,11 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 	ExternalProgram collink;
 	collink.AddPath(argyllpath.c_str());
 //	collink.AddPath("/usr/local/bin:/usr/bin/");
+#ifdef win32
+	collink.AddArg("collink.exe");
+else
 	collink.AddArg("collink");
+#endif
 
 	SetInt("Pending",1);
 	Save();
@@ -210,10 +214,9 @@ void DeviceLink::makefilename()
 	do
 	{
 		for(int i=0;i<32;++i)
-		{
 			buf[i]=char(RandomSeeded(255));
-			dig.Update(buf,32);
-		}
+		dig.Update(buf,32);
+		Debug[TRACE] << "Building filename using random hash" << std::endl;
 		fn=path + std::string("/") + dig.GetPrintableDigest() + ".icc";
 	} while(CheckFileExists(fn.c_str()));
 
