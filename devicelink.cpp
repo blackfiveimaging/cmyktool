@@ -207,9 +207,15 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 			collink.AddArg(buf);
 		}
 	}
+#if WIN32	// Quote filenames in case they contain spaces...
+	collink.AddArg("\""+std::string(src.Filename())+"\"");
+	collink.AddArg("\""+std::string(dst.Filename())+"\"");
+	collink.AddArg("\""+fn+"\"");
+#else
 	collink.AddArg(src.Filename());
 	collink.AddArg(dst.Filename());
 	collink.AddArg(fn);
+#endif
 	collink.RunProgram();
 	SetInt("Pending",0);
 	Save();		// Save a second time with the pending flag removed.

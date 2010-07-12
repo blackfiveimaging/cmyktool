@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-12 01:04+0100\n"
+"POT-Creation-Date: 2010-07-12 23:08+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -17,317 +17,307 @@ msgstr ""
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2); 10<=4 && (n%100<10 || n%"
 "100>=20) ? 1 : 2);\n"
 
-#: ../argyllsupport/blackgenselector.cpp:254
+#: argyllsupport/blackgenselector.cpp:255
 msgid "Absolute black generation (target, -k)"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:254
+#: argyllsupport/blackgenselector.cpp:255
 msgid ""
 "The black generation will attempt to use the actual level of black specified "
 "by the curve"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:255
+#: argyllsupport/blackgenselector.cpp:256
 msgid "Proportional black generation (locus, -K)"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:255
+#: argyllsupport/blackgenselector.cpp:256
 msgid ""
 "The black generation will pick a black level between the minimum and maximum "
 "possible, based on the curve"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:264
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Minimum black"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:264
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Aims for 0% black when mixing colours, using just C, M and Y."
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:265
+#: argyllsupport/blackgenselector.cpp:266
 msgid "Medium black"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:265
+#: argyllsupport/blackgenselector.cpp:266
 msgid "Aims for 50% black when mixing colours"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:266
+#: argyllsupport/blackgenselector.cpp:267
 msgid "Maximum black"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:266
+#: argyllsupport/blackgenselector.cpp:267
 msgid "Aims to use as much black, and as little C, M and Y as possible."
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:267
+#: argyllsupport/blackgenselector.cpp:268
 msgid "Ramp min to max"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:267
+#: argyllsupport/blackgenselector.cpp:268
 msgid ""
 "Uses a transition from 0% black for light colours, and 100% black for dark "
 "colours."
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:268
+#: argyllsupport/blackgenselector.cpp:269
 msgid "Custom"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:268
+#: argyllsupport/blackgenselector.cpp:269
 msgid "Define a custom black-generation curve."
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:270
 #, fuzzy
 msgid "Transfer from source profile"
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#: ../argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:270
 msgid ""
 "Attempts to retain the black-generation from the source profile (if source "
 "profile is CMYK)"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:270
+#: argyllsupport/blackgenselector.cpp:271
 msgid "Retain from target profile"
 msgstr ""
 
-#: ../argyllsupport/blackgenselector.cpp:270
+#: argyllsupport/blackgenselector.cpp:271
 #, fuzzy
 msgid ""
 "Attempts to retain the existing black generation from the destination "
 "profile."
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#. Spin buttons
-#. Start Level
-#: ../argyllsupport/blackgenselector.cpp:282
+#: argyllsupport/blackgenselector.cpp:283
 msgid "Start level:"
 msgstr ""
 
-#. Start Position
-#: ../argyllsupport/blackgenselector.cpp:294
+#: argyllsupport/blackgenselector.cpp:296
 msgid "Start position:"
 msgstr ""
 
-#. End Position
-#: ../argyllsupport/blackgenselector.cpp:306
+#: argyllsupport/blackgenselector.cpp:309
 msgid "End position:"
 msgstr ""
 
-#. End Level
-#: ../argyllsupport/blackgenselector.cpp:318
+#: argyllsupport/blackgenselector.cpp:322
 msgid "End level:"
 msgstr ""
 
-#. Shape
-#: ../argyllsupport/blackgenselector.cpp:330
+#: argyllsupport/blackgenselector.cpp:335
 msgid "Shape:"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:43
+#: argyllsupport/viewingcondselector.cpp:43
 msgid "Practical Reflection Print"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:44
+#: argyllsupport/viewingcondselector.cpp:44
 msgid "Print evaluation environment"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:45
+#: argyllsupport/viewingcondselector.cpp:45
 msgid "Monitor in typical work environment"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:46
+#: argyllsupport/viewingcondselector.cpp:46
 msgid "Monitor in bright work environment"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:47
+#: argyllsupport/viewingcondselector.cpp:47
 msgid "Monitor in darkened work environment"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:48
+#: argyllsupport/viewingcondselector.cpp:48
 msgid "Projector in dim environment"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:49
+#: argyllsupport/viewingcondselector.cpp:49
 msgid "Projector in dark environment"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:50
+#: argyllsupport/viewingcondselector.cpp:50
 msgid "Photo CD - original scene outdoors"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:51
+#: argyllsupport/viewingcondselector.cpp:51
 msgid "Original scene - Bright Outdoors"
 msgstr ""
 
-#: ../argyllsupport/viewingcondselector.cpp:52
+#: argyllsupport/viewingcondselector.cpp:52
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr ""
 
-#: ../cmyktool.cpp:110
+#: cmyktool.cpp:110
 msgid "_File"
 msgstr ""
 
-#: ../cmyktool.cpp:112
+#: cmyktool.cpp:112
 #, fuzzy
 msgid "_Quit"
 msgstr "Качество JPEG:"
 
-#: ../cmyktool.cpp:112
+#: cmyktool.cpp:112
 msgid "Exit the program"
 msgstr ""
 
-#: ../cmyktool.cpp:114
+#: cmyktool.cpp:114
 msgid "_Edit"
 msgstr ""
 
-#: ../cmyktool.cpp:116
+#: cmyktool.cpp:116
 msgid "Select _All"
 msgstr ""
 
-#: ../cmyktool.cpp:116
+#: cmyktool.cpp:116
 msgid "Select all images"
 msgstr ""
 
-#: ../cmyktool.cpp:117
+#: cmyktool.cpp:117
 msgid "Select _None"
 msgstr ""
 
-#: ../cmyktool.cpp:117
+#: cmyktool.cpp:117
 msgid "Deselect all images"
 msgstr ""
 
-#: ../cmyktool.cpp:118
+#: cmyktool.cpp:118
 #, fuzzy
 msgid "Preset _Editor..."
 msgstr "Выберите каталог..."
 
-#: ../cmyktool.cpp:118
+#: cmyktool.cpp:118
 msgid "Open the preset editor"
 msgstr ""
 
-#: ../cmyktool.cpp:119
+#: cmyktool.cpp:119
 #, fuzzy
 msgid "_Device Link Editor..."
 msgstr "Выберите каталог..."
 
-#: ../cmyktool.cpp:119
+#: cmyktool.cpp:119
 msgid "Open the Device Link editor"
 msgstr ""
 
-#: ../cmyktool.cpp:120
+#: cmyktool.cpp:120
 #, fuzzy
 msgid "Pre_ferences..."
 msgstr "Параметры CMYKTool"
 
-#: ../cmyktool.cpp:120
+#: cmyktool.cpp:120
 msgid "Set paths for colour profiles and external utilities"
 msgstr ""
 
-#: ../cmyktool.cpp:122
+#: cmyktool.cpp:122
 msgid "_Help"
 msgstr ""
 
-#: ../cmyktool.cpp:124
+#: cmyktool.cpp:124
 msgid "_About"
 msgstr ""
 
-#: ../cmyktool.cpp:124
+#: cmyktool.cpp:124
 msgid "Show the About dialog"
 msgstr ""
 
-#: ../cmyktool.cpp:207
+#: cmyktool.cpp:207
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: ../cmyktool.cpp:265
+#: cmyktool.cpp:265
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: ../cmyktool.cpp:272
+#: cmyktool.cpp:272
 msgid "Remove Images"
 msgstr "Удалить изображения"
 
-#. Convert button...
-#: ../cmyktool.cpp:291
+#: cmyktool.cpp:291
 msgid "Convert"
 msgstr "Преобразовать"
 
-#. Presets
-#: ../cmyktool.cpp:299
+#: cmyktool.cpp:299
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#. Preferences button
-#: ../cmyktool.cpp:321 ../dialogs.cpp:69
+#: cmyktool.cpp:321 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: ../cmyktool.cpp:352
+#: cmyktool.cpp:352
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: ../cmyktool.cpp:390 ../profilemanager/profileselector.cpp:195
+#: cmyktool.cpp:390 profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Без профиля"
 
-#: ../cmyktool.cpp:390
+#: cmyktool.cpp:390
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: ../cmyktool.cpp:411 ../conversionoptsdialog.cpp:207
-#: ../conversionoptsdialog.cpp:657 ../miscwidgets/imageselector.cpp:478
-#: ../profilemanager/profileselector.cpp:40
+#: cmyktool.cpp:411 conversionoptsdialog.cpp:207 conversionoptsdialog.cpp:657
+#: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: ../cmyktool.cpp:411
+#: cmyktool.cpp:411
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: ../cmyktool.cpp:543
+#: cmyktool.cpp:543
 #, fuzzy
 msgid "About CMYKTool"
 msgstr "CMYKTool"
 
-#: ../cmyktool.cpp:544
+#: cmyktool.cpp:544
 msgid "translator-credits"
 msgstr ""
 
-#: ../cmyktool.cpp:548
+#: cmyktool.cpp:548
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr ""
 
-#: ../cmyktool.cpp:549
+#: cmyktool.cpp:549
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr ""
 
-#: ../cmyktool.cpp:588
+#: cmyktool.cpp:588
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: ../cmyktool.cpp:618 ../cmyktool.cpp:775
+#: cmyktool.cpp:618 cmyktool.cpp:775
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
-#: ../cmykuitab.cpp:451
+#: cmykuitab.cpp:451
 msgid "Inspect"
 msgstr "Исследование"
 
-#: ../cmykuitab.cpp:451
+#: cmykuitab.cpp:451
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
 msgstr ""
 
-#: ../cmykuitab.cpp:453
+#: cmykuitab.cpp:453
 msgid "Simulate print, adapt white"
 msgstr "Имитация печати, адаптация белого"
 
-#: ../cmykuitab.cpp:453
+#: cmykuitab.cpp:453
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
@@ -338,181 +328,170 @@ msgstr ""
 "колориметрической цветопередачей и включённой компенсацией чёрной точки "
 "(BPC)."
 
-#: ../cmykuitab.cpp:455
+#: cmykuitab.cpp:455
 msgid "Simulate print"
 msgstr "Имитация печати"
 
-#: ../cmykuitab.cpp:455
+#: cmykuitab.cpp:455
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
 msgstr ""
 
-#: ../cmykuitab.cpp:491
+#: cmykuitab.cpp:491
 msgid "Save..."
 msgstr "Сохранить..."
 
-#: ../cmykuitab.cpp:635
+#: cmykuitab.cpp:635
 msgid "Save Image..."
 msgstr "Сохранить изображение"
 
-#. Format combo...
-#: ../cmykuitab.cpp:662
+#: cmykuitab.cpp:662
 msgid "File format:"
 msgstr "Формат файлов:"
 
-#: ../cmykuitab.cpp:667
+#: cmykuitab.cpp:667
 msgid "JPEG"
 msgstr "JPEG"
 
-#: ../cmykuitab.cpp:667
+#: cmykuitab.cpp:667
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG — формат сжатых файлов с потерей данных, для хранения фотографий"
 
-#: ../cmykuitab.cpp:668
+#: cmykuitab.cpp:668
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8-разрядный)"
 
-#: ../cmykuitab.cpp:668
+#: cmykuitab.cpp:668
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF — 8 разрядов на цветовой канал, для повышенной совместимости"
 
-#: ../cmykuitab.cpp:669
+#: cmykuitab.cpp:669
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16-разрядный)"
 
-#: ../cmykuitab.cpp:669
+#: cmykuitab.cpp:669
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr "TIFF — 8 разрядов на цветовой канал, для максимального качества"
 
-#. JPEG Quality setting...
-#: ../cmykuitab.cpp:679
+#: cmykuitab.cpp:679
 msgid "JPEG Quality:"
 msgstr "Качество JPEG:"
 
-#. Resolution override...
-#: ../cmykuitab.cpp:695
+#: cmykuitab.cpp:695
 msgid "Resolution:"
 msgstr "Разрешение:"
 
-#. Embed Profile setting...
-#: ../cmykuitab.cpp:711
+#: cmykuitab.cpp:711
 msgid "Embed ICC Profile"
 msgstr "Встроить профиль ICC"
 
-#: ../cmykuitab.cpp:806
+#: cmykuitab.cpp:806
 msgid "File exists - OK to overwrite?"
 msgstr "Файл уже существует. Перезаписать?"
 
-#: ../cmykuitab.cpp:820 ../cmykuitab.cpp:883
+#: cmykuitab.cpp:820 cmykuitab.cpp:883
 msgid "Saving"
 msgstr ""
 
-#: ../cmykuitab.cpp:880
+#: cmykuitab.cpp:880
 msgid "Save image - please choose filename"
 msgstr ""
 
-#: ../conversionoptsdialog.cpp:37
+#: conversionoptsdialog.cpp:37
 msgid "Colour conversion options"
 msgstr "Параметры преобразования цвета"
 
-#: ../conversionoptsdialog.cpp:66 ../devicelinkdialog.cpp:85
+#: conversionoptsdialog.cpp:66 devicelinkdialog.cpp:85
 #, fuzzy
 msgid "Delete"
 msgstr "По умолчанию"
 
-#: ../conversionoptsdialog.cpp:85
+#: conversionoptsdialog.cpp:85
 msgid "<- Save"
 msgstr ""
 
-#: ../conversionoptsdialog.cpp:90
+#: conversionoptsdialog.cpp:90
 msgid "Name:"
 msgstr ""
 
-#: ../conversionoptsdialog.cpp:103
+#: conversionoptsdialog.cpp:103
 #, fuzzy
 msgid "Input:"
 msgstr "Исследование"
 
-#. Input profile
-#: ../conversionoptsdialog.cpp:114
+#: conversionoptsdialog.cpp:114
 #, fuzzy
 msgid "Fallback RGB Profile:"
 msgstr "Профиль RGB по умолчанию:"
 
-#. Input CMYK profile
-#: ../conversionoptsdialog.cpp:130
+#: conversionoptsdialog.cpp:130
 #, fuzzy
 msgid "Fallback CMYK Profile:"
 msgstr "Профиль CMYK по умолчанию:"
 
-#. Ignore embedded profile button
-#: ../conversionoptsdialog.cpp:146
+#: conversionoptsdialog.cpp:146
 msgid "Ignore embedded profiles"
 msgstr "Игнорировать встроенные профили"
 
-#: ../conversionoptsdialog.cpp:154
+#: conversionoptsdialog.cpp:154
 #, fuzzy
 msgid "Output:"
 msgstr "Профиль вывода:"
 
-#. Output profile
-#: ../conversionoptsdialog.cpp:164
+#: conversionoptsdialog.cpp:164
 msgid "Output Profile:"
 msgstr "Профиль вывода:"
 
-#. Rendering intent
-#: ../conversionoptsdialog.cpp:179
+#: conversionoptsdialog.cpp:179
 msgid "Rendering intent:"
 msgstr "Цветопередача:"
 
-#: ../conversionoptsdialog.cpp:193
+#: conversionoptsdialog.cpp:193
 msgid "Processing:"
 msgstr ""
 
-#. DeviceLink settings
-#: ../conversionoptsdialog.cpp:202
+#: conversionoptsdialog.cpp:202
 msgid "Use Device Link:"
 msgstr ""
 
-#: ../conversionoptsdialog.cpp:207
+#: conversionoptsdialog.cpp:207
 msgid "Choose or create a Device Link profile..."
 msgstr ""
 
-#. Conversion mode
-#: ../conversionoptsdialog.cpp:217
+#: conversionoptsdialog.cpp:217
 msgid "Conversion mode:"
 msgstr "Режим преобразования:"
 
-#: ../conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:223
 msgid "Normal"
 msgstr "Обычный"
 
-#: ../conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:223
 msgid "A regular conversion from source to destination profile"
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#: ../conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:224
 msgid "Hold Black"
 msgstr "Сохранить чёрный цвет"
 
-#: ../conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:224
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Приравнять входящий чистый чёрный цвет к CMYK (0,0,0,100)"
 
-#: ../conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:225
 msgid "Hold Grey"
 msgstr "Сохранить серый цвет"
 
-#: ../conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:225
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Приравнять входящий серый цвет (R=G=B) только к каналу K"
 
-#: ../conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:226
 msgid "Overprint"
 msgstr "Надпечатка"
 
-#: ../conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:226
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
@@ -520,347 +499,285 @@ msgstr ""
 "Приравнять чистый чёрный цвет к CMYK (0,0,0,100) и скопировать C, M и Y из "
 "последнего нечёрного пиксела."
 
-#. ++row;
-#. Conversion width
-#: ../conversionoptsdialog.cpp:244
+#: conversionoptsdialog.cpp:244
 msgid "Transition width:"
 msgstr "Ширина перехода:"
 
-#: ../conversionoptsdialog.cpp:331
+#: conversionoptsdialog.cpp:331
 #, fuzzy
 msgid "New preset"
 msgstr "Создать новый профиль"
 
-#: ../conversionoptsdialog.cpp:373
+#: conversionoptsdialog.cpp:373
 msgid "Choose a name for this preset..."
 msgstr "Дайте профилю название..."
 
-#. If we got here the preset already exists, so save using the existing preset's filename...
-#: ../conversionoptsdialog.cpp:416
+#: conversionoptsdialog.cpp:416
 msgid "Overwrite existing preset?"
 msgstr ""
 
-#: ../conversionoptsdialog.cpp:441
+#: conversionoptsdialog.cpp:441
 msgid "Are you sure you want to delete this preset?"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:60
+#: devicelinkdialog.cpp:60
 msgid "Device Link Editor"
 msgstr ""
 
-#. Source Profile
-#: ../devicelinkdialog.cpp:107
+#: devicelinkdialog.cpp:107
 #, fuzzy
 msgid "Input options:"
 msgstr "Исследование"
 
-#: ../devicelinkdialog.cpp:115 ../devicelinkdialog.cpp:149
+#: devicelinkdialog.cpp:115 devicelinkdialog.cpp:149
 #, fuzzy
 msgid "Profile:"
 msgstr "Профиль вывода:"
 
-#. Viewing conditions
-#: ../devicelinkdialog.cpp:127 ../devicelinkdialog.cpp:161
+#: devicelinkdialog.cpp:127 devicelinkdialog.cpp:161
 msgid "Viewing Conditions:"
 msgstr ""
 
-#. Destination Profile
-#: ../devicelinkdialog.cpp:141
+#: devicelinkdialog.cpp:141
 #, fuzzy
 msgid "Output options:"
 msgstr "Профиль вывода:"
 
-#. Link options
-#: ../devicelinkdialog.cpp:175
+#: devicelinkdialog.cpp:175
 msgid "Link options:"
 msgstr ""
 
-#. Rendering Intent
-#: ../devicelinkdialog.cpp:185
+#: devicelinkdialog.cpp:185
 #, fuzzy
 msgid "Rendering Intent:"
 msgstr "Цветопередача:"
 
-#. Ink limit
-#: ../devicelinkdialog.cpp:204
+#: devicelinkdialog.cpp:204
 msgid "Ink Limit:"
 msgstr ""
 
-#. Quality
-#: ../devicelinkdialog.cpp:215
+#: devicelinkdialog.cpp:215
 #, fuzzy
 msgid "Quality:"
 msgstr "Качество JPEG:"
 
-#: ../devicelinkdialog.cpp:220
+#: devicelinkdialog.cpp:220
 msgid "Low"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:220
+#: devicelinkdialog.cpp:220
 msgid "Fastest mode at the expense of quality"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:221
+#: devicelinkdialog.cpp:221
 msgid "Medium"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:221
+#: devicelinkdialog.cpp:221
 msgid "Balances speed and quality"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:222
+#: devicelinkdialog.cpp:222
 msgid "High"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:222
+#: devicelinkdialog.cpp:222
 msgid "Highest quality at the expense of speed"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:230
+#: devicelinkdialog.cpp:230
 #, fuzzy
 msgid "Description:"
 msgstr "Разрешение:"
 
-#: ../devicelinkdialog.cpp:238
-msgid "Build Device Link:"
+#: devicelinkdialog.cpp:238
+msgid "Build Device Link"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:306
+#: devicelinkdialog.cpp:306
 msgid ""
 "You have changed device link parameters but not generated the actual device "
 "link profile.  OK to leave the device link editor?"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:352
+#: devicelinkdialog.cpp:352
 msgid "Are you sure you want to overwrite an existing device link?"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:405
+#: devicelinkdialog.cpp:405
 msgid "New devicelink"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:421
+#: devicelinkdialog.cpp:421
 msgid "New Devicelink"
 msgstr ""
 
-#: ../devicelinkdialog.cpp:483
+#: devicelinkdialog.cpp:483
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr ""
 
-#. Colour management page:
-#: ../dialogs.cpp:84
+#: dialogs.cpp:84
 msgid "Colour Management"
 msgstr "Управление цветом"
 
-#. Paths...
-#: ../dialogs.cpp:103
+#: dialogs.cpp:103
 msgid "ICC colour profile paths"
 msgstr "Расположение профилей ICC"
 
-#. Profiles...
-#: ../dialogs.cpp:123
+#: dialogs.cpp:123
 msgid "Monitor Profile:"
 msgstr "Профиль монитора:"
 
-#. External utilities
-#: ../dialogs.cpp:139
+#: dialogs.cpp:139
 msgid "External utilities"
 msgstr "Внешние утилиты"
 
-#. Paths...
-#: ../dialogs.cpp:158
+#: dialogs.cpp:158
 msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
 msgstr "Пути к утилитам Argyll (TIFFGamut, ColLink и пр.)"
 
-#: ../dialogs.cpp:176
+#: dialogs.cpp:176
 msgid "Search paths for GhostScript executable"
 msgstr "Пути к исполняемому файлу GhostScript"
 
-#: ../imagesource/imagesource_util.cpp:32
-msgid "Automatic"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:32
-msgid "Selects a scaling algorithm based on scale factor"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:33
-msgid "Fast"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:33
-msgid "Very fast scaling with no interpolation"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:34
-msgid "Bilinear"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:34
-msgid "An interpolation filter with mediocre speed and quality"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:35
-msgid "LanczosSinc"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:35
-msgid "Slow but very high quality interpolation filter"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:37
-msgid "Downsample"
-msgstr ""
-
-#: ../imagesource/imagesource_util.cpp:37
-msgid "High quality filter for reductions only"
-msgstr ""
-
-#: ../imageutils/jpegsave.cpp:169
+#: imageutils/jpegsave.cpp:169
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr ""
 
-#: ../imageutils/jpegsave.cpp:188
+#: imageutils/jpegsave.cpp:188
 msgid "Can't open file for saving"
 msgstr ""
 
-#: ../imageutils/jpegsave.cpp:221
+#: imageutils/jpegsave.cpp:221
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr ""
 
-#: ../miscwidgets/imageselector.cpp:458 ../miscwidgets/simplelistview.cpp:150
+#: miscwidgets/imageselector.cpp:458 miscwidgets/simplelistview.cpp:150
 msgid "Image"
 msgstr "Изображение"
 
-#: ../miscwidgets/colorantselector.cpp:168
+#: miscwidgets/colorantselector.cpp:168
 msgid "Active"
 msgstr ""
 
-#: ../miscwidgets/colorantselector.cpp:177
+#: miscwidgets/colorantselector.cpp:177
 msgid "Icon"
 msgstr ""
 
-#: ../miscwidgets/colorantselector.cpp:189
-#: ../miscwidgets/simplelistview.cpp:156
+#: miscwidgets/colorantselector.cpp:189 miscwidgets/simplelistview.cpp:156
 msgid "Name"
 msgstr ""
 
-#: ../miscwidgets/progresstab.cpp:51 ../miscwidgets/progressbar.cpp:52
+#: miscwidgets/progressbar.cpp:52
 msgid "Progress..."
 msgstr "Прогресс..."
 
-#: ../miscwidgets/patheditor.cpp:53
+#: miscwidgets/patheditor.cpp:53
 msgid "Select directory..."
 msgstr "Выберите каталог..."
 
-#: ../miscwidgets/patheditor.cpp:98
+#: miscwidgets/patheditor.cpp:98
 msgid "Path"
 msgstr "Расположение"
 
-#: ../miscwidgets/patheditor.cpp:112
+#: miscwidgets/patheditor.cpp:112
 msgid "Add..."
 msgstr "Добавить..."
 
-#: ../miscwidgets/patheditor.cpp:117
+#: miscwidgets/patheditor.cpp:117
 msgid "Remove"
 msgstr "Удалить"
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:552
-#: ../profilemanager/lcmswrapper.cpp:553
+#: profilemanager/lcmswrapper.cpp:553
 msgid "Perceptual"
 msgstr "Воспринимаемая"
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:553
-#: ../profilemanager/lcmswrapper.cpp:554
+#: profilemanager/lcmswrapper.cpp:554
 msgid "Relative Colorimetric"
 msgstr "Относительная колориметрическая"
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:554
-#: ../profilemanager/lcmswrapper.cpp:555
+#: profilemanager/lcmswrapper.cpp:555
 msgid "Relative Colorimetric with BPC"
 msgstr "Относительная колориметрическая с компенсацией точки чёрного"
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:555
-#: ../profilemanager/lcmswrapper.cpp:556
+#: profilemanager/lcmswrapper.cpp:556
 msgid "Saturation"
 msgstr "Насыщенность"
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:556
-#: ../profilemanager/lcmswrapper.cpp:557
+#: profilemanager/lcmswrapper.cpp:557
 msgid "Absolute Colorimetric"
 msgstr "Абсолютная колориметрическая"
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:561
-#: ../profilemanager/lcmswrapper.cpp:562
+#: profilemanager/lcmswrapper.cpp:562
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
 msgstr ""
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:562
-#: ../profilemanager/lcmswrapper.cpp:563
+#: profilemanager/lcmswrapper.cpp:563
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr ""
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:563
-#: ../profilemanager/lcmswrapper.cpp:564
+#: profilemanager/lcmswrapper.cpp:564
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
 "and shadows."
 msgstr ""
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:564
-#: ../profilemanager/lcmswrapper.cpp:565
+#: profilemanager/lcmswrapper.cpp:565
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
 msgstr ""
 
-#: ../profilemanager/lcmswrapper_lcms2.cpp:565
-#: ../profilemanager/lcmswrapper.cpp:566
+#: profilemanager/lcmswrapper.cpp:566
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
 msgstr ""
 
-#: ../profilemanager/profilemanager.cpp:207
+#: profilemanager/profilemanager.cpp:207
 msgid "Can't do proofing without a valid Printer profile!"
 msgstr ""
 
-#: ../profilemanager/profilemanager.cpp:212
+#: profilemanager/profilemanager.cpp:212
 msgid "Can't do proofing without a valid Monitor profile!"
 msgstr ""
 
-#: ../profilemanager/profilemanager.cpp:217
+#: profilemanager/profilemanager.cpp:217
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr ""
 
-#: ../profilemanager/profilemanager.cpp:497
+#: profilemanager/profilemanager.cpp:497
 msgid "No Proof profile provided!"
 msgstr "Профиль для цветопробы не указан!"
 
-#: ../profilemanager/profilemanager.cpp:831
+#: profilemanager/profilemanager.cpp:831
 msgid "Default"
 msgstr "По умолчанию"
 
-#: ../profilemanager/profilemanager.cpp:839
+#: profilemanager/profilemanager.cpp:839
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
-#: ../profilemanager/profileselector.cpp:394
+#: profilemanager/profileselector.cpp:394
 msgid "Please choose a valid ICC profile"
 msgstr "Выберите корректный цветовой профиль"
 
-#: ../psripui.cpp:28
+#: psripui.cpp:28
 msgid "Ripping File..."
 msgstr ""
 
-#: ../psripui.cpp:121
+#: psripui.cpp:121
 msgid "PSRip Test"
 msgstr ""
+
+#: conversionopts.h:198 devicelink.h:115
+msgid "<unknown>"
+msgstr "<неизвестно>"
 
 #, fuzzy
 #~ msgid "Profile"
@@ -889,9 +806,6 @@ msgstr ""
 
 #~ msgid "Error creating temporary thumbnail file for `%s': %s"
 #~ msgstr "Ошибка при создании временного файла миниатюры для `%s': %s"
-
-#~ msgid "<unknown>"
-#~ msgstr "<неизвестно>"
 
 #~ msgid "Fallback Input Profile (RGB):"
 #~ msgstr "Откатный профиль ввода (RGB):"

@@ -1,3 +1,5 @@
+Make Win32 externalprogram escape arguments with spaces in
+
 Add ability to export a devicelink for use in other programs.
 
 Place the "display name" for the devicelink in the argyll command line - must escape it though.
