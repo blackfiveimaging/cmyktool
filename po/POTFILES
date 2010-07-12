@@ -5,21 +5,19 @@
      ../conversionoptsdialog.cpp \
      ../devicelinkdialog.cpp \
      ../dialogs.cpp \
-     ../imagesource/imagesource_util.cpp \
      ../imageutils/jpegsave.cpp \
      ../miscwidgets/imageselector.cpp \
      ../miscwidgets/colorantselector.cpp \
-     ../miscwidgets/progresstab.cpp \
      ../miscwidgets/coloranttoggle.cpp \
      ../miscwidgets/simplelistview.cpp \
      ../miscwidgets/simplecombo.cpp \
      ../miscwidgets/uitab.cpp \
      ../miscwidgets/progressbar.cpp \
      ../miscwidgets/patheditor.cpp \
-     ../miscwidgets/progressspinner.cpp \
-     ../profilemanager/lcmswrapper_lcms2.cpp \
      ../profilemanager/lcmswrapper.cpp \
      ../profilemanager/profilemanager.cpp \
      ../profilemanager/profileselector.cpp \
      ../psrip.cpp \
-     ../psripui.cpp
+     ../psripui.cpp \
+     ../conversionopts.h \
+     ../devicelink.h

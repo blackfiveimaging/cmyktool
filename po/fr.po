@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.2\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-11 19:11+0100\n"
+"POT-Creation-Date: 2010-07-12 01:19+0100\n"
 "PO-Revision-Date: 2010-02-05 22:50+0000\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -36,87 +36,87 @@ msgid ""
 "possible, based on the curve"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:265
+#: argyllsupport/blackgenselector.cpp:264
 msgid "Minimum black"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:265
+#: argyllsupport/blackgenselector.cpp:264
 msgid "Aims for 0% black when mixing colours, using just C, M and Y."
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:266
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Medium black"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:266
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Aims for 50% black when mixing colours"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:267
+#: argyllsupport/blackgenselector.cpp:266
 msgid "Maximum black"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:267
+#: argyllsupport/blackgenselector.cpp:266
 msgid "Aims to use as much black, and as little C, M and Y as possible."
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:268
+#: argyllsupport/blackgenselector.cpp:267
 msgid "Ramp min to max"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:268
+#: argyllsupport/blackgenselector.cpp:267
 msgid ""
 "Uses a transition from 0% black for light colours, and 100% black for dark "
 "colours."
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:268
 msgid "Custom"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:268
 msgid "Define a custom black-generation curve."
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:270
+#: argyllsupport/blackgenselector.cpp:269
 #, fuzzy
 msgid "Transfer from source profile"
 msgstr "Une conversion rgulire du profil source vers destination"
 
-#: argyllsupport/blackgenselector.cpp:270
+#: argyllsupport/blackgenselector.cpp:269
 msgid ""
 "Attempts to retain the black-generation from the source profile (if source "
 "profile is CMYK)"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:271
+#: argyllsupport/blackgenselector.cpp:270
 msgid "Retain from target profile"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:271
+#: argyllsupport/blackgenselector.cpp:270
 #, fuzzy
 msgid ""
 "Attempts to retain the existing black generation from the destination "
 "profile."
 msgstr "Une conversion rgulire du profil source vers destination"
 
-#: argyllsupport/blackgenselector.cpp:283
+#: argyllsupport/blackgenselector.cpp:282
 msgid "Start level:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:295
+#: argyllsupport/blackgenselector.cpp:294
 msgid "Start position:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:307
+#: argyllsupport/blackgenselector.cpp:306
 msgid "End position:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:319
+#: argyllsupport/blackgenselector.cpp:318
 msgid "End level:"
 msgstr ""
 
-#: argyllsupport/blackgenselector.cpp:331
+#: argyllsupport/blackgenselector.cpp:330
 msgid "Shape:"
 msgstr ""
 
@@ -584,7 +584,7 @@ msgid "Description:"
 msgstr ""
 
 #: devicelinkdialog.cpp:238
-msgid "Build Device Link:"
+msgid "Build Device Link"
 msgstr ""
 
 #: devicelinkdialog.cpp:306
@@ -634,46 +634,6 @@ msgstr "Chemin vers les utilitaires Argyll TIFFGamut et ICCLink"
 msgid "Search paths for GhostScript executable"
 msgstr ""
 
-#: imagesource/imagesource_util.cpp:32
-msgid "Automatic"
-msgstr "Automatic"
-
-#: imagesource/imagesource_util.cpp:32
-msgid "Selects a scaling algorithm based on scale factor"
-msgstr "Choisi un algorithm de mise  l'chelle bas sur le facteur d'chelle"
-
-#: imagesource/imagesource_util.cpp:33
-msgid "Fast"
-msgstr "Rapide"
-
-#: imagesource/imagesource_util.cpp:33
-msgid "Very fast scaling with no interpolation"
-msgstr "Mise  l'chelle rapide sans interpolation"
-
-#: imagesource/imagesource_util.cpp:34
-msgid "Bilinear"
-msgstr "Bilinaire"
-
-#: imagesource/imagesource_util.cpp:34
-msgid "An interpolation filter with mediocre speed and quality"
-msgstr "Filtre d'interpolation  qualit et vitesse amoindrie"
-
-#: imagesource/imagesource_util.cpp:35
-msgid "LanczosSinc"
-msgstr "LanczosSinc"
-
-#: imagesource/imagesource_util.cpp:35
-msgid "Slow but very high quality interpolation filter"
-msgstr "Lent mais trs bonne qualit d'interpolation"
-
-#: imagesource/imagesource_util.cpp:37
-msgid "Downsample"
-msgstr ""
-
-#: imagesource/imagesource_util.cpp:37
-msgid "High quality filter for reductions only"
-msgstr "Haute qualit uniquement pour les rductions d'chelle"
-
 #: imageutils/jpegsave.cpp:169
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr ""
@@ -702,7 +662,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: miscwidgets/progresstab.cpp:51 miscwidgets/progressbar.cpp:52
+#: miscwidgets/progressbar.cpp:52
 msgid "Progress..."
 msgstr "Progression..."
 
@@ -722,52 +682,52 @@ msgstr "Ajouter..."
 msgid "Remove"
 msgstr "Supprimer"
 
-#: profilemanager/lcmswrapper_lcms2.cpp:552 profilemanager/lcmswrapper.cpp:553
+#: profilemanager/lcmswrapper.cpp:553
 msgid "Perceptual"
 msgstr "Perceptif"
 
-#: profilemanager/lcmswrapper_lcms2.cpp:553 profilemanager/lcmswrapper.cpp:554
+#: profilemanager/lcmswrapper.cpp:554
 msgid "Relative Colorimetric"
 msgstr "Relative Colorimetric"
 
-#: profilemanager/lcmswrapper_lcms2.cpp:554 profilemanager/lcmswrapper.cpp:555
+#: profilemanager/lcmswrapper.cpp:555
 msgid "Relative Colorimetric with BPC"
 msgstr "Relative Colorimetric avec BPC"
 
-#: profilemanager/lcmswrapper_lcms2.cpp:555 profilemanager/lcmswrapper.cpp:556
+#: profilemanager/lcmswrapper.cpp:556
 msgid "Saturation"
 msgstr "Saturation"
 
-#: profilemanager/lcmswrapper_lcms2.cpp:556 profilemanager/lcmswrapper.cpp:557
+#: profilemanager/lcmswrapper.cpp:557
 msgid "Absolute Colorimetric"
 msgstr "Colorimtrie absolue"
 
-#: profilemanager/lcmswrapper_lcms2.cpp:561 profilemanager/lcmswrapper.cpp:562
+#: profilemanager/lcmswrapper.cpp:562
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
 msgstr ""
 
-#: profilemanager/lcmswrapper_lcms2.cpp:562 profilemanager/lcmswrapper.cpp:563
+#: profilemanager/lcmswrapper.cpp:563
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr ""
 
-#: profilemanager/lcmswrapper_lcms2.cpp:563 profilemanager/lcmswrapper.cpp:564
+#: profilemanager/lcmswrapper.cpp:564
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
 "and shadows."
 msgstr ""
 
-#: profilemanager/lcmswrapper_lcms2.cpp:564 profilemanager/lcmswrapper.cpp:565
+#: profilemanager/lcmswrapper.cpp:565
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
 msgstr ""
 
-#: profilemanager/lcmswrapper_lcms2.cpp:565 profilemanager/lcmswrapper.cpp:566
+#: profilemanager/lcmswrapper.cpp:566
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
@@ -808,6 +768,37 @@ msgstr "Fichier en rasterisation..."
 #: psripui.cpp:121
 msgid "PSRip Test"
 msgstr "Test PSRip"
+
+#: conversionopts.h:198 devicelink.h:115
+msgid "<unknown>"
+msgstr "<Inconnu>"
+
+#~ msgid "Automatic"
+#~ msgstr "Automatic"
+
+#~ msgid "Selects a scaling algorithm based on scale factor"
+#~ msgstr "Choisi un algorithm de mise  l'chelle bas sur le facteur d'chelle"
+
+#~ msgid "Fast"
+#~ msgstr "Rapide"
+
+#~ msgid "Very fast scaling with no interpolation"
+#~ msgstr "Mise  l'chelle rapide sans interpolation"
+
+#~ msgid "Bilinear"
+#~ msgstr "Bilinaire"
+
+#~ msgid "An interpolation filter with mediocre speed and quality"
+#~ msgstr "Filtre d'interpolation  qualit et vitesse amoindrie"
+
+#~ msgid "LanczosSinc"
+#~ msgstr "LanczosSinc"
+
+#~ msgid "Slow but very high quality interpolation filter"
+#~ msgstr "Lent mais trs bonne qualit d'interpolation"
+
+#~ msgid "High quality filter for reductions only"
+#~ msgstr "Haute qualit uniquement pour les rductions d'chelle"
 
 #, fuzzy
 #~ msgid "Profile"
@@ -860,9 +851,6 @@ msgstr "Test PSRip"
 
 #~ msgid "Error creating temporary thumbnail file for `%s': %s"
 #~ msgstr "Erreur de cration d'aperu pour `%s': %s"
-
-#~ msgid "<unknown>"
-#~ msgstr "<Inconnu>"
 
 #~ msgid "Paths"
 #~ msgstr "Chemins"

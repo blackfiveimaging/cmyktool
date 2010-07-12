@@ -235,7 +235,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_table_attach_defaults(GTK_TABLE(table),description,2,4,row,row+1);
 
 
-		tmp=gtk_button_new_with_label(_("Build Device Link:"));
+		tmp=gtk_button_new_with_label(_("Build Device Link"));
 		g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(build_devicelink),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),tmp,4,5,row,row+1);
 

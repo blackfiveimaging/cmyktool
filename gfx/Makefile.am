@@ -26,6 +26,6 @@ chain2.cpp:
 sigma.cpp:
 	gdk-pixbuf-csource --name=sigma_data >sigma.cpp sigma.png
 
-EXTRA_DIST = Chain1.png Chain2.png rgb.png cmyk.png profile.png sigma.png hourglass.png \
-			 chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp sigma.cpp hourglass.cpp
+EXTRA_DIST = Chain1.png Chain2.png rgb.png cmyk.png profile.png sigma.png hourglass.png logo.png \
+			 chain1.cpp chain2.cpp rgb.cpp cmyk.cpp profile.cpp sigma.cpp hourglass.cpp logo.cpp
 
