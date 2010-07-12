@@ -54,6 +54,7 @@ DeviceLink::DeviceLink(const char *filename) : ConfigFile(), ConfigDB(configtemp
 		free(fn2);
 		if(FindInt("Pending"))
 			fn="";
+		blackgen.SetCmdLine(FindString("BlackGeneration"));
 	}
 	else
 		makefilename();
@@ -63,6 +64,19 @@ DeviceLink::DeviceLink(const char *filename) : ConfigFile(), ConfigDB(configtemp
 DeviceLink::~DeviceLink()
 {
 
+}
+
+
+void DeviceLink::SetBlackGen(Argyll_BlackGenerationCurve blackgen)
+{
+	this->blackgen=blackgen;
+	SetString("BlackGeneration",blackgen.GetCmdLine().c_str());
+}
+
+
+Argyll_BlackGenerationCurve &DeviceLink::GetBlackGen()
+{
+	return(blackgen);
 }
 
 
@@ -124,9 +138,9 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 	ExternalProgram collink;
 	collink.AddPath(argyllpath.c_str());
 //	collink.AddPath("/usr/local/bin:/usr/bin/");
-#ifdef win32
+#ifdef WIN32
 	collink.AddArg("collink.exe");
-else
+#else
 	collink.AddArg("collink");
 #endif
 

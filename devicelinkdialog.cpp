@@ -372,7 +372,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 	void dialog_to_devicelink(DeviceLink &dl)
 	{
-		dl.blackgen=blackgenselector_get(BLACKGENSELECTOR(blackgen));
+		dl.SetBlackGen(blackgenselector_get(BLACKGENSELECTOR(blackgen)));
 		dl.SetString("Description",gtk_entry_get_text(GTK_ENTRY(description)));
 		dl.SetString("SourceProfile",profileselector_get_filename(PROFILESELECTOR(inprofile)));
 		dl.SetString("SourceViewingConditions",viewingcondselector_get(VIEWINGCONDSELECTOR(inputvc)));
@@ -385,7 +385,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 	void devicelink_to_dialog(DeviceLink &dl)
 	{
-		blackgenselector_set(BLACKGENSELECTOR(blackgen),dl.blackgen);
+		blackgenselector_set(BLACKGENSELECTOR(blackgen),dl.GetBlackGen());
 		gtk_entry_set_text(GTK_ENTRY(description),dl.FindString("Description"));
 		profileselector_set_filename(PROFILESELECTOR(inprofile),dl.FindString("SourceProfile"));
 		viewingcondselector_set(VIEWINGCONDSELECTOR(inputvc),dl.FindString("SourceViewingConditions"));

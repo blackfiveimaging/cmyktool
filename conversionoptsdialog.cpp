@@ -200,6 +200,7 @@ class CMYKConversionOptsDialog
 
 		// DeviceLink settings
 		usedevicelink=gtk_check_button_new_with_label(_("Use Device Link:"));
+		gtk_toggle_button_set_state(GTK_TOGGLE_BUTTON(usedevicelink),opts.GetUseDeviceLink());
 		gtk_table_attach_defaults(GTK_TABLE(table),usedevicelink,0,2,row,row+1);
 		gtk_widget_show(usedevicelink);
 		
