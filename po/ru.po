@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-12 23:08+0100\n"
+"POT-Creation-Date: 2010-07-14 22:24+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -161,145 +161,145 @@ msgstr ""
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr ""
 
-#: cmyktool.cpp:110
+#: cmyktool.cpp:111
 msgid "_File"
 msgstr ""
 
-#: cmyktool.cpp:112
+#: cmyktool.cpp:113
 #, fuzzy
 msgid "_Quit"
 msgstr "Качество JPEG:"
 
-#: cmyktool.cpp:112
+#: cmyktool.cpp:113
 msgid "Exit the program"
 msgstr ""
 
-#: cmyktool.cpp:114
+#: cmyktool.cpp:115
 msgid "_Edit"
 msgstr ""
 
-#: cmyktool.cpp:116
+#: cmyktool.cpp:117
 msgid "Select _All"
 msgstr ""
 
-#: cmyktool.cpp:116
+#: cmyktool.cpp:117
 msgid "Select all images"
 msgstr ""
 
-#: cmyktool.cpp:117
+#: cmyktool.cpp:118
 msgid "Select _None"
 msgstr ""
 
-#: cmyktool.cpp:117
+#: cmyktool.cpp:118
 msgid "Deselect all images"
 msgstr ""
 
-#: cmyktool.cpp:118
+#: cmyktool.cpp:119
 #, fuzzy
 msgid "Preset _Editor..."
 msgstr "Выберите каталог..."
 
-#: cmyktool.cpp:118
+#: cmyktool.cpp:119
 msgid "Open the preset editor"
 msgstr ""
 
-#: cmyktool.cpp:119
+#: cmyktool.cpp:120
 #, fuzzy
 msgid "_Device Link Editor..."
 msgstr "Выберите каталог..."
 
-#: cmyktool.cpp:119
+#: cmyktool.cpp:120
 msgid "Open the Device Link editor"
 msgstr ""
 
-#: cmyktool.cpp:120
+#: cmyktool.cpp:121
 #, fuzzy
 msgid "Pre_ferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:120
+#: cmyktool.cpp:121
 msgid "Set paths for colour profiles and external utilities"
 msgstr ""
 
-#: cmyktool.cpp:122
+#: cmyktool.cpp:123
 msgid "_Help"
 msgstr ""
 
-#: cmyktool.cpp:124
+#: cmyktool.cpp:125
 msgid "_About"
 msgstr ""
 
-#: cmyktool.cpp:124
+#: cmyktool.cpp:125
 msgid "Show the About dialog"
 msgstr ""
 
-#: cmyktool.cpp:207
+#: cmyktool.cpp:208
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:265
+#: cmyktool.cpp:266
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:272
+#: cmyktool.cpp:273
 msgid "Remove Images"
 msgstr "Удалить изображения"
 
-#: cmyktool.cpp:291
+#: cmyktool.cpp:292
 msgid "Convert"
 msgstr "Преобразовать"
 
-#: cmyktool.cpp:299
+#: cmyktool.cpp:300
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:321 dialogs.cpp:69
+#: cmyktool.cpp:322 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:352
+#: cmyktool.cpp:353
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:390 profilemanager/profileselector.cpp:195
+#: cmyktool.cpp:391 profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:390
+#: cmyktool.cpp:391
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:411 conversionoptsdialog.cpp:207 conversionoptsdialog.cpp:657
+#: cmyktool.cpp:412 conversionoptsdialog.cpp:208 conversionoptsdialog.cpp:658
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:411
+#: cmyktool.cpp:412
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:543
+#: cmyktool.cpp:544
 #, fuzzy
 msgid "About CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:544
+#: cmyktool.cpp:545
 msgid "translator-credits"
 msgstr ""
 
-#: cmyktool.cpp:548
+#: cmyktool.cpp:549
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr ""
 
-#: cmyktool.cpp:549
+#: cmyktool.cpp:550
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr ""
 
-#: cmyktool.cpp:588
+#: cmyktool.cpp:589
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:618 cmyktool.cpp:775
+#: cmyktool.cpp:619 cmyktool.cpp:813
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -455,43 +455,43 @@ msgstr ""
 msgid "Use Device Link:"
 msgstr ""
 
-#: conversionoptsdialog.cpp:207
+#: conversionoptsdialog.cpp:208
 msgid "Choose or create a Device Link profile..."
 msgstr ""
 
-#: conversionoptsdialog.cpp:217
+#: conversionoptsdialog.cpp:218
 msgid "Conversion mode:"
 msgstr "Режим преобразования:"
 
-#: conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:224
 msgid "Normal"
 msgstr "Обычный"
 
-#: conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:224
 msgid "A regular conversion from source to destination profile"
 msgstr "Типичное преобразование из исходного в конечное цветовое пространство"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Hold Black"
 msgstr "Сохранить чёрный цвет"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Приравнять входящий чистый чёрный цвет к CMYK (0,0,0,100)"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Hold Grey"
 msgstr "Сохранить серый цвет"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Приравнять входящий серый цвет (R=G=B) только к каналу K"
 
-#: conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:227
 msgid "Overprint"
 msgstr "Надпечатка"
 
-#: conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:227
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
@@ -499,24 +499,24 @@ msgstr ""
 "Приравнять чистый чёрный цвет к CMYK (0,0,0,100) и скопировать C, M и Y из "
 "последнего нечёрного пиксела."
 
-#: conversionoptsdialog.cpp:244
+#: conversionoptsdialog.cpp:245
 msgid "Transition width:"
 msgstr "Ширина перехода:"
 
-#: conversionoptsdialog.cpp:331
+#: conversionoptsdialog.cpp:332
 #, fuzzy
 msgid "New preset"
 msgstr "Создать новый профиль"
 
-#: conversionoptsdialog.cpp:373
+#: conversionoptsdialog.cpp:374
 msgid "Choose a name for this preset..."
 msgstr "Дайте профилю название..."
 
-#: conversionoptsdialog.cpp:416
+#: conversionoptsdialog.cpp:417
 msgid "Overwrite existing preset?"
 msgstr ""
 
-#: conversionoptsdialog.cpp:441
+#: conversionoptsdialog.cpp:442
 msgid "Are you sure you want to delete this preset?"
 msgstr ""
 
@@ -608,11 +608,11 @@ msgstr ""
 msgid "New devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:421
+#: devicelinkdialog.cpp:427
 msgid "New Devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:483
+#: devicelinkdialog.cpp:497
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr ""
 
@@ -755,13 +755,18 @@ msgstr ""
 msgid "No Proof profile provided!"
 msgstr "Профиль для цветопробы не указан!"
 
-#: profilemanager/profilemanager.cpp:831
+#: profilemanager/profilemanager.cpp:837
 msgid "Default"
 msgstr "По умолчанию"
 
-#: profilemanager/profilemanager.cpp:839
+#: profilemanager/profilemanager.cpp:845
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
+
+#: profilemanager/profileselector.cpp:227
+#, fuzzy
+msgid "Choose ICC Profile..."
+msgstr "Встроить профиль ICC"
 
 #: profilemanager/profileselector.cpp:394
 msgid "Please choose a valid ICC profile"
@@ -775,7 +780,7 @@ msgstr ""
 msgid "PSRip Test"
 msgstr ""
 
-#: conversionopts.h:198 devicelink.h:115
+#: conversionopts.h:198 devicelink.h:117
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
