@@ -3,6 +3,7 @@
 
 #include <libgen.h>
 #include <gtk/gtk.h>
+#include <getopt.h>
 
 #ifdef WIN32
 #include <w32api.h>
@@ -744,11 +745,48 @@ void TestUI::AddImage(const char *filename)
 }
 
 
-int main(int argc,char **argv)
+void ParseOptions(int argc,char *argv[])
+{
+	static struct option long_options[] =
+	{
+		{"help",no_argument,NULL,'h'},
+		{"version",no_argument,NULL,'v'},
+		{"debug",required_argument,NULL,'d'},
+		{0, 0, 0, 0}
+	};
+
+	while(1)
+	{
+		int c;
+		c = getopt_long(argc,argv,"hvd:",long_options,NULL);
+		if(c==-1)
+			break;
+		switch (c)
+		{
+			case 'h':
+				printf("Usage: %s [options] image1 [image2] ... \n",argv[0]);
+				printf("\t -h --help\t\tdisplay this message\n");
+				printf("\t -v --version\t\tdisplay version\n");
+				printf("\t -d --debug\t\tset debugging level - 0 for silent, 4 for verbose");
+				throw 0;
+				break;
+			case 'v':
+				printf("%s\n",PACKAGE_STRING);
+				throw 0;
+				break;
+			case 'd':
+				Debug.SetLevel(DebugLevel(atoi(optarg)));
+				break;
+		}
+	}
+}
+
+
+int main(int argc,char *argv[])
 {
 	gtk_init(&argc,&argv);
 
-	Debug.SetLevel(TRACE);
+	ParseOptions(argc,argv);
 #ifdef WIN32
 	char *logname=substitute_homedir("$HOME" SEARCHPATH_SEPARATOR_S ".cmyktool_errorlog");
 	Debug.SetLogFile(logname);
@@ -774,7 +812,7 @@ int main(int argc,char **argv)
 
 		ProgressBar *prog=new ProgressBar(_("Adding images..."),true,ui.window);
 
-		for(int i=1;i<argc;++i)
+		for(int i=optind;i<argc;++i)
 		{
 			ui.AddImage(argv[i]);
 			if(!prog->DoProgress(i,argc))

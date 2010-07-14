@@ -416,6 +416,12 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 	void buildlist()
 	{
+		// First, get the number of jobs queued and in progress...
+		JobDispatcher &disp=core.GetDispatcher();
+		disp.ObtainMutex();
+		int jobcount=disp.JobCount(JOBSTATUS_QUEUED|JOBSTATUS_RUNNING);
+		disp.ReleaseMutex();
+
 		DeviceLinkList list;
 		SimpleListViewOptions lvo;
 		lvo.Add(NULL,_("New Devicelink"));
@@ -426,7 +432,15 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 			if(e.pending)
 			{
 				dn="("+e.displayname+")";
-				lvo.Add(e.filename.c_str(),dn.c_str(),NULL,hourglass);
+				if(jobcount)
+					lvo.Add(e.filename.c_str(),dn.c_str(),NULL,hourglass);
+				else	// If there are no jobs pending, but the DL is marked pending something went wrong...
+				{
+					GtkWidget *image = gtk_image_new ();
+					GdkPixbuf *pixbuf = gtk_widget_render_icon(image, GTK_STOCK_NO, GTK_ICON_SIZE_MENU, NULL); 
+					lvo.Add(e.filename.c_str(),dn.c_str(),NULL,pixbuf);	// FIXME - use stock image somehow...
+					gtk_widget_destroy(image);
+				}
 			}
 			else
 			{
