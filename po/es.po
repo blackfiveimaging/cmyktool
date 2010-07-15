@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-12 01:19+0100\n"
+"POT-Creation-Date: 2010-07-14 22:24+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -12,102 +12,101 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: ARGENTINA\n"
 
-#: argyllsupport/blackgenselector.cpp:254
+#: argyllsupport/blackgenselector.cpp:255
 msgid "Absolute black generation (target, -k)"
 msgstr "Generación de negro absoluta (destino, -k)"
 
-#: argyllsupport/blackgenselector.cpp:254
+#: argyllsupport/blackgenselector.cpp:255
 msgid "The black generation will attempt to use the actual level of black specified by the curve"
 msgstr "La generación de negro intentará usar el nivel de negro real especificado por la curva"
 
-#: argyllsupport/blackgenselector.cpp:255
+#: argyllsupport/blackgenselector.cpp:256
 msgid "Proportional black generation (locus, -K)"
 msgstr "Generación de negro proporcional (locus, -K)"
 
-#: argyllsupport/blackgenselector.cpp:255
+#: argyllsupport/blackgenselector.cpp:256
 msgid "The black generation will pick a black level between the minimum and maximum possible, based on the curve"
 msgstr "La generación de negro elegirá un nivel de negro entre el mínimo y el máximpo posible, basado en la curva"
 
-#: argyllsupport/blackgenselector.cpp:264
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Minimum black"
 msgstr "Negro mínimo"
 
-#: argyllsupport/blackgenselector.cpp:264
+#: argyllsupport/blackgenselector.cpp:265
 msgid "Aims for 0% black when mixing colours, using just C, M and Y."
 msgstr "Apunta a un 0% de negro cuando se mezclan los colores, usando sólo C, M e Y."
 
-#: argyllsupport/blackgenselector.cpp:265
+#: argyllsupport/blackgenselector.cpp:266
 msgid "Medium black"
 msgstr "Negro intermedio"
 
-#: argyllsupport/blackgenselector.cpp:265
+#: argyllsupport/blackgenselector.cpp:266
 msgid "Aims for 50% black when mixing colours"
 msgstr "Apunta a un 50% de negro cuando se mezclan los colores"
 
-#: argyllsupport/blackgenselector.cpp:266
+#: argyllsupport/blackgenselector.cpp:267
 msgid "Maximum black"
 msgstr "Negro máximo"
 
-#: argyllsupport/blackgenselector.cpp:266
+#: argyllsupport/blackgenselector.cpp:267
 msgid "Aims to use as much black, and as little C, M and Y as possible."
 msgstr "Apunta a usar la mayor cantidad de negro y menores cantidades de C, M e Y posibles."
 
-#: argyllsupport/blackgenselector.cpp:267
+#: argyllsupport/blackgenselector.cpp:268
 msgid "Ramp min to max"
 msgstr "Rampa mínimo a máximo"
 
-#: argyllsupport/blackgenselector.cpp:267
+#: argyllsupport/blackgenselector.cpp:268
 msgid "Uses a transition from 0% black for light colours, and 100% black for dark colours."
 msgstr "Usa una transición desde el 0% de negro para colores claros y 100% de negro para colores oscuros."
 
-#: argyllsupport/blackgenselector.cpp:268
+#: argyllsupport/blackgenselector.cpp:269
 msgid "Custom"
 msgstr "Personalizada"
 
-#: argyllsupport/blackgenselector.cpp:268
+#: argyllsupport/blackgenselector.cpp:269
 msgid "Define a custom black-generation curve."
 msgstr "Define una curva de generación de negro personalizada."
 
-#: argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:270
 msgid "Transfer from source profile"
 msgstr "Transferir desde el perfil de origen"
 
-#: argyllsupport/blackgenselector.cpp:269
+#: argyllsupport/blackgenselector.cpp:270
 msgid "Attempts to retain the black-generation from the source profile (if source profile is CMYK)"
 msgstr "Intenta retener la generación de negro desde el perfil de origen (si éste es CMYK)"
 
-#: argyllsupport/blackgenselector.cpp:270
+#: argyllsupport/blackgenselector.cpp:271
 msgid "Retain from target profile"
 msgstr "Mantener desde el perfil de destino"
 
-#: argyllsupport/blackgenselector.cpp:270
+#: argyllsupport/blackgenselector.cpp:271
 msgid "Attempts to retain the existing black generation from the destination profile."
 msgstr "Intenta mantener la generación de negro existente en el perfil de destino."
 
-#: argyllsupport/blackgenselector.cpp:282
+#: argyllsupport/blackgenselector.cpp:283
 msgid "Start level:"
 msgstr "Nivel inicial:"
 
-#: argyllsupport/blackgenselector.cpp:294
+#: argyllsupport/blackgenselector.cpp:296
 msgid "Start position:"
 msgstr "Posición inicial:"
 
-#: argyllsupport/blackgenselector.cpp:306
+#: argyllsupport/blackgenselector.cpp:309
 msgid "End position:"
 msgstr "Posición final:"
 
-#: argyllsupport/blackgenselector.cpp:318
+#: argyllsupport/blackgenselector.cpp:322
 msgid "End level:"
 msgstr "Nivel final:"
 
-#: argyllsupport/blackgenselector.cpp:330
+#: argyllsupport/blackgenselector.cpp:335
 msgid "Shape:"
 msgstr "Forma:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#, fuzzy
 msgid "Practical Reflection Print"
-msgstr "Impresión Práctica de Reflexión"
+msgstr "Impresión Reflectiva Típica"
 
 #: argyllsupport/viewingcondselector.cpp:44
 msgid "Print evaluation environment"
@@ -145,146 +144,146 @@ msgstr "Escena original - Exteriores luminosos"
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr "Transparencias en caja de luz"
 
-#: cmyktool.cpp:110
+#: cmyktool.cpp:111
 msgid "_File"
 msgstr "_Archivo"
 
-#: cmyktool.cpp:112
+#: cmyktool.cpp:113
 msgid "_Quit"
 msgstr "_Quitar"
 
-#: cmyktool.cpp:112
+#: cmyktool.cpp:113
 msgid "Exit the program"
 msgstr "Salir del programa"
 
-#: cmyktool.cpp:114
+#: cmyktool.cpp:115
 msgid "_Edit"
 msgstr "_Editar"
 
-#: cmyktool.cpp:116
+#: cmyktool.cpp:117
 msgid "Select _All"
 msgstr "Seleccionar _Todo"
 
-#: cmyktool.cpp:116
+#: cmyktool.cpp:117
 msgid "Select all images"
 msgstr "Seleccionar todas las imágenes"
 
-#: cmyktool.cpp:117
+#: cmyktool.cpp:118
 msgid "Select _None"
 msgstr "Seleccionar _Nada"
 
-#: cmyktool.cpp:117
+#: cmyktool.cpp:118
 msgid "Deselect all images"
 msgstr "Deseleccionar todas las imágenes"
 
-#: cmyktool.cpp:118
+#: cmyktool.cpp:119
 msgid "Preset _Editor..."
 msgstr "_Editor de Ajustes Predefinidos"
 
-#: cmyktool.cpp:118
+#: cmyktool.cpp:119
 msgid "Open the preset editor"
 msgstr "Abrir el editor de ajustes predefinidos"
 
-#: cmyktool.cpp:119
+#: cmyktool.cpp:120
 msgid "_Device Link Editor..."
 msgstr "Editor de _Device Link..."
 
-#: cmyktool.cpp:119
+#: cmyktool.cpp:120
 msgid "Open the Device Link editor"
 msgstr "Abrir el editor de Device Link"
 
-#: cmyktool.cpp:120
+#: cmyktool.cpp:121
 msgid "Pre_ferences..."
 msgstr "Pre_ferencias..."
 
-#: cmyktool.cpp:120
+#: cmyktool.cpp:121
 msgid "Set paths for colour profiles and external utilities"
 msgstr "Ajustar las rutas de perfiles de color y utilidades externas"
 
-#: cmyktool.cpp:122
+#: cmyktool.cpp:123
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: cmyktool.cpp:124
+#: cmyktool.cpp:125
 msgid "_About"
 msgstr "_Acerca de"
 
-#: cmyktool.cpp:124
+#: cmyktool.cpp:125
 msgid "Show the About dialog"
 msgstr "Muestra información acerca del programa"
 
-#: cmyktool.cpp:207
+#: cmyktool.cpp:208
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:265
+#: cmyktool.cpp:266
 msgid "Add Images..."
 msgstr "Agregar Imágenes..."
 
-#: cmyktool.cpp:272
+#: cmyktool.cpp:273
 msgid "Remove Images"
 msgstr "Quitar Imágenes"
 
-#: cmyktool.cpp:291
+#: cmyktool.cpp:292
 msgid "Convert"
 msgstr "Convertir"
 
-#: cmyktool.cpp:299
+#: cmyktool.cpp:300
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:321
+#: cmyktool.cpp:322
 #: dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferencias..."
 
-#: cmyktool.cpp:352
+#: cmyktool.cpp:353
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:390
+#: cmyktool.cpp:391
 #: profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Ninguno"
 
-#: cmyktool.cpp:390
+#: cmyktool.cpp:391
 msgid "No conversion"
 msgstr "Sin conversión"
 
-#: cmyktool.cpp:411
-#: conversionoptsdialog.cpp:207
-#: conversionoptsdialog.cpp:657
+#: cmyktool.cpp:412
+#: conversionoptsdialog.cpp:208
+#: conversionoptsdialog.cpp:658
 #: miscwidgets/imageselector.cpp:478
 #: profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Otro..."
 
-#: cmyktool.cpp:411
+#: cmyktool.cpp:412
 msgid "Create a new preset"
 msgstr "Crear un nuevo ajuste predefinido"
 
-#: cmyktool.cpp:543
+#: cmyktool.cpp:544
 msgid "About CMYKTool"
 msgstr "Acerca de CMYKTool"
 
-#: cmyktool.cpp:544
+#: cmyktool.cpp:545
 msgid "translator-credits"
 msgstr "Créditos de la traducción"
 
-#: cmyktool.cpp:548
+#: cmyktool.cpp:549
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:549
+#: cmyktool.cpp:550
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Una utilidad para convertir imágenes usando perfiles de color ICC."
 
-#: cmyktool.cpp:588
+#: cmyktool.cpp:589
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:618
-#: cmyktool.cpp:775
+#: cmyktool.cpp:619
+#: cmyktool.cpp:813
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 
@@ -426,63 +425,63 @@ msgstr "Procesando:"
 msgid "Use Device Link:"
 msgstr "Usar Device Link:"
 
-#: conversionoptsdialog.cpp:207
+#: conversionoptsdialog.cpp:208
 msgid "Choose or create a Device Link profile..."
 msgstr "Elegir o crear un perfil Device Link..."
 
-#: conversionoptsdialog.cpp:217
+#: conversionoptsdialog.cpp:218
 msgid "Conversion mode:"
 msgstr "Modo de Conversión:"
 
-#: conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:224
 msgid "Normal"
 msgstr "Normal"
 
-#: conversionoptsdialog.cpp:223
+#: conversionoptsdialog.cpp:224
 msgid "A regular conversion from source to destination profile"
 msgstr "Una conversión normal del perfil de origen al de destino"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Hold Black"
 msgstr "Preservar Negro"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Mapea la entrada de negro puro a CMYK (0,0,0,100)"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Hold Grey"
 msgstr "Retener Grises"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Mapea la entrada de grises (R=G=B) al canal K solamente"
 
-#: conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:227
 msgid "Overprint"
 msgstr "Sompreimprimir"
 
-#: conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:227
 msgid "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most recent non-black pixel."
 msgstr "Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-negros más recientes."
 
-#: conversionoptsdialog.cpp:244
+#: conversionoptsdialog.cpp:245
 msgid "Transition width:"
 msgstr "Ancho de transición:"
 
-#: conversionoptsdialog.cpp:331
+#: conversionoptsdialog.cpp:332
 msgid "New preset"
 msgstr "Nuevo ajuste predefinido"
 
-#: conversionoptsdialog.cpp:373
+#: conversionoptsdialog.cpp:374
 msgid "Choose a name for this preset..."
 msgstr "Seleccione un nombre para este ajuste predefinido..."
 
-#: conversionoptsdialog.cpp:416
+#: conversionoptsdialog.cpp:417
 msgid "Overwrite existing preset?"
 msgstr "Sobreescribir el ajuste existente?"
 
-#: conversionoptsdialog.cpp:441
+#: conversionoptsdialog.cpp:442
 msgid "Are you sure you want to delete this preset?"
 msgstr "Está seguro que desea eliminar este ajuste?"
 
@@ -568,11 +567,11 @@ msgstr "Está seguro que desea sobreescribir el device link existente?"
 msgid "New devicelink"
 msgstr "Nuevo Devicelink"
 
-#: devicelinkdialog.cpp:421
+#: devicelinkdialog.cpp:427
 msgid "New Devicelink"
 msgstr "Nuevo Devicelink"
 
-#: devicelinkdialog.cpp:483
+#: devicelinkdialog.cpp:497
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Está seguro de querer borrar este perfil devicelink?"
 
@@ -706,13 +705,17 @@ msgstr "No se puede realizar una prueba sin un perfil RGB predeterminado válido
 msgid "No Proof profile provided!"
 msgstr "No se ha provisto un perfil de Prueba!"
 
-#: profilemanager/profilemanager.cpp:831
+#: profilemanager/profilemanager.cpp:837
 msgid "Default"
 msgstr "Predeterminado"
 
-#: profilemanager/profilemanager.cpp:839
+#: profilemanager/profilemanager.cpp:845
 msgid "Default rendering intent"
 msgstr "Intento de renderizado predeterminado"
+
+#: profilemanager/profileselector.cpp:227
+msgid "Choose ICC Profile..."
+msgstr "Seleccionar perfil ICC..."
 
 #: profilemanager/profileselector.cpp:394
 msgid "Please choose a valid ICC profile"
@@ -727,7 +730,7 @@ msgid "PSRip Test"
 msgstr "Prueba de PSRip"
 
 #: conversionopts.h:198
-#: devicelink.h:115
+#: devicelink.h:117
 msgid "<unknown>"
 msgstr "<desconocido>"
 
