@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-14 22:24+0100\n"
+"POT-Creation-Date: 2010-07-16 00:30+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -640,15 +640,15 @@ msgstr "Пути к утилитам Argyll (TIFFGamut, ColLink и пр.)"
 msgid "Search paths for GhostScript executable"
 msgstr "Пути к исполняемому файлу GhostScript"
 
-#: imageutils/jpegsave.cpp:169
+#: imageutils/jpegsave.cpp:170
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr ""
 
-#: imageutils/jpegsave.cpp:188
+#: imageutils/jpegsave.cpp:189
 msgid "Can't open file for saving"
 msgstr ""
 
-#: imageutils/jpegsave.cpp:221
+#: imageutils/jpegsave.cpp:222
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr ""
 

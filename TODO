@@ -1,3 +1,24 @@
+UTF8 filename handling needed for:
+Image loaders
+|  ImageSource_JPEG
+|  ImageSource_PNM
+  ImageSource_BMP  -  uses fstream
+  ImageSource_GS
+|  ImageSource_TIFF  - use TIFFOpenW
+Image Savers
+|  TIFFSaver:  Use TIFFOpenW
+| JPEGSaver
+ConfigDB
+| SearchPaths - can use wopendir and wreaddir, along with conversion to UTF8
+dirtreewalker
+generaldialogs.cpp
+Consumer
+ProfileManager / LCMSWrapper - Load profile into RAM rather than opening from disk
+| util.cpp
+debug.cpp  -  log files?
+md5.cpp   ???
+
+
 Make Win32 externalprogram escape arguments with spaces in
 
 Add ability to export a devicelink for use in other programs.

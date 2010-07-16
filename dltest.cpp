@@ -4,13 +4,18 @@
 #include "profilemanager.h"
 #include "devicelink.h"
 #include "debug.h"
-
+#include "binaryblob.h"
 
 int main(int argc,char **argv)
 {
 	Debug.SetLevel(TRACE);
 	try
 	{
+		if(argc>1)
+		{
+			BinaryBlob blob(argv[1]);
+		}
+#if 0
 		ConfigFile conf;
 		ProfileManager pm(&conf,"[Colour Management]");
 		pm.SetInt("DefaultCMYKProfileActive",1);
@@ -41,6 +46,7 @@ int main(int argc,char **argv)
 			delete src;
 		if(dst)
 			delete dst;
+#endif
 	}
 	catch (const char *err)
 	{
