@@ -52,7 +52,7 @@ class TempDeviceLink : public TempFile
 	}
 	~TempDeviceLink()
 	{
-		Debug[TRACE] << "Loading blob from " << Filename() << endl;
+		Debug[TRACE] << "Loading blob from " << Filename() << std::endl;
 		BinaryBlob dl(Filename());
 		dl.Save(finalfn.c_str());
 	}

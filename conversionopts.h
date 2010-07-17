@@ -100,6 +100,7 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 	}
 	void Save(const char *presetid=NULL)
 	{
+		Debug[TRACE] << "Saving preset to " << presetid << std::endl;
 		// If a presetid is provided we store it, otherwise retrieve the existing one
 //		if(presetid)
 //			SetString("PresetID",presetid);
@@ -108,9 +109,10 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 
 		char *path=substitute_xdgconfighome(CMYKCONVERSIONOPTS_PRESET_PATH);
 
-		// If the presetid is an empty string (as opposed to a NULL pointer) we create a new ID
-		if(presetid && strlen(presetid)<1)
+		if(!presetid || strlen(presetid)<1)
 		{
+			// If the presetid is NULL or an empty stringwe create a new ID
+
 			// Generate new presetid here
 			// Yeah, using an MD5 digest of a random buffer is over-engineering, but it should work...
 			std::string presetname;
@@ -127,6 +129,12 @@ class CMYKConversionPreset : public ConfigFile, public ConfigDB
 			presetid=presetname.c_str();
 			Debug[TRACE] << "Saving file under new filename " << presetid << std::endl;
 			SaveConfigFile(presetid);
+		}
+		else if(strcmp(presetid,PRESET_PREVIOUS_ESCAPE)==0)
+		{
+			// We're saving the special "previous" preset, so build its path...
+			std::string presetname=path + std::string("/") + presetid;
+			SaveConfigFile(presetname.c_str());
 		}
 		else
 		{
