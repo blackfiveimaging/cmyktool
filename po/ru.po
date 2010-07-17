@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-16 00:30+0100\n"
+"POT-Creation-Date: 2010-07-17 10:22+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -604,15 +604,15 @@ msgstr ""
 msgid "Are you sure you want to overwrite an existing device link?"
 msgstr ""
 
-#: devicelinkdialog.cpp:405
+#: devicelinkdialog.cpp:406
 msgid "New devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:427
+#: devicelinkdialog.cpp:428
 msgid "New Devicelink"
 msgstr ""
 
-#: devicelinkdialog.cpp:497
+#: devicelinkdialog.cpp:498
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr ""
 
@@ -688,52 +688,52 @@ msgstr "Добавить..."
 msgid "Remove"
 msgstr "Удалить"
 
-#: profilemanager/lcmswrapper.cpp:553
+#: profilemanager/lcmswrapper.cpp:564
 msgid "Perceptual"
 msgstr "Воспринимаемая"
 
-#: profilemanager/lcmswrapper.cpp:554
+#: profilemanager/lcmswrapper.cpp:565
 msgid "Relative Colorimetric"
 msgstr "Относительная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:555
+#: profilemanager/lcmswrapper.cpp:566
 msgid "Relative Colorimetric with BPC"
 msgstr "Относительная колориметрическая с компенсацией точки чёрного"
 
-#: profilemanager/lcmswrapper.cpp:556
+#: profilemanager/lcmswrapper.cpp:567
 msgid "Saturation"
 msgstr "Насыщенность"
 
-#: profilemanager/lcmswrapper.cpp:557
+#: profilemanager/lcmswrapper.cpp:568
 msgid "Absolute Colorimetric"
 msgstr "Абсолютная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:562
+#: profilemanager/lcmswrapper.cpp:573
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:563
+#: profilemanager/lcmswrapper.cpp:574
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:564
+#: profilemanager/lcmswrapper.cpp:575
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
 "and shadows."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:565
+#: profilemanager/lcmswrapper.cpp:576
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
 msgstr ""
 
-#: profilemanager/lcmswrapper.cpp:566
+#: profilemanager/lcmswrapper.cpp:577
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."

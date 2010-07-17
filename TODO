@@ -1,23 +1,28 @@
+Fix searchpath bug which is prepending "\" to each path
+
+| Problem with fetching userdir when usename is unicode only happens from
+| within mingw shell - so don't worry about it.
+
 UTF8 filename handling needed for:
 Image loaders
 |  ImageSource_JPEG
 |  ImageSource_PNM
   ImageSource_BMP  -  uses fstream
-  ImageSource_GS
+  ImageSource_GS  -  needs replacing with PSRip-based solution.
 |  ImageSource_TIFF  - use TIFFOpenW
 Image Savers
 |  TIFFSaver:  Use TIFFOpenW
 | JPEGSaver
-ConfigDB
+| ConfigDB
 | SearchPaths - can use wopendir and wreaddir, along with conversion to UTF8
-dirtreewalker
-generaldialogs.cpp
+| dirtreewalker
+|generaldialogs.cpp
 Consumer
-ProfileManager / LCMSWrapper - Load profile into RAM rather than opening from disk
+| ProfileManager / LCMSWrapper - Load profile into RAM rather than opening from disk
 | util.cpp
-debug.cpp  -  log files?
-md5.cpp   ???
-
+| debug.cpp  -  log files?
+externalprogram - will Unicode parameters even work, or will filenames parameters need to be
+  converted to code page?
 
 Make Win32 externalprogram escape arguments with spaces in
 

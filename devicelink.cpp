@@ -5,6 +5,7 @@
 #include "md5.h"
 #include "tempfile.h"
 #include "externalprog.h"
+#include "binaryblob.h"
 
 #include "devicelink.h"
 
@@ -37,6 +38,26 @@ class TempProfile : public TempFile
 		profile->Save(Filename());
 	}
 	protected:
+};
+
+
+// We use this to provide a filename that can be presented to collink on the command line without hitting
+// unicode character problems.  Once the devicelink's created we copy it to its destination.
+
+class TempDeviceLink : public TempFile
+{
+	public:
+	TempDeviceLink(std::string finalfilename) : TempFile(NULL,"cktl"), finalfn(finalfilename)
+	{
+	}
+	~TempDeviceLink()
+	{
+		Debug[TRACE] << "Loading blob from " << Filename() << endl;
+		BinaryBlob dl(Filename());
+		dl.Save(finalfn.c_str());
+	}
+	protected:
+	std::string finalfn;
 };
 
 
@@ -208,15 +229,20 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 		}
 	}
 #if WIN32	// Quote filenames in case they contain spaces...
-	collink.AddArg("\""+std::string(src.Filename())+"\"");
-	collink.AddArg("\""+std::string(dst.Filename())+"\"");
-	collink.AddArg("\""+fn+"\"");
+	{
+		// Avoid the command-line-and-wide-char-filenames issue on WIN32...
+		TempDeviceLink tempdl(fn);
+		collink.AddArg("\""+std::string(src.Filename())+"\"");
+		collink.AddArg("\""+std::string(dst.Filename())+"\"");
+		collink.AddArg("\""+std::string(tempdl.Filename())+"\"");
+		collink.RunProgram();
+	}
 #else
 	collink.AddArg(src.Filename());
 	collink.AddArg(dst.Filename());
 	collink.AddArg(fn);
-#endif
 	collink.RunProgram();
+#endif
 	SetInt("Pending",0);
 	Save();		// Save a second time with the pending flag removed.
 }

@@ -361,6 +361,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 			dl->Save();	// Save metadata before generating the file...
 			dlg->core.GetDispatcher().AddJob(new DeviceLinkJob(dlg->core,dl));
+			dlg->dirty=false;
 
 			dlg->buildlist();
 		}
@@ -500,6 +501,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 			dl.Delete();
 			dlg->buildlist();
 		}
+		dlg->dirty=false;
 	}
 	CMYKTool_Core &core;
 	CMYKConversionOptions &opts;
