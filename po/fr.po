@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.2\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-17 10:22+0100\n"
+"POT-Creation-Date: 2010-07-17 11:18+0100\n"
 "PO-Revision-Date: 2010-02-05 22:50+0000\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -774,7 +774,7 @@ msgstr "Fichier en rasterisation..."
 msgid "PSRip Test"
 msgstr "Test PSRip"
 
-#: conversionopts.h:198 devicelink.h:117
+#: conversionopts.h:206 devicelink.h:117
 msgid "<unknown>"
 msgstr "<Inconnu>"
 

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-17 10:22+0100\n"
+"POT-Creation-Date: 2010-07-17 11:18+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -791,7 +791,7 @@ msgstr "Archivo de Ripeado."
 msgid "PSRip Test"
 msgstr "Prueba de PSRip"
 
-#: conversionopts.h:198 devicelink.h:117
+#: conversionopts.h:206 devicelink.h:117
 msgid "<unknown>"
 msgstr "<desconocido>"
 

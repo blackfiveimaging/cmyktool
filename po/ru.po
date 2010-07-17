@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.0\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-17 10:22+0100\n"
+"POT-Creation-Date: 2010-07-17 11:18+0100\n"
 "PO-Revision-Date: 2010-06-01 03:23+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -780,7 +780,7 @@ msgstr ""
 msgid "PSRip Test"
 msgstr ""
 
-#: conversionopts.h:198 devicelink.h:117
+#: conversionopts.h:206 devicelink.h:117
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
