@@ -132,7 +132,7 @@ class CMYKConversionOptsDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
-		icps = profileselector_new(&opts.profilemanager,IS_TYPE_CMYK);
+		icps = profileselector_new(&opts.profilemanager,IS_TYPE_CMYK,true,true);
 		g_signal_connect(icps,"changed",G_CALLBACK(inprofile_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),icps,2,5,row,row+1);
 		gtk_widget_show(icps);
@@ -166,7 +166,7 @@ class CMYKConversionOptsDialog
 		gtk_table_attach_defaults(GTK_TABLE(table),label,0,2,row,row+1);
 		gtk_widget_show(label);
 
-		ps = profileselector_new(&opts.profilemanager,IS_TYPE_NULL,true,true);
+		ps = profileselector_new(&opts.profilemanager,IS_TYPE_NULL,true);
 		g_signal_connect(ps,"changed",G_CALLBACK(profile_changed),this);
 		gtk_table_attach_defaults(GTK_TABLE(table),ps,2,5,row,row+1);
 		gtk_widget_show(ps);

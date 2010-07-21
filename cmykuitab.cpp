@@ -306,8 +306,8 @@ class UITab_CacheJob : public Job
 			tab.UnRef();	// If we encountered an error, delete the tab.
 		}
 		Debug[TRACE] << endl << "Adding reference from the end of CacheJob Run method" << endl;
-		tab.UnRef();	// Release the reference obtained when the job was created.
 		tab.spinner.Stop();
+		tab.UnRef();	// Release the reference obtained when the job was created.
 	}
 	protected:
 	CMYKUITab &tab;
@@ -942,11 +942,11 @@ void CMYKUITab::SetView(CMYKUITab_View &view)
 			if(this->view.displaymode!=view.displaymode)
 			{
 				simplecombo_set_index(SIMPLECOMBO(displaymode),view.displaymode);
-				Debug[TRACE] << endl << "Copying displaymode of " << view.displaymode << endl;
+//				Debug[TRACE] << endl << "Copying displaymode of " << view.displaymode << endl;
 				SetDisplayMode(view.displaymode);
 			}
-			else
-				Debug[TRACE] << endl << "Already have displaymode of " << view.displaymode << endl;
+//			else
+//				Debug[TRACE] << endl << "Already have displaymode of " << view.displaymode << endl;
 		}
 		delete is;
 	}
@@ -964,7 +964,6 @@ CMYKUITab_View CMYKUITab::GetView()
 		ImageSource *is=image->GetImageSource();
 
 		CMYKTabDisplayMode mode=(CMYKTabDisplayMode)simplecombo_get_index(SIMPLECOMBO(displaymode));
-		Debug[TRACE] << "GetView: Using displaymode " << mode << endl;
 //		CMYKUITab_View view(this,is->width,is->height,x,y,zoom,mode);
 		view.w=is->width;
 		view.h=is->height;

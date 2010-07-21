@@ -179,6 +179,10 @@ ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp
 		overprintblack(overprintblack), preservegrey(preservegrey), effectwidth(effectwidth)
 {
 	CMSProfile *emb=new CMSProfile(*outp);
+	if(!inp)
+		throw "No input profile supplied";
+	if(!emb)
+		throw "Unable to open output profile";
 	SetEmbeddedProfile(emb,true);
 	if(inp->IsDeviceLink())
 		transform=new CMSTransform(inp);

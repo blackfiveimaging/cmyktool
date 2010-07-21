@@ -7,6 +7,7 @@
 #include "miscwidgets/spinner.h"
 #include "conversionopts.h"
 #include "support/debug.h"
+#include "support/ptmutex.h"
 
 #include "cmyktool_core.h"
 
@@ -22,6 +23,15 @@ class TabSpinner : public Spinner
 	TabSpinner() : Spinner(), active(false), shown(false), frame(0)
 	{
 		gtk_widget_hide(GetWidget());
+	}
+	~TabSpinner()
+	{
+		Stop();
+		while(shown)
+		{
+			// Need to wait until it's safe to delete, so pump GTK event loop...
+			gtk_main_iteration_do(TRUE);
+		}
 	}
 	void Start()
 	{

@@ -257,7 +257,7 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	if(GetUseDeviceLink())
 		dlprof=profilemanager.GetProfile(GetDeviceLink());
 
-	if(outprof->IsDeviceLink() && !dlprof)
+	if(outprof && outprof->IsDeviceLink() && !dlprof)
 	{
 		dlprof=outprof;
 		outprof=NULL;
