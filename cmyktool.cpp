@@ -795,7 +795,11 @@ int main(int argc,char *argv[])
 
 	gtk_set_locale();
 
+#ifdef WIN32
+	bindtextdomain(PACKAGE,"locale");
+#else
 	bindtextdomain(PACKAGE,LOCALEDIR);
+#endif
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 	textdomain(PACKAGE);
 

@@ -10,6 +10,10 @@ CMYKTool-0.1.4
 
 	* Added About dialog.
 
+    * Many fixes to filename handling on Win32 - should now be able to handle unicode characters in filenames.
+
+    * Updated French translation, thanks to Cedric Gémy
+
 
 CMYKTool-0.1.3
 
