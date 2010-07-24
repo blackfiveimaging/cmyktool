@@ -316,6 +316,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 					}
 					break;
 				case GTK_RESPONSE_CANCEL:
+				case GTK_RESPONSE_DELETE_EVENT:
 					done=true;
 					break;
 			}
