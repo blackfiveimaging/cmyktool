@@ -12,7 +12,11 @@ CMYKTool-0.1.4
 
     * Many fixes to filename handling on Win32 - should now be able to handle unicode characters in filenames.
 
-    * Updated French translation, thanks to Cedric Gémy
+    * Translation should now work on Win32.
+
+    * Updated French translation, thanks to Cedric Gémy.
+
+    * Updated Russian translation, thanks to Alexandre Prokoudine.
 
 
 CMYKTool-0.1.3

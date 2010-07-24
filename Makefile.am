@@ -45,9 +45,9 @@ libdeflattenui_la_SOURCES = \
 	dialogs.cpp	\
 	dialogs.h
 
-bin_PROGRAMS = cmyktool dltest
+bin_PROGRAMS = cmyktool
 
-check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest 
+check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest dltest
 
 dltest_SOURCES = dltest.cpp
 rspltest_SOURCES = rspltest.cpp
