@@ -219,12 +219,13 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 		// We have to split the black generation argument into individual args, or Argyll can't find them!
 		std::string tmp=blackgen;
 		int argstart=0;
-		while(tmp.size())
+		int argend=tmp.find(' ',argstart);
+		while(argend!=std::string::npos)
 		{
-			int argend=tmp.find(' ',argstart);
-			Debug[TRACE] << "Adding argument " << tmp.substr(argstart,argend) << std::endl;
-			collink.AddArg(tmp.substr(argstart,argend));
+			Debug[TRACE] << "Adding argument from " << argstart << " to " << argend << ", " << tmp.substr(argstart,argend-argstart) << std::endl;
+			collink.AddArg(tmp.substr(argstart,argend-argstart));
 			argstart=argend+1;
+			argend=tmp.find(' ',argstart);
 		}
 	}
 

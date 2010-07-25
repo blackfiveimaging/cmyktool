@@ -1,3 +1,8 @@
+CMYKTool-0.1.4a
+
+    * Fixed bug with collink command line arguments for black generation.
+
+
 CMYKTool-0.1.4
 
     * Added Spanish translation, thanks to Guillermo Espertino.
