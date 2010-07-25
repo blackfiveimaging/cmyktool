@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-21 09:15+0100\n"
+"POT-Creation-Date: 2010-07-24 17:47+0100\n"
 "PO-Revision-Date: 2010-07-21 00:34+0200\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -595,19 +595,19 @@ msgstr ""
 "Vous avez changé les paramètres Device Link mais pas généré le profil. "
 "Confirmez-vous la sortie de l'éditeur Device Link ?"
 
-#: devicelinkdialog.cpp:352
+#: devicelinkdialog.cpp:353
 msgid "Are you sure you want to overwrite an existing device link?"
 msgstr "Êtes-vous sûr d'écraser le Device Link existant ?"
 
-#: devicelinkdialog.cpp:406
+#: devicelinkdialog.cpp:407
 msgid "New devicelink"
 msgstr "Nouveau Device Link"
 
-#: devicelinkdialog.cpp:428
+#: devicelinkdialog.cpp:429
 msgid "New Devicelink"
 msgstr "Nouveau Device Link"
 
-#: devicelinkdialog.cpp:498
+#: devicelinkdialog.cpp:499
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Êtes-vous sûr de supprimer ce profil Device Link ?"
 

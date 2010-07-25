@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-21 09:15+0100\n"
+"POT-Creation-Date: 2010-07-24 17:47+0100\n"
 "PO-Revision-Date: 2010-07-24 19:14+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -601,19 +601,19 @@ msgstr ""
 "Вы изменили параметры device link, но не создали сам профиль. Вы точно "
 "хотите завершить работу с редактором?"
 
-#: devicelinkdialog.cpp:352
+#: devicelinkdialog.cpp:353
 msgid "Are you sure you want to overwrite an existing device link?"
 msgstr "Вы действительно хотите перезаписать существующий профиль device link?"
 
-#: devicelinkdialog.cpp:406
+#: devicelinkdialog.cpp:407
 msgid "New devicelink"
 msgstr "Новый связующий профиль"
 
-#: devicelinkdialog.cpp:428
+#: devicelinkdialog.cpp:429
 msgid "New Devicelink"
 msgstr "Новый связующий профиль"
 
-#: devicelinkdialog.cpp:498
+#: devicelinkdialog.cpp:499
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Вы действительно хотите удалить этот профиль device link?"
 

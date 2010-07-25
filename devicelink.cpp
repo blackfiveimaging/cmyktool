@@ -215,7 +215,18 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 
 	std::string blackgen=FindString("BlackGeneration");
 	if(blackgen.size()>0)
-		collink.AddArg(blackgen);
+	{
+		// We have to split the black generation argument into individual args, or Argyll can't find them!
+		std::string tmp=blackgen;
+		int argstart=0;
+		while(tmp.size())
+		{
+			int argend=tmp.find(' ',argstart);
+			Debug[TRACE] << "Adding argument " << tmp.substr(argstart,argend) << std::endl;
+			collink.AddArg(tmp.substr(argstart,argend));
+			argstart=argend+1;
+		}
+	}
 
 	// We only use ink limiting if linking to a CMYK target - we disable it for RGB.
 	if(type==IS_TYPE_CMYK)
