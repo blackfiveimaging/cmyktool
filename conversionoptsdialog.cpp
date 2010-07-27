@@ -4,6 +4,7 @@
 
 #include "support/debug.h"
 #include "support/util.h"
+#include "support/thread.h"
 
 #include "miscwidgets/simplecombo.h"
 #include "miscwidgets/simplelistview.h"
@@ -29,10 +30,10 @@ using namespace std;
 #define PRESET_MAXCHARS 17
 
 
-class CMYKConversionOptsDialog
+class CMYKConversionOptsDialog : public ThreadFunction, public Thread
 {
 	public:
-	CMYKConversionOptsDialog(CMYKTool_Core &core, GtkWidget *parent) : core(core), opts(core.GetOptions()), backupopts(opts), blockupdates(false)
+	CMYKConversionOptsDialog(CMYKTool_Core &core, GtkWidget *parent) : ThreadFunction(), Thread(this), core(core), opts(core.GetOptions()), backupopts(opts), blockupdates(false)
 	{
 		window=gtk_dialog_new_with_buttons(_("Colour conversion options"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
@@ -263,9 +264,17 @@ class CMYKConversionOptsDialog
 
 		g_signal_connect(usedevicelink,"toggled",G_CALLBACK(usedevicelink_changed),this);
 		g_signal_connect(devicelink,"changed",G_CALLBACK(devicelink_changed),this);
+
+		Start();
 	}
 	~CMYKConversionOptsDialog()
 	{
+		// Cancel monitoring thread
+		Stop();
+		ThreadEvent *ev=core.FindEvent("UpdateUI");
+		if(ev)
+			ev->Trigger();
+
 		gtk_widget_destroy(window);
 	}
 	void Run()
@@ -286,6 +295,26 @@ class CMYKConversionOptsDialog
 
 		gtk_widget_set_sensitive(GTK_WIDGET(combo),active);
 	}
+	// Thread function - hangs around waiting for signal from ThreadEvent, and triggers a list update when received...
+	virtual int Entry(Thread &t)
+	{
+		ThreadEvent *ev=core.FindEvent("UpdateUI");
+		while(!TestBreak())
+		{
+			ev->WaitEvent();
+			if(!TestBreak())
+				g_timeout_add(1,updatefunc,this);
+		}
+		return(0);
+	}
+	// Function to trigger a list rebuild.  Called on the main thread's context.
+	static gboolean updatefunc(gpointer ud)
+	{
+		CMYKConversionOptsDialog *dlg=(CMYKConversionOptsDialog *)ud;
+		dlg->updatedevicelinklist();
+		return(FALSE);
+	}
+
 	private:
 	CMYKTool_Core &core;
 	CMYKConversionOptions &opts;
@@ -659,6 +688,16 @@ class CMYKConversionOptsDialog
 		simplecombo_set_opts(SIMPLECOMBO(devicelink),scopts);
 		std::string dl=opts.GetDeviceLink();
 		simplecombo_set(SIMPLECOMBO(devicelink),dl.c_str());
+
+		// Having attempted to set the devicelink, we now read back what we really got
+		// to keep UI and options in sync...
+
+		const char *dl2=simplecombo_get(SIMPLECOMBO(devicelink));
+		if(dl2)
+		{
+			Debug[TRACE] << "Setting devicelink to " << dl2 << endl;
+			opts.SetDeviceLink(dl2);
+		}
 	}
 
 	static CMYKConversionMode convmodes[];

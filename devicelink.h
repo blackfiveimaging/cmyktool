@@ -66,7 +66,6 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 
 		Debug[TRACE] << "Creating devicelink list..." << std::endl;
 		char *configdir=substitute_xdgconfighome(DEVICELINK_CACHE_PATH);
-		DirTreeWalker dtw(configdir);
 		const char *fn;
 
 		const char *srcd="";
@@ -76,50 +75,76 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 		if(dst)
 			dstd=dst->GetMD5()->GetPrintableDigest();
 
-		while((fn=dtw.NextFile()))
+		// Go through the devicelink directory twice -
+		// first scan for devicelink profiles
 		{
-			if(strcasecmp(".icc",fn+strlen(fn)-4)==0 || strcasecmp(".icm",fn+strlen(fn)-4)==0 || strcasecmp(".dlm",fn+strlen(fn)-4)==0)
+			DirTreeWalker dtw(configdir);
+
+			while((fn=dtw.NextFile()))
 			{
-				Debug[TRACE] << "Adding file " << fn << std::endl;
-				DeviceLink dl(fn);
+				if(strcasecmp(".icc",fn+strlen(fn)-4)==0 || strcasecmp(".icm",fn+strlen(fn)-4)==0)
+				{
+					Debug[TRACE] << "Adding file " << fn << std::endl;
+					DeviceLink dl(fn);
 
-				bool match=true;
+					bool match=true;
 
-				// FIXME: Yuk - find a better way to do this...
+					if(match && src && dst)
+						match=Match(dl,srcd,dstd,intent);
+
+					if(match)
+					{
+						const char *dn=dl.FindString("Description");
+						if(!(dn && strlen(dn)>0))
+							dn=_("<unknown>");
+
+						if(!Find(dn))	// Only create a new entry if there isn't already one by this name...
+						{
+							DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
+							push_back(e);
+						}
+					}
+				}
+			}
+		}
+
+		// now scan for metadata files from incomplete profiles, but only if we've been asked for a complete list...
+		if(src==NULL && dst==NULL)
+		{
+			DirTreeWalker dtw(configdir);
+
+			while((fn=dtw.NextFile()))
+			{
 				if(strcasecmp(".dlm",fn+strlen(fn)-4)==0)
 				{
+					Debug[TRACE] << "Adding file " << fn << std::endl;
+					DeviceLink dl(fn);
+
+					bool match=true;
+
 					if(dl.FindInt("Pending")==0)
 						match=false;
-				}
 
-				if(match && src && dst)
-				{
-					Debug[TRACE] << "Comparing " << srcd << " against " << dl.FindString("SourceProfileHash") << std::endl;
-					if(strcmp(srcd,dl.FindString("SourceProfileHash"))!=0)
-						match=false;
-					Debug[TRACE] << "Match: " << match << " - Comparing " << dstd << " against " << dl.FindString("DestProfileHash") << std::endl;
-					if(strcmp(dstd,dl.FindString("DestProfileHash"))!=0)
-						match=false;
-					Debug[TRACE] << "Match: " << match << " - Comparing " << intent << " against " << dl.FindInt("RenderingIntent") << std::endl;
+					if(match && src && dst)
+						match=Match(dl,srcd,dstd,intent);
 
-					int dlintent=dl.FindInt("RenderingIntent");
-					if(dlintent==LCMSWRAPPER_INTENT_DEFAULT)
-						dlintent=LCMSWRAPPER_INTENT_PERCEPTUAL;
-
-					if(dlintent!=intent && dlintent!=LCMSWRAPPER_INTENT_NONE)
-						match=false;
-					Debug[TRACE] << "Match: " << match << std::endl;
-				}
-				if(match)
-				{
-					const char *dn=dl.FindString("Description");
-					if(!(dn && strlen(dn)>0))
-						dn=_("<unknown>");
-
-					if(!Find(dn))	// Only create a new entry if there isn't already one by this name...
+					if(match)
 					{
-						DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
-						push_back(e);
+#ifdef WIN32
+						char *fn2=BuildFilename(fn,NULL,"icm");
+#else
+						char *fn2=BuildFilename(fn,NULL,"icc");
+#endif
+						const char *dn=dl.FindString("Description");
+						if(!(dn && strlen(dn)>0))
+							dn=_("<unknown>");
+
+						if(!Find(dn))	// Only create a new entry if there isn't already one by this name...
+						{
+							DeviceLinkList_Entry e(fn2,dn,dl.FindInt("Pending"));
+							push_back(e);
+						}
+						free(fn2);
 					}
 				}
 			}
@@ -134,6 +159,26 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 				return(&(*this)[idx]);
 		}
 		return(NULL);
+	}
+	bool Match(DeviceLink &dl,const char *srcd,const char *dstd,LCMSWrapper_Intent intent)
+	{
+		bool match=true;
+		Debug[TRACE] << "Comparing " << srcd << " against " << dl.FindString("SourceProfileHash") << std::endl;
+		if(strcmp(srcd,dl.FindString("SourceProfileHash"))!=0)
+			match=false;
+		Debug[TRACE] << "Match: " << match << " - Comparing " << dstd << " against " << dl.FindString("DestProfileHash") << std::endl;
+		if(strcmp(dstd,dl.FindString("DestProfileHash"))!=0)
+			match=false;
+		Debug[TRACE] << "Match: " << match << " - Comparing " << intent << " against " << dl.FindInt("RenderingIntent") << std::endl;
+
+		int dlintent=dl.FindInt("RenderingIntent");
+		if(dlintent==LCMSWRAPPER_INTENT_DEFAULT)
+			dlintent=LCMSWRAPPER_INTENT_PERCEPTUAL;
+
+		if(dlintent!=intent && dlintent!=LCMSWRAPPER_INTENT_NONE)
+			match=false;
+		Debug[TRACE] << "Match: " << match << std::endl;
+		return(match);
 	}
 };
 
