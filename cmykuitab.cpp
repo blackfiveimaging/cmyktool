@@ -231,6 +231,9 @@ class UITab_CacheJob : public Job
 
 			is=tab.core.GetOptions().Apply(is,NULL,cw->factory);
 
+			// FIXME - need mutex protection here...
+			if(tab.image)
+				delete tab.image;
 			tab.image=new CachedImage(is);
 
 			Debug[TRACE] << "Cached image generated - triggering render job" << endl;
@@ -463,6 +466,8 @@ CMYKUITab::~CMYKUITab()
 		delete collist;
 	if(image)
 		delete image;
+	if(collist)
+		delete collist;
 	if(filename)
 		free(filename);
 }

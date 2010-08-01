@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-07-25 09:30+0100\n"
+"POT-Creation-Date: 2010-08-01 11:54+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -234,80 +234,80 @@ msgstr "_Acerca de"
 msgid "Show the About dialog"
 msgstr "Muestra información acerca del programa"
 
-#: cmyktool.cpp:208
+#: cmyktool.cpp:212
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:266
+#: cmyktool.cpp:270
 msgid "Add Images..."
 msgstr "Agregar Imágenes..."
 
-#: cmyktool.cpp:273
+#: cmyktool.cpp:277
 msgid "Remove Images"
 msgstr "Quitar Imágenes"
 
-#: cmyktool.cpp:292
+#: cmyktool.cpp:296
 msgid "Convert"
 msgstr "Convertir"
 
-#: cmyktool.cpp:300
+#: cmyktool.cpp:304
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:322 dialogs.cpp:69
+#: cmyktool.cpp:326 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferencias..."
 
-#: cmyktool.cpp:353
+#: cmyktool.cpp:357
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:391 profilemanager/profileselector.cpp:195
+#: cmyktool.cpp:395 profilemanager/profileselector.cpp:195
 msgid "None"
 msgstr "Ninguno"
 
-#: cmyktool.cpp:391
+#: cmyktool.cpp:395
 msgid "No conversion"
 msgstr "Sin conversión"
 
-#: cmyktool.cpp:412 conversionoptsdialog.cpp:208 conversionoptsdialog.cpp:658
+#: cmyktool.cpp:416 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Otro..."
 
-#: cmyktool.cpp:412
+#: cmyktool.cpp:416
 msgid "Create a new preset"
 msgstr "Crear un nuevo ajuste predefinido"
 
-#: cmyktool.cpp:544
+#: cmyktool.cpp:548
 msgid "About CMYKTool"
 msgstr "Acerca de CMYKTool"
 
-#: cmyktool.cpp:545
+#: cmyktool.cpp:549
 msgid "translator-credits"
 msgstr "Créditos de la traducción"
 
-#: cmyktool.cpp:549
+#: cmyktool.cpp:553
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:550
+#: cmyktool.cpp:554
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Una utilidad para convertir imágenes usando perfiles de color ICC."
 
-#: cmyktool.cpp:589
+#: cmyktool.cpp:593
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:619 cmyktool.cpp:817
+#: cmyktool.cpp:623 cmyktool.cpp:822
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 
-#: cmykuitab.cpp:451
+#: cmykuitab.cpp:393
 msgid "Inspect"
 msgstr "Inspeccionar"
 
-#: cmykuitab.cpp:451
+#: cmykuitab.cpp:393
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
@@ -316,11 +316,11 @@ msgstr ""
 "al monitor, permitiendo ver cómo la información ha sido modificada por la "
 "conversión."
 
-#: cmykuitab.cpp:453
+#: cmykuitab.cpp:395
 msgid "Simulate print, adapt white"
 msgstr "Simular impresión, adaptar blanco"
 
-#: cmykuitab.cpp:453
+#: cmykuitab.cpp:395
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
@@ -330,11 +330,11 @@ msgstr ""
 "(Conversión desde el perfil de destino al perfil del monitor, usando el "
 "intento Colorimétrico Relativo con Compensación de Punto Negro.)"
 
-#: cmykuitab.cpp:455
+#: cmykuitab.cpp:397
 msgid "Simulate print"
 msgstr "Simular impresión"
 
-#: cmykuitab.cpp:455
+#: cmykuitab.cpp:397
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
@@ -343,155 +343,155 @@ msgstr ""
 "el perfil de destino al perfil del monitor, usando el intento Colorimétrico "
 "Absoluto.)"
 
-#: cmykuitab.cpp:491
+#: cmykuitab.cpp:433
 msgid "Save..."
 msgstr "Guardar"
 
-#: cmykuitab.cpp:635
+#: cmykuitab.cpp:579
 msgid "Save Image..."
 msgstr "Guardar imagen..."
 
-#: cmykuitab.cpp:662
+#: cmykuitab.cpp:606
 msgid "File format:"
 msgstr "Formato de archivo:"
 
-#: cmykuitab.cpp:667
+#: cmykuitab.cpp:611
 msgid "JPEG"
 msgstr "JPEG"
 
-#: cmykuitab.cpp:667
+#: cmykuitab.cpp:611
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG - Formato con pérdida optimizado para imágenes fotográficas"
 
-#: cmykuitab.cpp:668
+#: cmykuitab.cpp:612
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8 bits)"
 
-#: cmykuitab.cpp:668
+#: cmykuitab.cpp:612
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF - 8 bits por muestra, para mayor compatibilidad"
 
-#: cmykuitab.cpp:669
+#: cmykuitab.cpp:613
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16 bits)"
 
-#: cmykuitab.cpp:669
+#: cmykuitab.cpp:613
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr "TIFF - 16 bits por muestra, para máxima calidad"
 
-#: cmykuitab.cpp:679
+#: cmykuitab.cpp:623
 msgid "JPEG Quality:"
 msgstr "Calidad JPEG:"
 
-#: cmykuitab.cpp:695
+#: cmykuitab.cpp:639
 msgid "Resolution:"
 msgstr "Resolución:"
 
-#: cmykuitab.cpp:711
+#: cmykuitab.cpp:655
 msgid "Embed ICC Profile"
 msgstr "Incrustar Perfil ICC"
 
-#: cmykuitab.cpp:806
+#: cmykuitab.cpp:750
 msgid "File exists - OK to overwrite?"
 msgstr "El archivo existe - Desea sobreescribirlo?"
 
-#: cmykuitab.cpp:820 cmykuitab.cpp:883
+#: cmykuitab.cpp:764 cmykuitab.cpp:827
 msgid "Saving"
 msgstr "Guardando"
 
-#: cmykuitab.cpp:880
+#: cmykuitab.cpp:824
 msgid "Save image - please choose filename"
 msgstr "Guardar imagen - por favor ingrese un nombre de archivo"
 
-#: conversionoptsdialog.cpp:37
+#: conversionoptsdialog.cpp:38
 msgid "Colour conversion options"
 msgstr "Opciones de conversión de color"
 
-#: conversionoptsdialog.cpp:66 devicelinkdialog.cpp:85
+#: conversionoptsdialog.cpp:67 devicelinkdialog.cpp:85
 msgid "Delete"
 msgstr "Eliminar"
 
-#: conversionoptsdialog.cpp:85
+#: conversionoptsdialog.cpp:86
 msgid "<- Save"
 msgstr "<- Guardar"
 
-#: conversionoptsdialog.cpp:90
+#: conversionoptsdialog.cpp:91
 msgid "Name:"
 msgstr "Nombre:"
 
-#: conversionoptsdialog.cpp:103
+#: conversionoptsdialog.cpp:104
 msgid "Input:"
 msgstr "Entrada:"
 
-#: conversionoptsdialog.cpp:114
+#: conversionoptsdialog.cpp:115
 msgid "Fallback RGB Profile:"
 msgstr "Perfil RGB de reserva:"
 
-#: conversionoptsdialog.cpp:130
+#: conversionoptsdialog.cpp:131
 msgid "Fallback CMYK Profile:"
 msgstr "Perfil CMYK de reserva:"
 
-#: conversionoptsdialog.cpp:146
+#: conversionoptsdialog.cpp:147
 msgid "Ignore embedded profiles"
 msgstr "Ignorar perfiles incrustados"
 
-#: conversionoptsdialog.cpp:154
+#: conversionoptsdialog.cpp:155
 msgid "Output:"
 msgstr "Salida:"
 
-#: conversionoptsdialog.cpp:164
+#: conversionoptsdialog.cpp:165
 msgid "Output Profile:"
 msgstr "Perfil de Salida:"
 
-#: conversionoptsdialog.cpp:179
+#: conversionoptsdialog.cpp:180
 msgid "Rendering intent:"
 msgstr "Intento de Renderizado:"
 
-#: conversionoptsdialog.cpp:193
+#: conversionoptsdialog.cpp:194
 msgid "Processing:"
 msgstr "Procesando:"
 
-#: conversionoptsdialog.cpp:202
+#: conversionoptsdialog.cpp:203
 msgid "Use Device Link:"
 msgstr "Usar Device Link:"
 
-#: conversionoptsdialog.cpp:208
+#: conversionoptsdialog.cpp:209
 msgid "Choose or create a Device Link profile..."
 msgstr "Elegir o crear un perfil Device Link..."
 
-#: conversionoptsdialog.cpp:218
+#: conversionoptsdialog.cpp:219
 msgid "Conversion mode:"
 msgstr "Modo de Conversión:"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "Normal"
 msgstr "Normal"
 
-#: conversionoptsdialog.cpp:224
+#: conversionoptsdialog.cpp:225
 msgid "A regular conversion from source to destination profile"
 msgstr "Una conversión normal del perfil de origen al de destino"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Hold Black"
 msgstr "Preservar Negro"
 
-#: conversionoptsdialog.cpp:225
+#: conversionoptsdialog.cpp:226
 msgid "Maps pure black input to CMYK (0,0,0,100)"
 msgstr "Mapea la entrada de negro puro a CMYK (0,0,0,100)"
 
-#: conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:227
 msgid "Hold Grey"
 msgstr "Retener Grises"
 
-#: conversionoptsdialog.cpp:226
+#: conversionoptsdialog.cpp:227
 msgid "Maps grey input (R=G=B) to K channel only"
 msgstr "Mapea la entrada de grises (R=G=B) al canal K solamente"
 
-#: conversionoptsdialog.cpp:227
+#: conversionoptsdialog.cpp:228
 msgid "Overprint"
 msgstr "Sompreimprimir"
 
-#: conversionoptsdialog.cpp:227
+#: conversionoptsdialog.cpp:228
 msgid ""
 "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
 "recent non-black pixel."
@@ -499,23 +499,23 @@ msgstr ""
 "Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-"
 "negros más recientes."
 
-#: conversionoptsdialog.cpp:245
+#: conversionoptsdialog.cpp:246
 msgid "Transition width:"
 msgstr "Ancho de transición:"
 
-#: conversionoptsdialog.cpp:332
+#: conversionoptsdialog.cpp:363
 msgid "New preset"
 msgstr "Nuevo ajuste predefinido"
 
-#: conversionoptsdialog.cpp:374
+#: conversionoptsdialog.cpp:405
 msgid "Choose a name for this preset..."
 msgstr "Seleccione un nombre para este ajuste predefinido..."
 
-#: conversionoptsdialog.cpp:417
+#: conversionoptsdialog.cpp:448
 msgid "Overwrite existing preset?"
 msgstr "Sobreescribir el ajuste existente?"
 
-#: conversionoptsdialog.cpp:442
+#: conversionoptsdialog.cpp:473
 msgid "Are you sure you want to delete this preset?"
 msgstr "Está seguro que desea eliminar este ajuste?"
 
@@ -791,7 +791,7 @@ msgstr "Archivo de Ripeado."
 msgid "PSRip Test"
 msgstr "Prueba de PSRip"
 
-#: conversionopts.h:206 devicelink.h:117
+#: conversionopts.h:206 devicelink.h:99 devicelink.h:140
 msgid "<unknown>"
 msgstr "<desconocido>"
 

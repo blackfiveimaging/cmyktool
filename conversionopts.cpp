@@ -304,6 +304,9 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	}
 	if(freeinprof)
 		delete inprof;
+	// We don't free the output profile - the ImageSource assumes ownership of it.
+	if(dlprof)
+		delete dlprof;
 
 	return(src);
 }

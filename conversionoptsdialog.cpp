@@ -341,9 +341,11 @@ class CMYKConversionOptsDialog : public ThreadFunction, public Thread
 
 		intentselector_setintent(INTENTSELECTOR(is),opts.GetIntent());
 
+		blockupdates=true;
 		profileselector_set_filename(PROFILESELECTOR(irps),opts.GetInRGBProfile());
 		profileselector_set_filename(PROFILESELECTOR(icps),opts.GetInCMYKProfile());
 		profileselector_set_filename(PROFILESELECTOR(ps),opts.GetOutProfile());
+		blockupdates=false;
 
 		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(usedevicelink),opts.GetUseDeviceLink());
 		simplecombo_set(SIMPLECOMBO(devicelink),opts.GetDeviceLink());

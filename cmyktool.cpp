@@ -159,7 +159,8 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 				     GtkSelectionData *selection_data, guint info,
 				     guint time, gpointer data)
 {
-	gchar *urilist=g_strdup((const gchar *)selection_data->data);
+	gchar *temp;
+	gchar *urilist=temp=g_strdup((const gchar *)selection_data->data);
 
 	TestUI *ui=(TestUI *)data;
 
@@ -189,6 +190,9 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 			}
 		}
 	}
+
+	if(temp)
+		g_free(temp);
 }
 
 
@@ -734,6 +738,7 @@ void TestUI::AddImage(const char *filename)
 				mon->Add(is,0,10);
 			}
 			GdkPixbuf *pb=pixbuf_from_imagesource(mon);
+			delete mon;
 			if(pb)
 				imageselector_add_filename(IMAGESELECTOR(imgsel),filename,pb);
 		}
