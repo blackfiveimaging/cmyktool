@@ -1,3 +1,8 @@
+CMYKTool-0.1.5
+
+    * Added Brazilian Portuguese translation, thanks to Banto Palmarino
+
+
 CMYKTool-0.1.4a
 
     * Fixed bug with collink command line arguments for black generation.
