@@ -91,12 +91,14 @@ class PSRipUIThread : public ThreadFunction, public Thread
 	static gboolean updateimgselfunc(gpointer ud)
 	{
 		PSRipUIThread *t=(PSRipUIThread *)ud;
-		cerr << "Event received - updating image list..." << endl;
+		Debug[TRACE] << "Event received - updating image list..." << endl;
 
 		t->session->TempFileTracker::ObtainMutex();
-		for(unsigned int idx;idx<t->session->size();++idx)
+//		Debug[TRACE] << "Session contains " << t->session->size() << " images " << endl;
+		for(unsigned int idx=0;idx<t->session->size();++idx)
 		{
 			TempFile *temp=(*t->session)[idx];
+//			Debug[TRACE] << "Attempting to add " << temp->Filename() << endl;
 			imageselector_add_filename(IMAGESELECTOR(t->ripui.imgsel),temp->Filename());
 		}
 		t->session->TempFileTracker::ReleaseMutex();
