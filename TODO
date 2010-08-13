@@ -1,4 +1,12 @@
-Fix searchpath bug which is prepending "\" to each path
+Add some kind of mask capability.
+	Import mask from external file
+	Mask editor?
+
+
+
+| Export resolution broken?
+
+| Fix searchpath bug which is prepending "\" to each path
 
 | Problem with fetching userdir when usename is unicode only happens from
 | within mingw shell - so don't worry about it.

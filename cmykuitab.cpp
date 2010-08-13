@@ -763,6 +763,11 @@ class UITab_SaveDialog
 
 					ProgressBar p(_("Saving"),true,dlg->dialog);
 					ImageSource *is=dlg->tab.image->GetImageSource();
+
+					// Patch resolution
+					is->xres=resolution;
+					is->yres=resolution;
+
 					if(!embedprofile)
 						is->SetEmbeddedProfile(NULL);
 
