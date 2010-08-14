@@ -11,7 +11,16 @@
 #include "simplecombo.h"
 #include "generaldialogs.h"
 #include "errordialogqueue.h"
+
+// FIXME - these are being created separately in each module that uses them
 #include "gfx/hourglass.cpp"
+#include "gfx/rgb.cpp"
+#include "gfx/cmyk.cpp"
+
+#include "imagesource_gdkpixbuf.h"
+#include "imagesource_montage.h"
+#include "pixbuf_from_imagesource.h"
+
 #include "miscwidgets/pixbuf_from_imagedata.h"
 
 #include "argyllsupport/viewingcondselector.h"
@@ -56,6 +65,8 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 		// Create pixbufs from icons in gfx/*.cpp
 		hourglass=PixbufFromImageData(hourglass_data,sizeof(hourglass_data));
+		rgbpb=PixbufFromImageData(rgb_data,sizeof(rgb_data));
+		cmykpb=PixbufFromImageData(cmyk_data,sizeof(cmyk_data));
 
 		window=gtk_dialog_new_with_buttons(_("Device Link Editor"),
 			GTK_WINDOW(parent),GtkDialogFlags(0),
@@ -269,6 +280,10 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 		if(hourglass)
 			g_object_unref(G_OBJECT(hourglass));
+		if(rgbpb)
+			g_object_unref(G_OBJECT(rgbpb));
+		if(cmykpb)
+			g_object_unref(G_OBJECT(cmykpb));
 	}
 
 	// Thread function - hangs around waiting for signal from ThreadEvent, and triggers a list update when received...
@@ -447,8 +462,64 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 			else
 			{
 				// FIXME - pick an RGB / CMYK icon here...
+				GdkPixbuf *icon=NULL;
+				try
+				{
+					ProfileManager &pm=core.GetProfileManager();
+					DeviceLink dl(e.filename.c_str());
+
+					CMSProfile *in=pm.GetProfile(dl.FindString("SourceProfile"));
+					IS_TYPE intype=in->GetColourSpace();
+					delete in;
+
+					CMSProfile *out=pm.GetProfile(dl.FindString("DestProfile"));
+					IS_TYPE outtype=out->GetColourSpace();
+					delete out;
+
+					GdkPixbuf *inicon=NULL;
+					GdkPixbuf *outicon=NULL;
+					switch(intype)
+					{
+						case IS_TYPE_RGB:
+							inicon=rgbpb;
+							break;
+						case IS_TYPE_CMYK:
+							inicon=cmykpb;
+							break;
+						default:
+							break;
+					}
+					switch(outtype)
+					{
+						case IS_TYPE_RGB:
+							outicon=rgbpb;
+							break;
+						case IS_TYPE_CMYK:
+							outicon=cmykpb;
+							break;
+						default:
+							break;
+					}
+					ImageSource_Montage *mon=new ImageSource_Montage(IS_TYPE_RGB);
+					if(outicon)
+					{
+						ImageSource *emblem=new ImageSource_GdkPixbuf(outicon);
+						mon->Add(emblem,36-emblem->width,30-emblem->height);
+					}
+					if(inicon)
+					{
+						ImageSource *emblem=new ImageSource_GdkPixbuf(inicon);
+						mon->Add(emblem,0,0);
+					}
+					if(mon->width)
+						icon=pixbuf_from_imagesource(mon);
+				}
+				catch(const char *err)
+				{
+					Debug[WARN] << "Couldn't create icon for devicelink " << e.filename << endl;
+				}
 				dn=e.displayname;
-				lvo.Add(e.filename.c_str(),dn.c_str());
+				lvo.Add(e.filename.c_str(),dn.c_str(),NULL,icon);
 			}
 		}
 		simplelistview_set_opts(SIMPLELISTVIEW(devicelinklist),&lvo);
@@ -519,6 +590,8 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 
 	// Icons for the listview
 	GdkPixbuf *hourglass;
+	GdkPixbuf *rgbpb;
+	GdkPixbuf *cmykpb;
 	
 	GtkWidget *parent;
 	GtkWidget *window;

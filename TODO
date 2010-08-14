@@ -3,6 +3,13 @@ Add some kind of mask capability.
 	Mask editor?
 
 
+Add some kind of node-based editor for defining operations.
+The trickiest part will be having some way for nodes further down the chain to communicate
+how many "support" rows they need.  Maybe add a static function to the ImageSource
+
+
+Add icons for devicelink list
+
 
 | Export resolution broken?
 
@@ -69,14 +76,14 @@ Add proper support for greyscale images and profiles.
 | Add newly-created presets to the preset list.
 
 | Need some kind of preset manager - will show a list of presets, and allow them to be edited or deleted.
-| Dialog should have a list of presets on the left hand side, each with an icon to show the source and dest spaces,
-| and preferably the conversion mode too.
-|   Need icons for:
-|     Straight RGB -> CMYK
-|     Hold Black
-|     Hold Grey
-|     Overprint
-|     DeviceLink
+Dialog should have a list of presets on the left hand side, each with an icon to show the source and dest spaces,
+and preferably the conversion mode too.
+  Need icons for:
+    Straight RGB -> CMYK
+    Hold Black
+    Hold Grey
+    Overprint
+    DeviceLink
 | On the right hand pane, the editor needs to have
 |   Preset Name
 |   Mark out a group, called "Input"
