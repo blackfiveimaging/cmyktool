@@ -80,6 +80,20 @@ int main ()
 	jd.AddJob(new TestJob(42));
 	jd.AddJob(new TestJob(7));
 
+	int c=0;
+	do
+	{
+		jd.ObtainMutex();
+		c=jd.JobCount(JOBSTATUS_RUNNING|JOBSTATUS_QUEUED);
+		jd.ReleaseMutex();
+		Debug[TRACE] << "Jobcount is " << c << endl;
+#ifdef WIN32
+		Sleep(1000);
+#else
+		sleep(1);
+#endif
+	} while(c);
+
 	jd.WaitCompletion();
 
 	return 0;

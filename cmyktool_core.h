@@ -12,11 +12,54 @@
 #include "conversionopts.h"
 
 
+class Callback
+{
+	public:
+	Callback()
+	{
+	}
+	virtual ~Callback()
+	{
+	}
+	virtual void Call()
+	{
+	}
+};
+
+
+class CMYKToolDispatcher : public JobDispatcher
+{
+	public:
+	CMYKToolDispatcher(ProfileManager &pm,int threads=3) : JobDispatcher(0), addjobcallback(0)
+	{
+		for(int i=0;i<threads;++i)
+			AddWorker(new CMTransformWorker(*this,pm));
+	}
+	void SetAddJobCallback(Callback *cb)
+	{
+//		Debug[TRACE] << "***Setting callback..." << std::endl;
+		addjobcallback=cb;
+	}
+	virtual void AddJob(Job *job)
+	{
+//		Debug[TRACE] << "*** In CMYKToolDispatcher::AddJob" << std::endl;
+		JobQueue::AddJob(job);
+		if(addjobcallback)
+		{
+//			Debug[TRACE] << "***Calling callback..." << std::endl;
+			addjobcallback->Call();
+		}
+	}
+	protected:
+	Callback *addjobcallback;
+};
+
+
 class CMYKTool_Core : public ConfigFile, public ConfigDB, public ThreadEventHandler
 {
 	public:
 	CMYKTool_Core() : ConfigFile(), ConfigDB(Template), profilemanager(this,"[ColourManagement]"),
-		dispatcher(0),factory(profilemanager), convopts(profilemanager), UpdateUI(*this,"UpdateUI")
+		dispatcher(profilemanager),factory(profilemanager), convopts(profilemanager), UpdateUI(*this,"UpdateUI")
 	{
 		new ConfigDBHandler(this,"[CMYKTool]",this);
 		profilemanager.SetInt("DefaultCMYKProfileActive",1);
@@ -25,10 +68,6 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB, public ThreadEventHand
 		ParseConfigFile(fn);
 		confname=fn;
 		free(fn);
-
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
-		dispatcher.AddWorker(new CMTransformWorker(dispatcher,profilemanager));
 	}
 	virtual ~CMYKTool_Core()
 	{
@@ -46,7 +85,7 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB, public ThreadEventHand
 	{
 		return(profilemanager);
 	}
-	JobDispatcher &GetDispatcher()
+	CMYKToolDispatcher &GetDispatcher()
 	{
 		return(dispatcher);
 	}
@@ -56,7 +95,7 @@ class CMYKTool_Core : public ConfigFile, public ConfigDB, public ThreadEventHand
 	};
 	protected:
 	ProfileManager profilemanager;
-	JobDispatcher dispatcher;
+	CMYKToolDispatcher dispatcher;
 	CMTransformFactory factory;
 	CMYKConversionOptions convopts;
 	std::string confname;

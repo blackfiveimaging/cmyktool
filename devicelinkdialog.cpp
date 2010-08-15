@@ -29,7 +29,7 @@
 class DeviceLinkJob : public Job
 {
 	public:
-	DeviceLinkJob(CMYKTool_Core &core,DeviceLink *dl) : core(core), dl(dl)
+	DeviceLinkJob(CMYKTool_Core &core,DeviceLink *dl) : Job(_("Generating Device Link")),core(core), dl(dl)
 	{
 	}
 	virtual ~DeviceLinkJob()

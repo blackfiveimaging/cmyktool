@@ -59,7 +59,7 @@ using namespace std;
 class UITab_RenderJob : public Job, public ThreadSync, public Progress
 {
 	public:
-	UITab_RenderJob(CMYKUITab &tab) : Job(), ThreadSync(), Progress(), tab(tab), tempimage(NULL), page(0)
+	UITab_RenderJob(CMYKUITab &tab) : Job(_("Rendering preview")), ThreadSync(), Progress(), tab(tab), tempimage(NULL), page(0)
 	{
 		tab.Ref();
 		unrefondelete=true;	// We need to be sure the reference will be released if the job gets cancelled before running.
@@ -201,7 +201,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 class UITab_CacheJob : public Job
 {
 	public:
-	UITab_CacheJob(CMYKUITab &tab,const char *filename) : Job(), tab(tab), filename(NULL)
+	UITab_CacheJob(CMYKUITab &tab,const char *filename) : Job(_("Converting image")), tab(tab), filename(NULL)
 	{
 		Debug[TRACE] << endl << "Adding reference from CacheJob Constructor" << endl;
 
@@ -466,8 +466,6 @@ CMYKUITab::~CMYKUITab()
 		delete collist;
 	if(image)
 		delete image;
-	if(collist)
-		delete collist;
 	if(filename)
 		free(filename);
 }

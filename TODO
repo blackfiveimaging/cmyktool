@@ -1,7 +1,49 @@
+DeviceLink editor needs to be split into tabs.
+
+First tab:  ("Basic")
+Input
+Output
+Rendering intent
+Ink limit
+Name
+
+Second tab:  ("Viewing conditions")
+Input viewing conditions
+| (Viewing condition selector needs "default" options with which no parameters are passed to Argyll.)
+Output viewing conditions
+Input spectrum (Default, D50, etc - or custom file)
+Observer (Default, 1931_2, etc.)
+[x] FWA compensation
+
+Third tab: ("Black Generation")
+Black Generation
+Ink Limit
+
+
+Argyll Spectrum selector
+Should provide a combo with the built-in illuminants first, then search an Argyll ref path for .sp files.
+Finally, should have a "custom" option.
+
+
+Beneath the notebook we should have buttons as follows:
+
+[Generate...]
+[Export...]  (Must solve issue with -D first!)
+
+
+
+Need some kind of global activity indicator - something to monitor the jobqueue.
+Clicking on this should bring up a list of pending jobs, which means the jobs should have meaningful names.
+
+
+Add Postscript Import - recognise PS/PDF by extension when adding a file, and pop up an options dialog.
+Need to decide how to handle temporary files.  Maybe a dialog when CMYKTool quits asking whether
+auto-generated files should be removed?
+
+
 Add some kind of mask capability.
 	Import mask from external file
 	Mask editor?
-
 
 Add some kind of node-based editor for defining operations.
 The trickiest part will be having some way for nodes further down the chain to communicate

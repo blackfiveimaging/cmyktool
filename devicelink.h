@@ -100,8 +100,12 @@ class DeviceLinkList : public std::deque<DeviceLinkList_Entry>
 
 						if(!Find(dn))	// Only create a new entry if there isn't already one by this name...
 						{
-							DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
-							push_back(e);
+							// If it's currently being generated we omit it if we're matching against specific profiles...
+							if((dl.FindInt("Pending")==0) || (src==NULL && dst==NULL))
+							{
+								DeviceLinkList_Entry e(fn,dn,dl.FindInt("Pending"));
+								push_back(e);
+							}
 						}
 					}
 				}

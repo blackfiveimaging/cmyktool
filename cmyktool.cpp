@@ -76,12 +76,14 @@ class TestUI : public CMYKTool_Core
 	void AddImage(const char *filename);
 	virtual void ProcessImage(const char *filename);
 	virtual void SaveConfig();
+	void StartProgressBar();
 	static void combochanged(GtkWidget *wid,gpointer userdata);
 	static void convert(GtkWidget *wid,gpointer userdata);
 	static void addimages(GtkWidget *wid,gpointer userdata);
 	static void removeimages(GtkWidget *wid,gpointer userdata);
 //	static void batchprocess(GtkWidget *wid,gpointer userdata);
 //	static void showconversiondialog(GtkWidget *wid,gpointer userdata);
+	static gboolean progressfunc(gpointer userdata);
 	static void showpreferencesdialog(GtkWidget *wid,gpointer userdata);
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 				     gint x, gint y, GtkSelectionData *selection_data, guint info, guint time, gpointer data);
@@ -98,6 +100,10 @@ class TestUI : public CMYKTool_Core
 	GtkWidget *imgsel;
 	GtkWidget *notebook;
 	GtkWidget *combo;
+	GtkWidget *progressbar;
+	Callback *progresscallback;
+	bool shuttingdown;
+	bool timeoutrunning;
 	GdkPixbuf *rgbpb;
 	GdkPixbuf *cmykpb;
 	GdkPixbuf *profpb;
@@ -105,6 +111,26 @@ class TestUI : public CMYKTool_Core
 	static GtkActionEntry menu_entries[];
 	static const char *menu_ui_description;
 };
+
+
+class ProgressCallback : public Callback
+{
+	public:
+	ProgressCallback(TestUI &ui) : ui(ui)
+	{
+	}
+	virtual ~ProgressCallback()
+	{
+	}
+	virtual void Call()
+	{
+//		Debug[TRACE] << "**** Callback function called." << endl;
+		ui.StartProgressBar();
+	}
+	protected:
+	TestUI &ui;
+};
+
 
 
 GtkActionEntry TestUI::menu_entries[] = {
@@ -320,13 +346,22 @@ TestUI::TestUI() : CMYKTool_Core()
 	gtk_widget_show(tmp);
 
 
-	// Preferences button
+
+#if 0
+	// Preferences button - redundant since we now have menus
 
 
 	tmp=gtk_button_new_with_label(_("Preferences..."));
 	gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showpreferencesdialog),this);
 	gtk_widget_show(tmp);
+#endif
+
+	progressbar=gtk_progress_bar_new();
+	gtk_progress_bar_set_ellipsize(GTK_PROGRESS_BAR(progressbar),PANGO_ELLIPSIZE_END);
+	gtk_box_pack_start(GTK_BOX(vbox),progressbar,FALSE,FALSE,0);
+//	g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(showpreferencesdialog),this);
+	gtk_widget_show(progressbar);
 
 
 //	GtkWidget *tmp=gtk_button_new_with_label("Batch Process...");
@@ -347,11 +382,23 @@ TestUI::TestUI() : CMYKTool_Core()
 	const char *key=simplecombo_get(SIMPLECOMBO(combo));
 	if(strcmp(key,PRESET_OTHER_ESCAPE)!=0)
 		combochanged(combo,this);
+
+	progresscallback=new ProgressCallback(*this);
+	GetDispatcher().SetAddJobCallback(progresscallback);
+	timeoutrunning=shuttingdown=false;
 }
 
 
 TestUI::~TestUI()
 {
+	shuttingdown=true;	
+	while(timeoutrunning)
+		gtk_main_iteration();
+	if(progresscallback)
+	{
+		GetDispatcher().SetAddJobCallback(NULL);
+		delete progresscallback;
+	}
 	CMYKConversionPreset p;
 	p.Store(convopts);
 	p.SetString("DisplayName",_("Previous settings"));
@@ -553,6 +600,54 @@ void TestUI::showaboutdialog(GtkAction *action,gpointer ob)
 		"copyright", _("Copyright (c) 2009-2010 Alastair M. Robinson"),
 		"comments",_("A utility for conversion of images using ICC colour profiles."),
 		NULL);
+}
+
+
+void TestUI::StartProgressBar()
+{
+	if(!timeoutrunning && !shuttingdown)
+		gtk_timeout_add(200,progressfunc,this);
+}
+
+
+gboolean TestUI::progressfunc(gpointer userdata)
+{
+	static int tick=0;
+	bool result=true;
+	TestUI *ui=(TestUI *)userdata;
+	if(ui->shuttingdown)
+		result=ui->timeoutrunning=false;
+	else
+	{
+		ui->timeoutrunning=true;
+		JobDispatcher &jd=ui->GetDispatcher();
+		jd.ObtainMutex();
+		int c=jd.JobCount(JOBSTATUS_QUEUED|JOBSTATUS_RUNNING);
+		jd.ReleaseMutex();
+//		Debug[TRACE] << "Jobcount is currently " << c << endl;
+		if(c)
+		{
+			gtk_widget_show(ui->progressbar);
+			gtk_progress_bar_pulse(GTK_PROGRESS_BAR(ui->progressbar));
+			if((tick&7)==0)
+			{
+				int entry=tick/8;
+				JobMonitorList joblist(ui->GetDispatcher());
+				entry%=joblist.size();
+				gtk_progress_bar_set_text(GTK_PROGRESS_BAR(ui->progressbar),joblist[entry].name.c_str());
+			}
+			++tick;
+		}
+		else
+		{
+//			gtk_widget_hide(ui->progressbar);
+			gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(ui->progressbar),0.0);
+			gtk_progress_bar_set_text(GTK_PROGRESS_BAR(ui->progressbar),_("Done"));
+			result=ui->timeoutrunning=false;
+			tick=0;
+		}
+	}
+	return(result);
 }
 
 
