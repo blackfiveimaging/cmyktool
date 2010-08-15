@@ -38,7 +38,11 @@ Clicking on this should bring up a list of pending jobs, which means the jobs sh
 
 Add Postscript Import - recognise PS/PDF by extension when adding a file, and pop up an options dialog.
 Need to decide how to handle temporary files.  Maybe a dialog when CMYKTool quits asking whether
-auto-generated files should be removed?
+auto-generated files should be removed?  Or just a checkbox on the import dialog?
+
+Need the following options:
+
+Output filename prefix: [ /path/to/file ] _nnn.tif
 
 
 Add some kind of mask capability.
