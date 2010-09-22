@@ -4,131 +4,26 @@
 
 #include "imagesource.h"
 #include "imagesource_util.h"
+#include "imagesource_hsv.h"
+#include "imagesource_hsvtorgb.h"
+#include "imagesource_huerotate.h"
+#include "imagesource_flatten.h"
+#include "devicencolorant.h"
+#include "imagesource_cms.h"
+#include "imagesource_devicen_preview.h"
+
+#include "cachedimage.h"
+
 #include "pixbuf_from_imagesource.h"
 #include "pixbufview.h"
 #include "profilemanager.h"
 
-#include "rspl/rspl.h"
+#include "rsplwrapper.h"
 
 #include "config.h"
 #define _(x) gettext(x)
 
 using namespace std;
-
-
-class RSPLWrapper
-{
-	public:
-	RSPLWrapper(int ind, int outd) : interp(NULL), ind(ind), outd(outd)
-	{
-		interp=new_rspl(0,ind,outd); // Create a new RSPL structure
-		for(int i=0;i<ind;++i)
-		{
-			gres[i]=16;
-			avgdev[i]=0.1;
-		}
-	}
-	virtual ~RSPLWrapper()
-	{
-		if(interp)
-			interp->del(interp);
-	}
-	virtual bool Populate(int count, double *in, double *out,double smoothing)
-	{
-		cow *myco=new cow[count];
-		datai ilow,ihigh;
-		datao olow,ohigh;
-
-		for(int i=0;i<ind;++i)
-		{
-			ilow[i]=ihigh[i]=in[i];
-		}
-		for(int i=0;i<outd;++i)
-		{
-			olow[i]=ohigh[i]=out[i];
-		}
-
-		for(int i=0;i<count;++i)
-		{
-			for(int j=0;j<ind;++j)
-			{
-				myco[i].p[j]=in[i*ind+j];
-				if(in[i*ind+j]<ilow[j]) ilow[j]=in[i*ind+j];
-				if(in[i*ind+j]>ihigh[j]) ihigh[j]=in[i*ind+j];
-			}
-			for(int j=0;j<outd;++j)
-			{
-				myco[i].v[j]=out[i*outd+j];
-				if(out[i*outd+j]<olow[j]) olow[j]=out[i*outd+j];
-				if(out[i*outd+j]>ohigh[j]) ohigh[j]=out[i*outd+j];
-			}
-			myco[i].w=1.0;
-		}
-		// Increase weights of endpoints...
-		myco[0].w=10.0;
-		myco[count-1].w=10.0;
-
-		// Add some "headroom"
-		for(int j=0;j<ind;++j)
-		{
-			ilow[j]-=1.0;
-			ihigh[j]+=1.0;
-		}
-
-		for(int j=0;j<outd;++j)
-		{
-			olow[j]-=1.0;
-			ohigh[j]+=1.0;
-		}
-
-		interp->fit_rspl_w(interp,
-		           RSPL_EXTRAFIT,		/* Non-mon and clip flags */
-		           myco,				/* Test points */
-		           count,				/* Number of test points */
-		           ilow, ihigh, gres,	/* Low, high, resolution of grid */
-		           olow, ohigh,			/* Default data scale */
-		           smoothing,			/* Smoothing */
-		           avgdev,				/* Average deviation */
-		           NULL);				/* iwidth */
-		delete[] myco;
-		return(true);
-	}
-
-	virtual void Interp(double *in, double *out)
-	{
-		co point;
-		for(int i=0;i<ind;++i)
-			point.p[i]=*in++;
-		for(int i=0;i<outd;++i)
-			point.v[i]=0.0;
-		interp->interp(interp,&point);
-		for(int i=0;i<outd;++i)
-			*out++=point.v[i];
-	}
-
-	virtual bool ReverseInterp(double *out, double *in)
-	{
-		co point;
-		for(int i=0;i<ind;++i)
-			point.p[i]=0;
-		for(int i=0;i<outd;++i)
-			point.v[i]=*out++;
-		int result=interp->rev_interp(interp,RSPL_WILLCLIP|RSPL_NEARCLIP,1,NULL,NULL,&point);
-		for(int i=0;i<outd;++i)
-			*in++=point.p[i];
-		if(result==0)
-		{
-			Debug[TRACE] << "ReverseInterp: no solutions found" << endl;
-			return(false);
-		}
-		return(true);
-	}
-	protected:
-	rspl *interp;
-	int ind,outd;
-	int gres[MXDI];
-	double avgdev[MXDO];
-};
 
 
 class RGBToCMY : public RSPLWrapper
@@ -163,8 +58,8 @@ class RGBToCMY : public RSPLWrapper
 					cmyin[idx+1]=double(cmyk[1])/IS_SAMPLEMAX;
 					cmyin[idx+2]=double(cmyk[2])/IS_SAMPLEMAX;
 					rgbout[idx]=double(in[0])/IS_SAMPLEMAX;
-					rgbout[idx+1]=double(in[1])/IS_SAMPLEMAX-0.5;
-					rgbout[idx+2]=double(in[2])/IS_SAMPLEMAX-0.5;
+					rgbout[idx+1]=double(in[1])/IS_SAMPLEMAX;
+					rgbout[idx+2]=double(in[2])/IS_SAMPLEMAX;
 					Debug[TRACE] << cmyin[idx] << ", " << cmyin[idx+1] << ", " << cmyin[idx+2] << " -> " <<
 						rgbout[idx] << ", " << rgbout[idx+1] << ", " << rgbout[idx+2] << endl;
 				}
@@ -178,117 +73,48 @@ class RGBToCMY : public RSPLWrapper
 };
 
 
-class ImageSource_HSV : public ImageSource
+class ImageSource_DuoTone : public ImageSource
 {
 	public:
-	ImageSource_HSV(ImageSource *src) : ImageSource(src), source(src)
+	ImageSource_DuoTone(ImageSource *src) : ImageSource(src), source(src)
 	{
-		Debug[TRACE] << "Source image type " << source->type << std::endl;
-		switch(source->type)
-		{
-			case IS_TYPE_RGB:
-				type=IS_TYPE_HSV;
-				break;
-			case IS_TYPE_RGBA:
-				type=IS_TYPE_HSVA;
-				break;
-			default:
-				throw "HSV conversion can only take RGB(A) input";
-				break;
-		}
-		Debug[TRACE] << "HSV image type " << type << std::endl;
+		if(STRIP_ALPHA(source->type)!=IS_TYPE_RGB)
+			throw "DuoTone only supports RGB input!";
+		if(HAS_ALPHA(source->type))
+			source=new ImageSource_Flatten(source);
+
+		type=IS_TYPE_DEVICEN;
+		samplesperpixel=2;
+
 		MakeRowBuffer();
 	}
-	~ImageSource_HSV()
+	~ImageSource_DuoTone()
 	{
 		if(source)
 			delete source;
 	}
 	ISDataType *GetRow(int row)
 	{
-		if(row==currentrow)
+		if(currentrow==row)
 			return(rowbuffer);
+
 		ISDataType *src=source->GetRow(row);
-
-		switch(type)
+		for(int x=0;x<width;++x)
 		{
-			case IS_TYPE_HSV:
-				for(int x=0;x<width;++x)
-				{
-					int r=src[3*x];
-					int g=src[3*x+1];
-					int b=src[3*x+2];
-					int M=r;
-					if(M<g) M=g;
-					if(M<b) M=b;
+			int r=src[x*3];
+			int g=src[x*3+1];
+			int b=src[x*3+2];
+			int t=(g+b)/2;
 
-					int m=r;
-					if(m>g) m=g;
-					if(m>b) m=b;
+			if(r>t)
+				g=t;
+			else
+				r=g=(r + g + b)/3;
 
-					int c=M-m;
-					int h=0;
-					if(c)
-					{
-						if(M==r)
-							h=(((g-b)*8192)/c);
-						if(M==g)
-							h=(((b-r)*8192)/c)+16384;
-						if(M==b)
-							h=(((r-g)*8192)/c)+32768;
-						if(h<0)
-							h+=(6*8192);
-					}
+			g=r-g;
 
-					int s=0;
-					if(M>4)
-						s=((IS_SAMPLEMAX/4)*c)/(M/4);
-					rowbuffer[3*x]=h;
-					rowbuffer[3*x+1]=s;
-					rowbuffer[3*x+2]=M;
-				}
-				break;
-			case IS_TYPE_HSVA:
-				for(int x=0;x<width;++x)
-				{
-					int r=src[4*x];
-					int g=src[4*x+1];
-					int b=src[4*x+2];
-					int a=0;
-					int M=r;
-					if(M<g) M=g;
-					if(M<b) M=b;
-
-					int m=r;
-					if(m>g) m=g;
-					if(m>b) m=b;
-
-					int c=M-m;
-					int h=0;
-					if(c)
-					{
-						if(M==r)
-							h=(((g-b)*8192)/c);
-						if(M==g)
-							h=(((b-r)*8192)/c)+16384;
-						if(M==b)
-							h=(((r-g)*8192)/c)+32768;
-						if(h<0)
-							h+=(6*8192);
-					}
-
-					int s=0;
-					if(M>4)
-						s=((IS_SAMPLEMAX/4)*c)/(M/4);
-					rowbuffer[4*x]=h;
-					rowbuffer[4*x+1]=s;
-					rowbuffer[4*x+2]=M;
-					rowbuffer[4*x+3]=a;
-				}
-				break;
-			default:
-				throw "Bad type - how did that happen?";
-				break;
+			rowbuffer[x*2]=g;
+			rowbuffer[x*2+1]=IS_SAMPLEMAX-r;
 		}
 		currentrow=row;
 		return(rowbuffer);
@@ -298,234 +124,82 @@ class ImageSource_HSV : public ImageSource
 };
 
 
-class ImageSource_HSVToRGB : public ImageSource
+class ImageSource_DuoTone_Preview : public ImageSource
 {
 	public:
-	ImageSource_HSVToRGB(ImageSource *src) : ImageSource(src), source(src)
+	ImageSource_DuoTone_Preview(ImageSource *source,ISDeviceNValue &col1,ISDeviceNValue &col2) : ImageSource(source), source(source),col1(col1),col2(col2)
 	{
-		switch(source->type)
-		{
-			case IS_TYPE_HSV:
-				type=IS_TYPE_RGB;
-				break;
-			case IS_TYPE_HSVA:
-				type=IS_TYPE_RGBA;
-				break;
-			default:
-				throw "HSV conversion only works with HSV or HSVA input!";
-				break;
-		}
+		type=IS_TYPE_CMYK;
+		samplesperpixel=4;
 		MakeRowBuffer();
 	}
-	~ImageSource_HSVToRGB()
+	~ImageSource_DuoTone_Preview()
 	{
 		if(source)
 			delete source;
 	}
 	ISDataType *GetRow(int row)
 	{
-		if(row==currentrow)
+		if(currentrow==row)
 			return(rowbuffer);
+
 		ISDataType *src=source->GetRow(row);
-
-		switch(source->type)
+		for(int x=0;x<width;++x)
 		{
-			case IS_TYPE_HSV:
-				for(int x=0;x<width;++x)
-				{
-					int h=src[3*x];
-					int s=src[3*x+1];
-					int v=src[3*x+2];
-
-					int c=((s/2)*(v/2))/(IS_SAMPLEMAX/4);
-
-					int r=0;
-					int g=0;
-					int b=0;
-					int t=(h % 0x4000) - 0x2000;
-					if(t<0)
-						t=-t;
-					t=(c*(0x2000-t))/0x2000;
-
-					if(h<0x2000)
-					{
-						r=c; g=t; b=0;
-					}
-					else if(h<0x4000)
-					{
-						r=t; g=c; b=0;
-					}
-					else if(h<0x6000)
-					{
-						r=0; g=c; b=t;
-					}
-					else if(h<0x8000)
-					{
-						r=0; g=t; b=c;
-					}
-					else if(h<0xa000)
-					{
-						r=t; g=0; b=c;
-					}
-					else if(h<0xc000)
-					{
-						r=c; g=0; b=t;
-					}
-					r+=v-c;
-					g+=v-c;
-					b+=v-c;
-					if(r>IS_SAMPLEMAX) r=IS_SAMPLEMAX;
-					if(r<0) r=0;
-					if(g>IS_SAMPLEMAX) g=IS_SAMPLEMAX;
-					if(g<0) g=0;
-					if(b>IS_SAMPLEMAX) b=IS_SAMPLEMAX;
-					if(b<0) b=0;
-					rowbuffer[3*x]=r;
-					rowbuffer[3*x+1]=g;
-					rowbuffer[3*x+2]=b;
-				}
-				break;
-			case IS_TYPE_HSVA:
-				for(int x=0;x<width;++x)
-				{
-					int h=src[4*x];
-					int s=src[4*x+1];
-					int v=src[4*x+2];
-					int a=src[4*x+3];
-
-					int c=((s/2)*(v/2))/(IS_SAMPLEMAX/4);
-
-					int r=0;
-					int g=0;
-					int b=0;
-					int t=(h % 0x4000) - 0x2000;
-					if(t<0)
-						t=-t;
-					t=(c*(0x2000-t))/0x2000;
-
-					if(h<0x2000)
-					{
-						r=c; g=t; b=0;
-					}
-					else if(h<0x4000)
-					{
-						r=t; g=c; b=0;
-					}
-					else if(h<0x6000)
-					{
-						r=0; g=c; b=t;
-					}
-					else if(h<0x8000)
-					{
-						r=0; g=t; b=c;
-					}
-					else if(h<0xa000)
-					{
-						r=t; g=0; b=c;
-					}
-					else if(h<0xc000)
-					{
-						r=c; g=0; b=t;
-					}
-					r+=v-c;
-					g+=v-c;
-					b+=v-c;
-					if(r>IS_SAMPLEMAX) r=IS_SAMPLEMAX;
-					if(r<0) r=0;
-					if(g>IS_SAMPLEMAX) g=IS_SAMPLEMAX;
-					if(g<0) g=0;
-					if(b>IS_SAMPLEMAX) b=IS_SAMPLEMAX;
-					if(b<0) b=0;
-					rowbuffer[4*x]=r;
-					rowbuffer[4*x+1]=g;
-					rowbuffer[4*x+2]=b;
-					rowbuffer[4*x+3]=a;
-				}
-				break;
-			default:
-				throw "Bad type - how did that happen?";
-				break;
+			int a=src[x*2]/4;
+			int b=src[x*2+1]/4;
+			int c=(col1[0]*a)/(IS_SAMPLEMAX/4);
+			int m=(col1[1]*a)/(IS_SAMPLEMAX/4);
+			int y=(col1[2]*a)/(IS_SAMPLEMAX/4);
+			int k=(col2[3]*b)/(IS_SAMPLEMAX/4);
+			rowbuffer[x*4]=c;
+			rowbuffer[x*4+1]=m;
+			rowbuffer[x*4+2]=y;
+			rowbuffer[x*4+3]=k;
 		}
 		currentrow=row;
 		return(rowbuffer);
 	}
 	protected:
 	ImageSource *source;
+	ISDeviceNValue &col1;
+	ISDeviceNValue &col2;
 };
 
 
-class ImageSource_HueRotate : public ImageSource
+class GUI : public ConfigFile
 {
 	public:
-	ImageSource_HueRotate(ImageSource *src,int degrees) : ImageSource(src), source(src), offset(0)
+	GUI() : ConfigFile(), profilemanager(this,"[Colour Management]"), pview(NULL), imposter(NULL), colorants(),
+		cmypreview(4,0), kpreview(4,0), transform(NULL)
 	{
-		if(STRIP_ALPHA(type)!=IS_TYPE_HSV)
-			throw "Hue rotation only works with HSV data!";
-		offset=(0xc000*degrees)/360;
-		MakeRowBuffer();
-	}
-	~ImageSource_HueRotate()
-	{
-		if(source)
-			delete source;
-	}
-	ISDataType *GetRow(int row)
-	{
-		if(row==currentrow)
-			return(rowbuffer);
-		ISDataType *src=source->GetRow(row);
-		switch(type)
+		profilemanager.SetInt("DefaultCMYKProfileActive",1);
+		CMSProfile *prof=profilemanager.GetDefaultProfile(IS_TYPE_CMYK);
+		if(!prof)
+			throw "Can't open default CMYK profile";
+		CMSProfile *monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DISPLAY);
+		if(!monitorprof)
+			monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DEFAULTRGB);
+		if(monitorprof)
 		{
-			case IS_TYPE_HSV:
-				for(int x=0;x<width;++x)
-				{
-					int h=src[x*samplesperpixel];
-					int s=src[x*samplesperpixel+1];
-					int v=src[x*samplesperpixel+2];
-					h+=offset;
-					if(h>=0xc000)
-						h-=0xc000;
-					rowbuffer[x*samplesperpixel]=h;
-					rowbuffer[x*samplesperpixel+1]=s;
-					rowbuffer[x*samplesperpixel+2]=v;
-				}
-				break;
-			case IS_TYPE_HSVA:
-				for(int x=0;x<width;++x)
-				{
-					int h=src[x*samplesperpixel];
-					int s=src[x*samplesperpixel+1];
-					int v=src[x*samplesperpixel+2];
-					int a=src[x*samplesperpixel+3];
-					h+=offset;
-					if(h>=0xc000)
-						h-=0xc000;
-					rowbuffer[x*samplesperpixel]=h;
-					rowbuffer[x*samplesperpixel+1]=s;
-					rowbuffer[x*samplesperpixel+2]=v;
-					rowbuffer[x*samplesperpixel+3]=a;
-				}
-				break;
-				break;
-			default:
-				throw "ImageSource_HueRotate: Bad image type!";
-				break;
+			transform=new CMSTransform(prof,monitorprof);
+			delete monitorprof;
 		}
-		return(rowbuffer);
-	}
-	protected:
-	ImageSource *source;
-	int offset;
-};
+		else
+			throw "Can't get profile for display!";
+		delete prof;
 
-int main(int argc,char **argv)
-{
-	Debug.SetLevel(TRACE);
+		cmypreview[0]=0;
+		cmypreview[1]=IS_SAMPLEMAX;
+		cmypreview[2]=(IS_SAMPLEMAX*5)/6;
+		cmypreview[3]=0;
+		kpreview[3]=IS_SAMPLEMAX;
 
-	gtk_init(&argc,&argv);
+		Debug[TRACE] << "CMY preview: " << cmypreview[0] << ", " << cmypreview[1] << ", " << cmypreview[2] << std::endl;
 
-	try
-	{
+		new DeviceNColorant(colorants,"Red");
+		new DeviceNColorant(colorants,"Black");
+
 		GtkWidget *win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
 		gtk_window_set_title (GTK_WINDOW (win), _("PixBufView Test"));
 		gtk_signal_connect (GTK_OBJECT (win), "delete_event",
@@ -535,38 +209,99 @@ int main(int argc,char **argv)
 		gtk_container_add(GTK_CONTAINER(win),vbox);
 		gtk_widget_show(GTK_WIDGET(vbox));
 
-		GtkWidget *pview=pixbufview_new(NULL,false);
-//		g_signal_connect(G_OBJECT(pview),"mousemove",G_CALLBACK(mouse_move),pview);
+		pview=pixbufview_new(NULL,false);
 
 		gtk_box_pack_start(GTK_BOX(vbox),pview,TRUE,TRUE,0);
 		gtk_widget_show(pview);
 		gtk_widget_show(win);
 
-//		SimpleComboOptions opts;
+		rotation=gtk_hscale_new_with_range(0.0,359.0,1.0);
+		g_signal_connect(G_OBJECT(rotation),"value-changed",G_CALLBACK(slider_changed),this);
+		gtk_box_pack_start(GTK_BOX(vbox),rotation,FALSE,FALSE,0);
+		gtk_widget_show(rotation);
 
-		for(int i=1;i<argc;++i)
+	}
+	~GUI()
+	{
+		if(imposter)
+			delete imposter;
+		if(transform)
+			delete transform;
+	}
+	void SetImage(std::string fn)
+	{
+		if(imposter)
+			delete imposter;
+		imposter=NULL;
+
+		filename=fn;
+		ImageSource *is=ISLoadImage(fn.c_str());
+		int w=256;
+		int h=(256*is->height)/is->width;
+		if(h>256)
 		{
-			ImageSource *is=ISLoadImage(argv[i]);
-			is=new ImageSource_HSV(is);
-			is=new ImageSource_HueRotate(is,60);
-			is=new ImageSource_HSVToRGB(is);
-//			is=new ImageSource_HReflect(is);
-			GdkPixbuf *pb=pixbuf_from_imagesource(is);
-			delete is;
-
-			pixbufview_add_page(PIXBUFVIEW(pview),pb);
-			g_object_unref(G_OBJECT(pb));
-
-//			opts.Add("",argv[i]);
+			h=256;
+			w=(256*is->width)/is->height;
 		}
+		is=ISScaleImageBySize(is,w,h);
+		imposter=new CachedImage(is);
+		Update();
+	}
+	void Update()
+	{
+		int r=gtk_range_get_value(GTK_RANGE(rotation));
+		ImageSource *is=imposter->GetImageSource();
+		is=Process(is,r);
 
-//		GtkWidget *combo=simplecombo_new(opts);
-//		g_signal_connect(G_OBJECT(combo),"changed",G_CALLBACK(change_page),pview);
-//		gtk_box_pack_start(GTK_BOX(vbox),combo,FALSE,FALSE,0);
-//		gtk_widget_show(combo);
+		GdkPixbuf *pb=pixbuf_from_imagesource(is);
+		delete is;
+
+		pixbufview_set_pixbuf(PIXBUFVIEW(pview),pb);
+		g_object_unref(G_OBJECT(pb));
+	}
+	ImageSource *Process(ImageSource *src, int rotation)
+	{
+		src=new ImageSource_HSV(src);
+		src=new ImageSource_HueRotate(src,rotation);
+		src=new ImageSource_HSVToRGB(src);
+		src=new ImageSource_DuoTone(src);
+//		src=new ImageSource_DeviceN_Preview(src,&colorants);
+		src=new ImageSource_DuoTone_Preview(src,cmypreview,kpreview);
+		src=new ImageSource_CMS(src,transform);
+		return(src);
+	}
+	static void slider_changed(GtkWidget *wid,gpointer ud)
+	{
+		GUI *gui=(GUI *)ud;
+		gui->Update();
+	}
+	protected:
+	ProfileManager profilemanager;
+	GtkWidget *window;
+	GtkWidget *pview;
+	GtkWidget *rotation;
+	CachedImage *imposter;
+	DeviceNColorantList colorants;
+	ISDeviceNValue cmypreview;
+	ISDeviceNValue kpreview;
+	CMSTransform *transform;
+	std::string filename;
+};
+
+
+int main(int argc,char**argv)
+{
+	Debug.SetLevel(TRACE);
+
+	gtk_init(&argc,&argv);
+
+	try
+	{
+		GUI test;
+		if(argc>1)
+			test.SetImage(argv[1]);
 
 		gtk_main();
-
 	}
 	catch(const char *err)
 	{
@@ -575,3 +310,4 @@ int main(int argc,char **argv)
 
 	return(0);
 }
+

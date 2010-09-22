@@ -5,7 +5,7 @@ SUBDIRS = po numlib rspl argyllsupport support imagesource imageutils miscwidget
 localedir=$(datadir)/locale
 
 AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -I./imageutils \
-	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail -I./numlib -I./rspl \
+	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail -I./numlib -I./rspl -I./argyllsupport \
 	$(LCMS_CFLAGS) $(GTK2_CFLAGS)
 
 noinst_LTLIBRARIES = libdeflatten.la libdeflattenui.la
