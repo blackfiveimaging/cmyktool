@@ -124,16 +124,16 @@ class ImageSource_DuoTone : public ImageSource
 };
 
 
-class ImageSource_DuoTone_Preview : public ImageSource
+class ImageSource_DuoToneToCMYK : public ImageSource
 {
 	public:
-	ImageSource_DuoTone_Preview(ImageSource *source,ISDeviceNValue &col1,ISDeviceNValue &col2) : ImageSource(source), source(source),col1(col1),col2(col2)
+	ImageSource_DuoToneToCMYK(ImageSource *source,ISDeviceNValue &col1,ISDeviceNValue &col2) : ImageSource(source), source(source),col1(col1),col2(col2)
 	{
 		type=IS_TYPE_CMYK;
 		samplesperpixel=4;
 		MakeRowBuffer();
 	}
-	~ImageSource_DuoTone_Preview()
+	~ImageSource_DuoToneToCMYK()
 	{
 		if(source)
 			delete source;
@@ -165,6 +165,14 @@ class ImageSource_DuoTone_Preview : public ImageSource
 	ISDeviceNValue &col1;
 	ISDeviceNValue &col2;
 };
+
+
+#define TARGET_URI_LIST 1
+
+static GtkTargetEntry dnd_file_drop_types[] = {
+	{ "text/uri-list", 0, TARGET_URI_LIST }
+};
+static gint dnd_file_drop_types_count = 1;
 
 
 class GUI : public ConfigFile
@@ -201,13 +209,22 @@ class GUI : public ConfigFile
 		new DeviceNColorant(colorants,"Black");
 
 		GtkWidget *win=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		gtk_window_set_title (GTK_WINDOW (win), _("PixBufView Test"));
+		gtk_window_set_default_size(GTK_WINDOW(win),640,480);
+		gtk_window_set_title (GTK_WINDOW (win), _("DuoToner"));
 		gtk_signal_connect (GTK_OBJECT (win), "delete_event",
 			(GtkSignalFunc) gtk_main_quit, NULL);
 
 		GtkWidget *vbox=gtk_vbox_new(FALSE,0);
 		gtk_container_add(GTK_CONTAINER(win),vbox);
 		gtk_widget_show(GTK_WIDGET(vbox));
+
+		gtk_drag_dest_set(GTK_WIDGET(vbox),
+				  GtkDestDefaults(GTK_DEST_DEFAULT_MOTION | GTK_DEST_DEFAULT_DROP),
+				  dnd_file_drop_types, dnd_file_drop_types_count,
+	                          GdkDragAction(GDK_ACTION_COPY | GDK_ACTION_MOVE | GDK_ACTION_LINK));
+		g_signal_connect(G_OBJECT(vbox), "drag_data_received",
+				 G_CALLBACK(get_dnd_data), this);
+
 
 		pview=pixbufview_new(NULL,false);
 
@@ -250,14 +267,18 @@ class GUI : public ConfigFile
 	void Update()
 	{
 		int r=gtk_range_get_value(GTK_RANGE(rotation));
-		ImageSource *is=imposter->GetImageSource();
-		is=Process(is,r);
+		if(imposter)
+		{
+			ImageSource *is=imposter->GetImageSource();
+			is=Process(is,r);
+			is=new ImageSource_CMS(is,transform);
 
-		GdkPixbuf *pb=pixbuf_from_imagesource(is);
-		delete is;
+			GdkPixbuf *pb=pixbuf_from_imagesource(is);
+			delete is;
 
-		pixbufview_set_pixbuf(PIXBUFVIEW(pview),pb);
-		g_object_unref(G_OBJECT(pb));
+			pixbufview_set_pixbuf(PIXBUFVIEW(pview),pb);
+			g_object_unref(G_OBJECT(pb));
+		}
 	}
 	ImageSource *Process(ImageSource *src, int rotation)
 	{
@@ -265,15 +286,51 @@ class GUI : public ConfigFile
 		src=new ImageSource_HueRotate(src,rotation);
 		src=new ImageSource_HSVToRGB(src);
 		src=new ImageSource_DuoTone(src);
-//		src=new ImageSource_DeviceN_Preview(src,&colorants);
-		src=new ImageSource_DuoTone_Preview(src,cmypreview,kpreview);
-		src=new ImageSource_CMS(src,transform);
+		src=new ImageSource_DuoToneToCMYK(src,cmypreview,kpreview);
 		return(src);
 	}
 	static void slider_changed(GtkWidget *wid,gpointer ud)
 	{
 		GUI *gui=(GUI *)ud;
 		gui->Update();
+	}
+	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
+	     gint x, gint y, GtkSelectionData *selection_data, guint info,
+	     guint time, gpointer data)
+	{
+		gchar *temp;
+		gchar *urilist=temp=g_strdup((const gchar *)selection_data->data);
+
+		GUI *ui=(GUI *)data;
+
+		while(*urilist)
+		{
+			if(strncmp(urilist,"file:",5))
+			{
+				g_print("Warning: only local files (file://) are currently supported\n");
+				while(*urilist && *urilist!='\n' && *urilist!='\r')
+					++urilist;
+				while(*urilist=='\n' || *urilist=='\r')
+					*urilist++;
+			}
+			else
+			{
+				gchar *uri=urilist;
+				while(*urilist && *urilist!='\n' && *urilist!='\r')
+					++urilist;
+				if(*urilist)
+				{
+					while(*urilist=='\n' || *urilist=='\r')
+						*urilist++=0;
+					gchar *filename=g_filename_from_uri(uri,NULL,NULL);
+
+					ui->SetImage(filename);
+				}
+			}
+		}
+
+		if(temp)
+			g_free(temp);
 	}
 	protected:
 	ProfileManager profilemanager;
