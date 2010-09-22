@@ -45,7 +45,7 @@ libdeflattenui_la_SOURCES = \
 
 bin_PROGRAMS = cmyktool
 
-check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest dltest
+check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest dltest hsvtest
 
 dltest_SOURCES = dltest.cpp
 rspltest_SOURCES = rspltest.cpp
