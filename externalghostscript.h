@@ -39,9 +39,9 @@ class ExternalGhostScript : public ExternalProgram
 		DirTreeWalker *w;
 		while((w=dtw.NextDirectory()))
 		{
-			if(MatchBaseName("gs",w->c_str())==0)
+			if(MatchBaseName("gs",w->Directory())==0)
 			{
-				std::string gspath=FindParent(*w,"gswin32");
+				std::string gspath=FindParent(w->Directory(),"gswin32");
 				if(gspath.size())
 				{
 					Debug[TRACE] << "Adding " << gspath << " to search path" << std::endl;
