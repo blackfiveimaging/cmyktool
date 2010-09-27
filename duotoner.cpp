@@ -108,6 +108,10 @@ class DuoTone_Options
 	{
 		return(cmypreview);
 	}
+	void SetCMY(ISDeviceNValue &col)
+	{
+		cmypreview=col;
+	}
 	ISDeviceNValue &GetK()
 	{
 		return(kpreview);
@@ -408,6 +412,23 @@ class GUI : public DuoToner
 		gtk_box_pack_start(GTK_BOX(vbox),colcontrast,FALSE,FALSE,0);
 		gtk_widget_show(colcontrast);
 
+		tmp=gtk_label_new(_("DuoTone colour"));
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+		gtk_widget_show(tmp);
+
+		GdkColor col;
+		ISDeviceNValue &cmy=opts.GetCMY();
+		col.red=IS_SAMPLEMAX-cmy[0];
+		col.green=IS_SAMPLEMAX-cmy[1];
+		col.blue=IS_SAMPLEMAX-cmy[2];
+
+		colselector=gtk_color_button_new();
+		gtk_color_button_set_color(GTK_COLOR_BUTTON(colselector),&col);
+		gtk_box_pack_start(GTK_BOX(vbox),colselector,FALSE,FALSE,0);
+		g_signal_connect(G_OBJECT(colselector),"color-set",G_CALLBACK(sliders_changed),this);
+		gtk_widget_show(colselector);
+
+
 		tmp=gtk_hseparator_new();
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,8);
 		gtk_widget_show(tmp);
@@ -498,6 +519,13 @@ class GUI : public DuoToner
 	static void sliders_changed(GtkWidget *wid,gpointer ud)
 	{
 		GUI *gui=(GUI *)ud;
+		GdkColor col;
+		gtk_color_button_get_color(GTK_COLOR_BUTTON(gui->colselector),&col);
+		ISDeviceNValue cmy(4,0);
+		cmy[0]=IS_SAMPLEMAX-col.red;
+		cmy[1]=IS_SAMPLEMAX-col.green;
+		cmy[2]=IS_SAMPLEMAX-col.blue;
+		gui->opts.SetCMY(cmy);
 		gui->opts.SetRotation(gtk_range_get_value(GTK_RANGE(gui->rotation)));
 		gui->opts.SetGGamma(gtk_range_get_value(GTK_RANGE(gui->greygamma)));
 		gui->opts.SetCGamma(gtk_range_get_value(GTK_RANGE(gui->colgamma)));
@@ -551,6 +579,7 @@ class GUI : public DuoToner
 	GtkWidget *colgamma;
 	GtkWidget *greycontrast;
 	GtkWidget *colcontrast;
+	GtkWidget *colselector;
 	CachedImage *imposter;
 	DeviceNColorantList colorants;
 	DuoTone_Options opts;
