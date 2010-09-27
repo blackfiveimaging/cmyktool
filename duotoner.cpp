@@ -82,15 +82,95 @@ class RGBToCMY : public RSPLWrapper
 };
 
 
+class DuoTone_Options
+{
+	public:
+	DuoTone_Options() : rotation(0), ggamma(1.0), gcontrast(1.0), cgamma(1.0), ccontrast(1.0), cmypreview(4,0), kpreview(4,0)
+	{
+		cmypreview[0]=0;
+		cmypreview[1]=IS_SAMPLEMAX;
+		cmypreview[2]=(IS_SAMPLEMAX*5)/6;
+		cmypreview[3]=0;
+		kpreview[3]=IS_SAMPLEMAX;
+	}
+	~DuoTone_Options()
+	{
+	}
+	int GetRotation()
+	{
+		return(rotation);
+	}
+	void SetRotation(int r)
+	{
+		rotation=r;
+	}
+	ISDeviceNValue &GetCMY()
+	{
+		return(cmypreview);
+	}
+	ISDeviceNValue &GetK()
+	{
+		return(kpreview);
+	}
+	void SetGGamma(double g)
+	{
+		ggamma=g;
+	}
+	double GetGGamma()
+	{
+		return(ggamma);
+	}
+	void SetGContrast(double g)
+	{
+		gcontrast=g;
+	}
+	double GetGContrast()
+	{
+		return(gcontrast);
+	}
+	void SetCGamma(double g)
+	{
+		cgamma=g;
+	}
+	double GetCGamma()
+	{
+		return(cgamma);
+	}
+	void SetCContrast(double g)
+	{
+		ccontrast=g;
+	}
+	double GetCContrast()
+	{
+		return(ccontrast);
+	}
+	protected:
+	int rotation;
+	double ggamma;
+	double gcontrast;
+	double cgamma;
+	double ccontrast;
+	ISDeviceNValue cmypreview;
+	ISDeviceNValue kpreview;
+};
+
+
+
+
 class ImageSource_DuoTone : public ImageSource
 {
 	public:
-	ImageSource_DuoTone(ImageSource *src,double ggamma=1.0, double cgamma=1.0) : ImageSource(src), source(src), ggamma(ggamma), cgamma(cgamma)
+	ImageSource_DuoTone(ImageSource *src,DuoTone_Options &opts) : ImageSource(src), source(src)
 	{
 		if(STRIP_ALPHA(source->type)!=IS_TYPE_RGB)
 			throw "DuoTone only supports RGB input!";
 		if(HAS_ALPHA(source->type))
 			source=new ImageSource_Flatten(source);
+
+		cgamma=opts.GetCGamma();
+		ggamma=opts.GetGGamma();
+		ccontrast=opts.GetCContrast();
+		gcontrast=opts.GetGContrast();
 
 		type=IS_TYPE_DEVICEN;
 		samplesperpixel=2;
@@ -122,8 +202,15 @@ class ImageSource_DuoTone : public ImageSource
 
 			g=r-g;
 
-			rowbuffer[x*2]=IS_GAMMA(g,cgamma);
-			rowbuffer[x*2+1]=IS_GAMMA(IS_SAMPLEMAX-r,ggamma);
+			t=ccontrast*(IS_GAMMA(g,cgamma));
+			if(t>IS_SAMPLEMAX)
+				t=IS_SAMPLEMAX;
+			rowbuffer[x*2]=t;
+
+			t=gcontrast*(IS_GAMMA(IS_SAMPLEMAX-r,ggamma));
+			if(t>IS_SAMPLEMAX)
+				t=IS_SAMPLEMAX;
+			rowbuffer[x*2+1]=t;
 		}
 		currentrow=row;
 		return(rowbuffer);
@@ -132,6 +219,8 @@ class ImageSource_DuoTone : public ImageSource
 	ImageSource *source;
 	double ggamma;
 	double cgamma;
+	double gcontrast;
+	double ccontrast;
 };
 
 
@@ -186,11 +275,34 @@ static GtkTargetEntry dnd_file_drop_types[] = {
 static gint dnd_file_drop_types_count = 1;
 
 
-class GUI : public ConfigFile
+
+class DuoToner : public ConfigFile
 {
 	public:
-	GUI() : ConfigFile(), profilemanager(this,"[Colour Management]"), pview(NULL), imposter(NULL), colorants(),
-		cmypreview(4,0), kpreview(4,0), transform(NULL)
+	DuoToner() : ConfigFile(), profilemanager(this,"[Colour Management]")
+	{
+	}
+	~DuoToner()
+	{
+	}
+	ImageSource *Process(ImageSource *src, DuoTone_Options &opts, double ggamma=1.0, double cgamma=1.0)
+	{
+		src=new ImageSource_HSV(src);
+		src=new ImageSource_HueRotate(src,opts.GetRotation());
+		src=new ImageSource_HSVToRGB(src);
+		src=new ImageSource_DuoTone(src,opts);
+		src=new ImageSource_DuoToneToCMYK(src,opts.GetCMY(),opts.GetK());
+		return(src);
+	}
+	protected:
+	ProfileManager profilemanager;
+};
+
+
+class GUI : public DuoToner
+{
+	public:
+	GUI() : DuoToner(), pview(NULL), imposter(NULL), colorants(), transform(NULL)
 	{
 		profilemanager.SetInt("DefaultCMYKProfileActive",1);
 		CMSProfile *prof=profilemanager.GetDefaultProfile(IS_TYPE_CMYK);
@@ -208,19 +320,11 @@ class GUI : public ConfigFile
 			throw "Can't get profile for display!";
 		delete prof;
 
-		cmypreview[0]=0;
-		cmypreview[1]=IS_SAMPLEMAX;
-		cmypreview[2]=(IS_SAMPLEMAX*5)/6;
-		cmypreview[3]=0;
-		kpreview[3]=IS_SAMPLEMAX;
-
-		Debug[TRACE] << "CMY preview: " << cmypreview[0] << ", " << cmypreview[1] << ", " << cmypreview[2] << std::endl;
-
 		new DeviceNColorant(colorants,"Red");
 		new DeviceNColorant(colorants,"Black");
 
 		window=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-		gtk_window_set_default_size(GTK_WINDOW(window),640,480);
+		gtk_window_set_default_size(GTK_WINDOW(window),800,640);
 		gtk_window_set_title (GTK_WINDOW (window), _("DuoToner"));
 		gtk_signal_connect (GTK_OBJECT (window), "delete_event",
 			(GtkSignalFunc) gtk_main_quit, NULL);
@@ -274,6 +378,16 @@ class GUI : public ConfigFile
 		gtk_box_pack_start(GTK_BOX(vbox),greygamma,FALSE,FALSE,0);
 		gtk_widget_show(greygamma);
 
+		tmp=gtk_label_new(_("Grey contrast"));
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+		gtk_widget_show(tmp);
+
+		greycontrast=gtk_hscale_new_with_range(0.3,3.0,0.05);
+		gtk_range_set_value(GTK_RANGE(greycontrast),1.0);
+		g_signal_connect(G_OBJECT(greycontrast),"value-changed",G_CALLBACK(sliders_changed),this);
+		gtk_box_pack_start(GTK_BOX(vbox),greycontrast,FALSE,FALSE,0);
+		gtk_widget_show(greycontrast);
+
 		tmp=gtk_label_new(_("Colour gamma"));
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 		gtk_widget_show(tmp);
@@ -284,11 +398,21 @@ class GUI : public ConfigFile
 		gtk_box_pack_start(GTK_BOX(vbox),colgamma,FALSE,FALSE,0);
 		gtk_widget_show(colgamma);
 
+		tmp=gtk_label_new(_("Colour contrast"));
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+		gtk_widget_show(tmp);
+
+		colcontrast=gtk_hscale_new_with_range(0.3,3.0,0.05);
+		gtk_range_set_value(GTK_RANGE(colcontrast),1.0);
+		g_signal_connect(G_OBJECT(colcontrast),"value-changed",G_CALLBACK(sliders_changed),this);
+		gtk_box_pack_start(GTK_BOX(vbox),colcontrast,FALSE,FALSE,0);
+		gtk_widget_show(colcontrast);
+
 		tmp=gtk_hseparator_new();
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,8);
 		gtk_widget_show(tmp);
 
-		tmp=gtk_button_new_with_label(_("Save DuoTone..."));
+		tmp=gtk_button_new_with_label(_("Save DuoTone Image..."));
 		g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(saveclicked),this);
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
 		gtk_widget_show(tmp);
@@ -326,13 +450,10 @@ class GUI : public ConfigFile
 	}
 	void Update()
 	{
-		int r=gtk_range_get_value(GTK_RANGE(rotation));
-		double gg=gtk_range_get_value(GTK_RANGE(greygamma));
-		double cg=gtk_range_get_value(GTK_RANGE(colgamma));
 		if(imposter)
 		{
 			ImageSource *is=imposter->GetImageSource();
-			is=Process(is,r,gg,cg);
+			is=Process(is,opts);
 			is=new ImageSource_CMS(is,transform);
 
 			GdkPixbuf *pb=pixbuf_from_imagesource(is);
@@ -342,26 +463,13 @@ class GUI : public ConfigFile
 			g_object_unref(G_OBJECT(pb));
 		}
 	}
-	ImageSource *Process(ImageSource *src, int rotation, double ggamma=1.0, double cgamma=1.0)
-	{
-		src=new ImageSource_HSV(src);
-		src=new ImageSource_HueRotate(src,rotation);
-		src=new ImageSource_HSVToRGB(src);
-		src=new ImageSource_DuoTone(src,ggamma,cgamma);
-		src=new ImageSource_DuoToneToCMYK(src,cmypreview,kpreview);
-		return(src);
-	}
 	void Save(std::string outfn)
 	{
 		try
 		{
-			int r=gtk_range_get_value(GTK_RANGE(rotation));
-			double gg=gtk_range_get_value(GTK_RANGE(greygamma));
-			double cg=gtk_range_get_value(GTK_RANGE(colgamma));
-
 			ProgressBar prog(_("Saving..."),window);
 			ImageSource *is=ISLoadImage(filename.c_str());
-			is=Process(is,r,gg,cg);
+			is=Process(is,opts);
 			TIFFSaver saver(outfn.c_str(),is);
 			saver.SetProgress(&prog);
 			saver.Save();
@@ -390,6 +498,11 @@ class GUI : public ConfigFile
 	static void sliders_changed(GtkWidget *wid,gpointer ud)
 	{
 		GUI *gui=(GUI *)ud;
+		gui->opts.SetRotation(gtk_range_get_value(GTK_RANGE(gui->rotation)));
+		gui->opts.SetGGamma(gtk_range_get_value(GTK_RANGE(gui->greygamma)));
+		gui->opts.SetCGamma(gtk_range_get_value(GTK_RANGE(gui->colgamma)));
+		gui->opts.SetGContrast(gtk_range_get_value(GTK_RANGE(gui->greycontrast)));
+		gui->opts.SetCContrast(gtk_range_get_value(GTK_RANGE(gui->colcontrast)));
 		gui->Update();
 	}
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
@@ -431,16 +544,16 @@ class GUI : public ConfigFile
 			g_free(temp);
 	}
 	protected:
-	ProfileManager profilemanager;
 	GtkWidget *window;
 	GtkWidget *pview;
 	GtkWidget *rotation;
 	GtkWidget *greygamma;
 	GtkWidget *colgamma;
+	GtkWidget *greycontrast;
+	GtkWidget *colcontrast;
 	CachedImage *imposter;
 	DeviceNColorantList colorants;
-	ISDeviceNValue cmypreview;
-	ISDeviceNValue kpreview;
+	DuoTone_Options opts;
 	CMSTransform *transform;
 	std::string filename;
 };
