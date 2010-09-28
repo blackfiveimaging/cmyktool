@@ -148,6 +148,18 @@ class DuoTone_Options
 	{
 		return(ccontrast);
 	}
+	void NormalizeCMY()
+	{
+		int max=cmypreview[0];
+		if(cmypreview[1]>max)
+			max=cmypreview[1];
+		if(cmypreview[2]>max)
+			max=cmypreview[2];
+		max/=4;
+		cmypreview[0]=(cmypreview[0]*(IS_SAMPLEMAX/4))/max;
+		cmypreview[1]=(cmypreview[1]*(IS_SAMPLEMAX/4))/max;
+		cmypreview[2]=(cmypreview[2]*(IS_SAMPLEMAX/4))/max;
+	}
 	protected:
 	int rotation;
 	double ggamma;
@@ -283,7 +295,7 @@ static gint dnd_file_drop_types_count = 1;
 class DuoToner : public ConfigFile
 {
 	public:
-	DuoToner() : ConfigFile(), profilemanager(this,"[Colour Management]")
+	DuoToner() : ConfigFile(), profilemanager(this,"[Colour Management]"), factory(profilemanager)
 	{
 	}
 	~DuoToner()
@@ -291,6 +303,7 @@ class DuoToner : public ConfigFile
 	}
 	ImageSource *Process(ImageSource *src, DuoTone_Options &opts, double ggamma=1.0, double cgamma=1.0)
 	{
+		src=ToRGB(src);
 		src=new ImageSource_HSV(src);
 		src=new ImageSource_HueRotate(src,opts.GetRotation());
 		src=new ImageSource_HSVToRGB(src);
@@ -298,15 +311,34 @@ class DuoToner : public ConfigFile
 		src=new ImageSource_DuoToneToCMYK(src,opts.GetCMY(),opts.GetK());
 		return(src);
 	}
+	ImageSource *ToRGB(ImageSource *src)
+	{
+		if(STRIP_ALPHA(src->type)!=IS_TYPE_RGB)
+		{
+			CMSProfile *p=src->GetEmbeddedProfile();
+			CMSTransform *t=NULL;
+			if(p)
+				t=factory.GetTransform(CM_COLOURDEVICE_DEFAULTRGB,p);
+			else
+				t=factory.GetTransform(CM_COLOURDEVICE_DEFAULTRGB,STRIP_ALPHA(src->type));
+
+			if(t)
+				return(new ImageSource_CMS(src,t));
+			else
+				throw "Conversion to RGB failed!";
+		}
+		return(src);
+	}
 	protected:
 	ProfileManager profilemanager;
+	CMTransformFactory factory;
 };
 
 
 class GUI : public DuoToner
 {
 	public:
-	GUI() : DuoToner(), pview(NULL), imposter(NULL), colorants(), transform(NULL)
+	GUI() : DuoToner(), pview(NULL), imposter(NULL), impostersize(256), colorants(), transform(NULL)
 	{
 		profilemanager.SetInt("DefaultCMYKProfileActive",1);
 		CMSProfile *prof=profilemanager.GetDefaultProfile(IS_TYPE_CMYK);
@@ -452,22 +484,29 @@ class GUI : public DuoToner
 	}
 	void SetImage(std::string fn)
 	{
-		if(imposter)
-			delete imposter;
-		imposter=NULL;
-
-		filename=fn;
-		ImageSource *is=ISLoadImage(fn.c_str());
-		int w=256;
-		int h=(256*is->height)/is->width;
-		if(h>256)
+		try
 		{
-			h=256;
-			w=(256*is->width)/is->height;
+			if(imposter)
+				delete imposter;
+			imposter=NULL;
+
+			filename=fn;
+			ImageSource *is=ISLoadImage(fn.c_str());
+			int w=impostersize;
+			int h=(impostersize*is->height)/is->width;
+			if(h>impostersize)
+			{
+				h=impostersize;
+				w=(impostersize*is->width)/is->height;
+			}
+			is=ISScaleImageBySize(is,w,h);
+			imposter=new CachedImage(is);
+			Update();
 		}
-		is=ISScaleImageBySize(is,w,h);
-		imposter=new CachedImage(is);
-		Update();
+		catch(const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
+		}
 	}
 	void Update()
 	{
@@ -490,7 +529,9 @@ class GUI : public DuoToner
 		{
 			ProgressBar prog(_("Saving..."),window);
 			ImageSource *is=ISLoadImage(filename.c_str());
-			is=Process(is,opts);
+			DuoTone_Options opt2=opts;
+			opt2.NormalizeCMY();
+			is=Process(is,opt2);
 			TIFFSaver saver(outfn.c_str(),is);
 			saver.SetProgress(&prog);
 			saver.Save();
@@ -503,35 +544,49 @@ class GUI : public DuoToner
 	}
 	static void saveclicked(GtkWidget *wid,gpointer ud)
 	{
-		GUI *gui=(GUI *)ud;
-		if(gui->filename.size())
+		try
 		{
-			char *deffn=BuildFilename(gui->filename.c_str(),"-duotone","tif");
-			char *actualfn=File_Save_Dialog(_("Please choose a filename for the duotone image..."),deffn,gui->window);
-			if(actualfn)
+			GUI *gui=(GUI *)ud;
+			if(gui->filename.size())
 			{
-				gui->Save(actualfn);
-				free(actualfn);
+				char *deffn=BuildFilename(gui->filename.c_str(),"-duotone","tif");
+				char *actualfn=File_Save_Dialog(_("Please choose a filename for the duotone image..."),deffn,gui->window);
+				if(actualfn)
+				{
+					gui->Save(actualfn);
+					free(actualfn);
+				}
+				free(deffn);
 			}
-			free(deffn);
+		}
+		catch(const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
 		}
 	}
 	static void sliders_changed(GtkWidget *wid,gpointer ud)
 	{
 		GUI *gui=(GUI *)ud;
 		GdkColor col;
-		gtk_color_button_get_color(GTK_COLOR_BUTTON(gui->colselector),&col);
-		ISDeviceNValue cmy(4,0);
-		cmy[0]=IS_SAMPLEMAX-col.red;
-		cmy[1]=IS_SAMPLEMAX-col.green;
-		cmy[2]=IS_SAMPLEMAX-col.blue;
-		gui->opts.SetCMY(cmy);
-		gui->opts.SetRotation(gtk_range_get_value(GTK_RANGE(gui->rotation)));
-		gui->opts.SetGGamma(gtk_range_get_value(GTK_RANGE(gui->greygamma)));
-		gui->opts.SetCGamma(gtk_range_get_value(GTK_RANGE(gui->colgamma)));
-		gui->opts.SetGContrast(gtk_range_get_value(GTK_RANGE(gui->greycontrast)));
-		gui->opts.SetCContrast(gtk_range_get_value(GTK_RANGE(gui->colcontrast)));
-		gui->Update();
+		try
+		{
+			gtk_color_button_get_color(GTK_COLOR_BUTTON(gui->colselector),&col);
+			ISDeviceNValue cmy(4,0);
+			cmy[0]=IS_SAMPLEMAX-col.red;
+			cmy[1]=IS_SAMPLEMAX-col.green;
+			cmy[2]=IS_SAMPLEMAX-col.blue;
+			gui->opts.SetCMY(cmy);
+			gui->opts.SetRotation(gtk_range_get_value(GTK_RANGE(gui->rotation)));
+			gui->opts.SetGGamma(gtk_range_get_value(GTK_RANGE(gui->greygamma)));
+			gui->opts.SetCGamma(gtk_range_get_value(GTK_RANGE(gui->colgamma)));
+			gui->opts.SetGContrast(gtk_range_get_value(GTK_RANGE(gui->greycontrast)));
+			gui->opts.SetCContrast(gtk_range_get_value(GTK_RANGE(gui->colcontrast)));
+			gui->Update();
+		}
+		catch(const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
+		}
 	}
 	static void get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 	     gint x, gint y, GtkSelectionData *selection_data, guint info,
@@ -581,6 +636,7 @@ class GUI : public DuoToner
 	GtkWidget *colcontrast;
 	GtkWidget *colselector;
 	CachedImage *imposter;
+	int impostersize;
 	DeviceNColorantList colorants;
 	DuoTone_Options opts;
 	CMSTransform *transform;
