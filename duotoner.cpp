@@ -3,6 +3,7 @@
 #include <gtk/gtk.h>
 
 #include "errordialogqueue.h"
+#include "pathsupport.h"
 
 #include "imagesource.h"
 #include "imagesource_util.h"
@@ -25,6 +26,8 @@
 
 #include "tiffsave.h"
 #include "progressbar.h"
+#include "profileselector.h"
+#include "patheditor.h"
 
 #include "rsplwrapper.h"
 
@@ -297,9 +300,17 @@ class DuoToner : public ConfigFile
 	public:
 	DuoToner() : ConfigFile(), profilemanager(this,"[Colour Management]"), factory(profilemanager)
 	{
+		char *fn=substitute_xdgconfighome("$XDG_CONFIG_HOME/duotoner.conf");
+		configname=fn;
+		ParseConfigFile(fn);
+		free(fn);
 	}
 	~DuoToner()
 	{
+	}
+	void SaveConfig()
+	{
+		SaveConfigFile(configname.c_str());
 	}
 	ImageSource *Process(ImageSource *src, DuoTone_Options &opts, double ggamma=1.0, double cgamma=1.0)
 	{
@@ -325,13 +336,109 @@ class DuoToner : public ConfigFile
 			if(t)
 				return(new ImageSource_CMS(src,t));
 			else
-				throw "Conversion to RGB failed!";
+				throw "Conversion to RGB failed - check ICC profiles.";
 		}
 		return(src);
 	}
 	protected:
 	ProfileManager profilemanager;
 	CMTransformFactory factory;
+	std::string configname;
+};
+
+
+class ProfileDialog
+{
+	public:
+	ProfileDialog(ProfileManager &pm, GtkWidget *parent) : pm(pm), dialog(NULL), parent(parent)
+	{
+		dialog=gtk_dialog_new_with_buttons(_("Setup colour options..."),
+		GTK_WINDOW(parent),GtkDialogFlags(0),
+		GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
+		GTK_STOCK_OK,GTK_RESPONSE_OK,
+		NULL);
+		gtk_window_set_default_size(GTK_WINDOW(dialog),600,400);
+
+		GtkWidget *vbox = GTK_DIALOG(dialog)->vbox;
+		
+		pe = patheditor_new(&pm);
+		g_signal_connect(pe,"changed",G_CALLBACK(paths_changed),this);
+		gtk_box_pack_start(GTK_BOX(vbox),pe,TRUE,TRUE,8);
+		gtk_widget_show(pe);
+
+		ps = profileselector_new(&pm,IS_TYPE_CMYK);
+		g_signal_connect(ps,"changed",G_CALLBACK(cmykprofile_changed),this);
+		gtk_box_pack_start(GTK_BOX(vbox),ps,FALSE,FALSE,8);
+		gtk_widget_show(ps);
+
+		const char *defprof=pm.FindString("DefaultCMYKProfile");
+		if(defprof)
+			profileselector_set_filename(PROFILESELECTOR(ps),defprof);
+	}
+	~ProfileDialog()
+	{
+		if(dialog)
+			gtk_widget_destroy(dialog);
+	}
+	void Run()
+	{
+		char *savedpaths=pm.GetPaths();
+		
+		gtk_widget_show_all(dialog);
+
+		bool done=false;
+		while(!done)
+		{
+			gint result=gtk_dialog_run(GTK_DIALOG(dialog));
+			switch(result)
+			{
+				case GTK_RESPONSE_CANCEL:
+					pm.ClearPaths();
+					pm.AddPath(savedpaths);
+					done=true;
+					break;
+				case GTK_RESPONSE_OK:
+					done=true;
+					pm.SetString("DefaultCMYKProfile",profileselector_get_filename(PROFILESELECTOR(ps)));
+
+					char *tmppaths=pm.GetPaths();
+					pm.SetString("ProfilePath",tmppaths);
+					free(tmppaths);
+					break;
+			}
+		}
+		if(savedpaths)
+			free(savedpaths);
+	}
+	private:
+	ConfigFile f;
+	ProfileManager &pm;
+	GtkWidget *dialog;
+	GtkWidget *ps;
+	GtkWidget *pe;
+	GtkWidget *parent;
+
+	static void	cmykprofile_changed(GtkWidget *widget,gpointer user_data)
+	{
+		cerr << "Received changed signal from ProfileSelector" << endl;
+		ProfileDialog *dlg=(ProfileDialog *)user_data;
+		ProfileSelector *c=PROFILESELECTOR(dlg->ps);
+		const char *val=profileselector_get_filename(c);
+		if(val)
+			cerr << "Selected: " << val << endl;
+		else
+			cerr << "No profile selected... " << endl;
+	}
+
+	static void	paths_changed(GtkWidget *widget,gpointer user_data)
+	{
+		cerr << "Received changed signal from PathEditor" << endl;
+		ProfileDialog *dlg=(ProfileDialog *)user_data;
+		patheditor_get_paths(PATHEDITOR(dlg->pe),&dlg->pm);
+		cerr << "Updated path list" << endl;
+		profileselector_refresh(PROFILESELECTOR(dlg->ps));
+		cerr << "Refreshed ProfileManager" << endl;
+	}
 };
 
 
@@ -340,22 +447,6 @@ class GUI : public DuoToner
 	public:
 	GUI() : DuoToner(), pview(NULL), imposter(NULL), impostersize(256), colorants(), transform(NULL)
 	{
-		profilemanager.SetInt("DefaultCMYKProfileActive",1);
-		CMSProfile *prof=profilemanager.GetDefaultProfile(IS_TYPE_CMYK);
-		if(!prof)
-			throw "Can't open default CMYK profile";
-		CMSProfile *monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DISPLAY);
-		if(!monitorprof)
-			monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DEFAULTRGB);
-		if(monitorprof)
-		{
-			transform=new CMSTransform(prof,monitorprof);
-			delete monitorprof;
-		}
-		else
-			throw "Can't get profile for display!";
-		delete prof;
-
 		new DeviceNColorant(colorants,"Red");
 		new DeviceNColorant(colorants,"Black");
 
@@ -474,6 +565,15 @@ class GUI : public DuoToner
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,TRUE,TRUE,0);
 		gtk_widget_show(tmp);
 
+		tmp=gtk_hseparator_new();
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
+		gtk_widget_show(tmp);
+
+		tmp=gtk_button_new_with_label(_("Settings..."));
+		g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(settingsclicked),this);
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,8);
+		gtk_widget_show(tmp);
+
 	}
 	~GUI()
 	{
@@ -481,6 +581,25 @@ class GUI : public DuoToner
 			delete imposter;
 		if(transform)
 			delete transform;
+	}
+	void MakeTransform()
+	{
+		if(transform)
+			delete transform;
+		transform=NULL;
+		CMSProfile *prof=profilemanager.GetDefaultProfile(IS_TYPE_CMYK);
+		if(prof)
+		{
+			CMSProfile *monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DISPLAY);
+			if(!monitorprof)
+				monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DEFAULTRGB);
+			if(monitorprof)
+			{
+				transform=new CMSTransform(prof,monitorprof);
+				delete monitorprof;
+			}
+			delete prof;
+		}
 	}
 	void SetImage(std::string fn)
 	{
@@ -510,6 +629,10 @@ class GUI : public DuoToner
 	}
 	void Update()
 	{
+		if(!transform)
+			MakeTransform();
+		if(!transform)
+			throw "Can't create transform - check ICC profiles";
 		if(imposter)
 		{
 			ImageSource *is=imposter->GetImageSource();
@@ -536,6 +659,21 @@ class GUI : public DuoToner
 			saver.SetProgress(&prog);
 			saver.Save();
 			delete is;
+		}
+		catch(const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
+		}
+	}
+	static void settingsclicked(GtkWidget *wid,gpointer ud)
+	{
+		try
+		{
+			GUI *gui=(GUI *)ud;
+			ProfileDialog dlg(gui->profilemanager,gui->window);
+			dlg.Run();
+			gui->MakeTransform();
+			gui->Update();
 		}
 		catch(const char *err)
 		{
@@ -649,6 +787,22 @@ int main(int argc,char**argv)
 	Debug.SetLevel(TRACE);
 
 	gtk_init(&argc,&argv);
+
+#ifdef WIN32
+	char *logname=substitute_homedir("$HOME" SEARCHPATH_SEPARATOR_S ".duotoner_errorlog");
+	Debug.SetLogFile(logname);
+	delete logname;
+#endif
+
+	gtk_set_locale();
+
+#ifdef WIN32
+	bindtextdomain(PACKAGE,"locale");
+#else
+	bindtextdomain(PACKAGE,LOCALEDIR);
+#endif
+	bind_textdomain_codeset(PACKAGE, "UTF-8");
+	textdomain(PACKAGE);
 
 	try
 	{
