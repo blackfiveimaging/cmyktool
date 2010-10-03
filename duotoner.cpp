@@ -347,13 +347,16 @@ class DuoToner : public ConfigFile
 };
 
 
+#define RESPONSE_SAVE 1
+
 class ProfileDialog
 {
 	public:
-	ProfileDialog(ProfileManager &pm, GtkWidget *parent) : pm(pm), dialog(NULL), parent(parent)
+	ProfileDialog(ProfileManager &pm, DuoToner &duotoner, GtkWidget *parent) : pm(pm), duotoner(duotoner), dialog(NULL), parent(parent)
 	{
 		dialog=gtk_dialog_new_with_buttons(_("Setup colour options..."),
 		GTK_WINDOW(parent),GtkDialogFlags(0),
+		GTK_STOCK_SAVE,RESPONSE_SAVE,
 		GTK_STOCK_CANCEL,GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OK,GTK_RESPONSE_OK,
 		NULL);
@@ -397,6 +400,7 @@ class ProfileDialog
 					pm.AddPath(savedpaths);
 					done=true;
 					break;
+				case RESPONSE_SAVE:
 				case GTK_RESPONSE_OK:
 					done=true;
 					pm.SetString("DefaultCMYKProfile",profileselector_get_filename(PROFILESELECTOR(ps)));
@@ -404,6 +408,8 @@ class ProfileDialog
 					char *tmppaths=pm.GetPaths();
 					pm.SetString("ProfilePath",tmppaths);
 					free(tmppaths);
+					if(result==RESPONSE_SAVE)
+						duotoner.SaveConfig();
 					break;
 			}
 		}
@@ -411,8 +417,8 @@ class ProfileDialog
 			free(savedpaths);
 	}
 	private:
-	ConfigFile f;
 	ProfileManager &pm;
+	DuoToner &duotoner;
 	GtkWidget *dialog;
 	GtkWidget *ps;
 	GtkWidget *pe;
@@ -670,7 +676,7 @@ class GUI : public DuoToner
 		try
 		{
 			GUI *gui=(GUI *)ud;
-			ProfileDialog dlg(gui->profilemanager,gui->window);
+			ProfileDialog dlg(gui->profilemanager,*gui,gui->window);
 			dlg.Run();
 			gui->MakeTransform();
 			gui->Update();
