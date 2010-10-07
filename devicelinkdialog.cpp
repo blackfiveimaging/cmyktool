@@ -468,13 +468,22 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 					ProfileManager &pm=core.GetProfileManager();
 					DeviceLink dl(e.filename.c_str());
 
+					IS_TYPE intype=IS_TYPE_NULL;
+					IS_TYPE outtype=IS_TYPE_NULL;
+
 					CMSProfile *in=pm.GetProfile(dl.FindString("SourceProfile"));
-					IS_TYPE intype=in->GetColourSpace();
-					delete in;
+					if(in)
+					{
+						intype=in->GetColourSpace();
+						delete in;
+					}
 
 					CMSProfile *out=pm.GetProfile(dl.FindString("DestProfile"));
-					IS_TYPE outtype=out->GetColourSpace();
-					delete out;
+					if(out)
+					{
+						outtype=out->GetColourSpace();
+						delete out;
+					}
 
 					GdkPixbuf *inicon=NULL;
 					GdkPixbuf *outicon=NULL;
