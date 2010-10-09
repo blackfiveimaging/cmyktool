@@ -3,12 +3,17 @@ CMYKTool-0.1.5
     * Added Brazilian Portuguese translation, thanks to Banto Palmarino
 
     * It's no longer possible to select a DeviceLink before it's finished generating.
-      (Previous you could select it, but it wouldn't actually be used!)
+      (Previously you could select it, but it wouldn't actually be used!)
 
     * Now renders icons showing the input and output colorspaces of DeviceLinks
 
     * Added global activity bar showing when there are jobs queued or pending - 
       cycles through the job names.
+
+    * Windows build now correctly embeds profiles when exporting.  (Embedded profile
+      handling made much neater in general.)
+
+    * SearchPaths for colour profiles are now scanned recursively.
 
 
 CMYKTool-0.1.4a

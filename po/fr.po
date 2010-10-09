@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-09-24 23:40+0100\n"
+"POT-Creation-Date: 2010-10-09 23:40+0100\n"
 "PO-Revision-Date: 2010-07-21 00:34+0200\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -632,7 +632,7 @@ msgstr "Nouveau Device Link"
 msgid "New Devicelink"
 msgstr "Nouveau Device Link"
 
-#: devicelinkdialog.cpp:570
+#: devicelinkdialog.cpp:579
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Êtes-vous sûr de supprimer ce profil Device Link ?"
 
@@ -661,15 +661,15 @@ msgstr "Chemin vers les utilitaires Argyll TIFFGamut et ICCLink"
 msgid "Search paths for GhostScript executable"
 msgstr "Chemin vers les éxécutables Ghostscript"
 
-#: imageutils/jpegsave.cpp:171
+#: imageutils/jpegsave.cpp:153
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr "JPEG supporte seulement les images en gris et couleur!"
 
-#: imageutils/jpegsave.cpp:192
+#: imageutils/jpegsave.cpp:174
 msgid "Can't open file for saving"
 msgstr "Impossible d'ouvrir le fichier pour enregistrement"
 
-#: imageutils/jpegsave.cpp:227
+#: imageutils/jpegsave.cpp:209
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr "JPEG peut être actuellement en RVB, CMJN, Niveaux de gris."
 
@@ -709,27 +709,27 @@ msgstr "Ajouter..."
 msgid "Remove"
 msgstr "Supprimer"
 
-#: profilemanager/lcmswrapper.cpp:564
+#: profilemanager/lcmswrapper.cpp:556
 msgid "Perceptual"
 msgstr "Perceptif"
 
-#: profilemanager/lcmswrapper.cpp:565
+#: profilemanager/lcmswrapper.cpp:557
 msgid "Relative Colorimetric"
 msgstr "Colorimétrie Relative "
 
-#: profilemanager/lcmswrapper.cpp:566
+#: profilemanager/lcmswrapper.cpp:558
 msgid "Relative Colorimetric with BPC"
 msgstr "Colorimétrie relative avec BPC"
 
-#: profilemanager/lcmswrapper.cpp:567
+#: profilemanager/lcmswrapper.cpp:559
 msgid "Saturation"
 msgstr "Saturation"
 
-#: profilemanager/lcmswrapper.cpp:568
+#: profilemanager/lcmswrapper.cpp:560
 msgid "Absolute Colorimetric"
 msgstr "Colorimétrie absolue"
 
-#: profilemanager/lcmswrapper.cpp:573
+#: profilemanager/lcmswrapper.cpp:565
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
@@ -737,14 +737,14 @@ msgstr ""
 "Pour des photographies plaisantes en préservant les relations de couleurs et "
 "évitant les couleurs non reproductibles"
 
-#: profilemanager/lcmswrapper.cpp:574
+#: profilemanager/lcmswrapper.cpp:566
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr ""
 "Préserve les couleurs originales, selon les différences de point blanc."
 
-#: profilemanager/lcmswrapper.cpp:575
+#: profilemanager/lcmswrapper.cpp:567
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
@@ -754,7 +754,7 @@ msgstr ""
 "Utilise la compensation de point noir pour éviter le découpage des zones "
 "claires et des ombres. "
 
-#: profilemanager/lcmswrapper.cpp:576
+#: profilemanager/lcmswrapper.cpp:568
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
@@ -762,7 +762,7 @@ msgstr ""
 "Des résultats plus brillant, des couleurs plus saturées, au détriment des "
 "relations de couleur."
 
-#: profilemanager/lcmswrapper.cpp:577
+#: profilemanager/lcmswrapper.cpp:569
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."

@@ -601,7 +601,8 @@ class GUI : public DuoToner
 				monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DEFAULTRGB);
 			if(monitorprof)
 			{
-				transform=new CMSTransform(prof,monitorprof,LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC_BPC);
+//				transform=new CMSTransform(prof,monitorprof,LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC_BPC);
+				transform=new CMSTransform(prof,monitorprof,LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC);
 				delete monitorprof;
 			}
 			delete prof;

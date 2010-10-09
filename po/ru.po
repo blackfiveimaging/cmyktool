@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-09-24 23:40+0100\n"
+"POT-Creation-Date: 2010-10-09 23:40+0100\n"
 "PO-Revision-Date: 2010-07-24 19:14+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -638,7 +638,7 @@ msgstr "Новый связующий профиль"
 msgid "New Devicelink"
 msgstr "Новый связующий профиль"
 
-#: devicelinkdialog.cpp:570
+#: devicelinkdialog.cpp:579
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Вы действительно хотите удалить этот профиль device link?"
 
@@ -666,17 +666,17 @@ msgstr "Пути к утилитам Argyll (TIFFGamut, ColLink и пр.)"
 msgid "Search paths for GhostScript executable"
 msgstr "Пути к исполняемому файлу GhostScript"
 
-#: imageutils/jpegsave.cpp:171
+#: imageutils/jpegsave.cpp:153
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr ""
 "В JPEG сохраняются только цветные изображения и изображения в градациях "
 "серого!"
 
-#: imageutils/jpegsave.cpp:192
+#: imageutils/jpegsave.cpp:174
 msgid "Can't open file for saving"
 msgstr "Не удалось открыть файл для сохранения"
 
-#: imageutils/jpegsave.cpp:227
+#: imageutils/jpegsave.cpp:209
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr "В JPEG сохраняются только изображения в RGB, CMYK и градациях серого."
 
@@ -716,27 +716,27 @@ msgstr "Добавить..."
 msgid "Remove"
 msgstr "Удалить"
 
-#: profilemanager/lcmswrapper.cpp:564
+#: profilemanager/lcmswrapper.cpp:556
 msgid "Perceptual"
 msgstr "Воспринимаемая"
 
-#: profilemanager/lcmswrapper.cpp:565
+#: profilemanager/lcmswrapper.cpp:557
 msgid "Relative Colorimetric"
 msgstr "Относительная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:566
+#: profilemanager/lcmswrapper.cpp:558
 msgid "Relative Colorimetric with BPC"
 msgstr "Относительная колориметрическая с компенсацией точки чёрного"
 
-#: profilemanager/lcmswrapper.cpp:567
+#: profilemanager/lcmswrapper.cpp:559
 msgid "Saturation"
 msgstr "Насыщенность"
 
-#: profilemanager/lcmswrapper.cpp:568
+#: profilemanager/lcmswrapper.cpp:560
 msgid "Absolute Colorimetric"
 msgstr "Абсолютная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:573
+#: profilemanager/lcmswrapper.cpp:565
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
@@ -744,13 +744,13 @@ msgstr ""
 "Попытаться сохранить фотографическую достоверность сохранением соотношения "
 "между цветами и попыткой избежать потери недоступных при переносе цветов"
 
-#: profilemanager/lcmswrapper.cpp:574
+#: profilemanager/lcmswrapper.cpp:566
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr "Попытаться сохранить исходные цвета относительно белой точки"
 
-#: profilemanager/lcmswrapper.cpp:575
+#: profilemanager/lcmswrapper.cpp:567
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
@@ -759,7 +759,7 @@ msgstr ""
 "Попытаться сохранить исходные цвета относительно белой точки. Использовать "
 "компенсацию чёрной точки во избежание потери ярких и тёмных участков."
 
-#: profilemanager/lcmswrapper.cpp:576
+#: profilemanager/lcmswrapper.cpp:568
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
@@ -767,7 +767,7 @@ msgstr ""
 "Попытаться передать яркие, более насыщенные цвета ценой потери соотношения "
 "цветов"
 
-#: profilemanager/lcmswrapper.cpp:577
+#: profilemanager/lcmswrapper.cpp:569
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
