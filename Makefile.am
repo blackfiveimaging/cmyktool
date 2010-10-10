@@ -93,12 +93,13 @@ pixbufthumbnail/libpixbufthumbnail.la:
 
 
 desktopdir = $(datadir)/applications
-desktop_DATA = cmyktool.desktop
+desktop_DATA = cmyktool.desktop duotoner.desktop
 
 icondir = $(datadir)/icons/hicolor/48x48/apps/
-icon_DATA = cmyktool.png
+icon_DATA = cmyktool.png duotoner.png
 
 
 
-EXTRA_DIST = COPYING README TODO cmyktool.desktop cmyktool.png
+EXTRA_DIST = COPYING README TODO cmyktool.desktop cmyktool.png duotoner.desktop duotoner.png
+
 

@@ -28,6 +28,7 @@
 #include "progressbar.h"
 #include "profileselector.h"
 #include "patheditor.h"
+#include "simplecombo.h"
 
 #include "rsplwrapper.h"
 
@@ -354,10 +355,18 @@ class DuoToner : public ConfigFile
 		{
 			CMSProfile *p=src->GetEmbeddedProfile();
 			CMSTransform *t=NULL;
+			LCMSWrapper_Intent intents[]=
+			{
+				LCMSWRAPPER_INTENT_PERCEPTUAL,
+				LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC,
+				LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC
+			};
+			int idx=profilemanager.FindInt("ProofMode");
+			if(idx>2) idx=2;
 			if(p)
-				t=factory->GetTransform(CM_COLOURDEVICE_DISPLAY,p,LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC);
+				t=factory->GetTransform(CM_COLOURDEVICE_DISPLAY,p,intents[idx]);
 			else
-				t=factory->GetTransform(CM_COLOURDEVICE_DISPLAY,STRIP_ALPHA(src->type),LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC);
+				t=factory->GetTransform(CM_COLOURDEVICE_DISPLAY,STRIP_ALPHA(src->type),intents[idx]);
 
 			if(t)
 				return(new ImageSource_CMS(src,t));
@@ -395,14 +404,38 @@ class ProfileDialog
 		gtk_box_pack_start(GTK_BOX(vbox),pe,TRUE,TRUE,8);
 		gtk_widget_show(pe);
 
+		GtkWidget *table=gtk_table_new(2,2,FALSE);
+		gtk_box_pack_start(GTK_BOX(vbox),table,FALSE,FALSE,8);
+		gtk_widget_show(table);
+		
+
+		GtkWidget *tmp;
+		tmp=gtk_label_new(_("Press profile:"));
+		gtk_table_attach_defaults(GTK_TABLE(table),tmp,0,1,0,1);
+		gtk_widget_show(tmp);
+
+		tmp=gtk_label_new(_("Proofing mode:"));
+		gtk_table_attach_defaults(GTK_TABLE(table),tmp,0,1,1,2);
+		gtk_widget_show(tmp);
+
 		ps = profileselector_new(&pm,IS_TYPE_CMYK);
 		g_signal_connect(ps,"changed",G_CALLBACK(cmykprofile_changed),this);
-		gtk_box_pack_start(GTK_BOX(vbox),ps,FALSE,FALSE,8);
+		gtk_table_attach_defaults(GTK_TABLE(table),ps,1,2,0,1);
 		gtk_widget_show(ps);
+
+		SimpleComboOptions co;
+		co.Add("",_("None"));
+		co.Add("",_("Simulate Print"));
+		co.Add("",_("Simulate Print, Adapt White"));
+
+		sc=simplecombo_new(co);
+		gtk_table_attach_defaults(GTK_TABLE(table),sc,1,2,1,2);
+		gtk_widget_show(sc);
 
 		const char *defprof=pm.FindString("DefaultCMYKProfile");
 		if(defprof)
 			profileselector_set_filename(PROFILESELECTOR(ps),defprof);
+		simplecombo_set_index(SIMPLECOMBO(sc),pm.FindInt("ProofMode"));
 	}
 	~ProfileDialog()
 	{
@@ -429,6 +462,7 @@ class ProfileDialog
 				case RESPONSE_SAVE:
 				case GTK_RESPONSE_OK:
 					done=true;
+					pm.SetInt("ProofMode",simplecombo_get_index(SIMPLECOMBO(sc)));
 					pm.SetString("DefaultCMYKProfile",profileselector_get_filename(PROFILESELECTOR(ps)));
 
 					char *tmppaths=pm.GetPaths();
@@ -449,6 +483,7 @@ class ProfileDialog
 	GtkWidget *ps;
 	GtkWidget *pe;
 	GtkWidget *parent;
+	GtkWidget *sc;
 
 	static void	cmykprofile_changed(GtkWidget *widget,gpointer user_data)
 	{
@@ -554,7 +589,7 @@ class HighResPreview : public Job, public ThreadSync
 class GUI : public DuoToner, public JobDispatcher
 {
 	public:
-	GUI() : DuoToner(), JobDispatcher(0), pview(NULL), imposter(NULL), impostersize(256), colorants(), transform(NULL), hrpreview(NULL)
+	GUI() : DuoToner(), JobDispatcher(0), pview(NULL), imposter(NULL), impostersize(256), colorants(), hrpreview(NULL)
 	{
 		new CMTransformWorker(*this,profilemanager);
 		new DeviceNColorant(colorants,"Red");
@@ -595,6 +630,16 @@ class GUI : public DuoToner, public JobDispatcher
 		GtkWidget *vbox=gtk_vbox_new(FALSE,0);
 		gtk_box_pack_start(GTK_BOX(hbox),vbox,FALSE,FALSE,8);
 		gtk_widget_show(vbox);
+
+
+		tmp=gtk_button_new_with_label("Load image...");
+		g_signal_connect(G_OBJECT(tmp),"clicked",G_CALLBACK(loadimage_clicked),this);
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,8);
+		gtk_widget_show(tmp);
+
+		tmp=gtk_hseparator_new();
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,8);
+		gtk_widget_show(tmp);
 
 		tmp=gtk_label_new(_("Hue Rotation"));
 		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,0);
@@ -689,28 +734,6 @@ class GUI : public DuoToner, public JobDispatcher
 	{
 		if(imposter)
 			delete imposter;
-		if(transform)
-			delete transform;
-	}
-	void MakeTransform()
-	{
-		if(transform)
-			delete transform;
-		transform=NULL;
-		CMSProfile *prof=profilemanager.GetDefaultProfile(IS_TYPE_CMYK);
-		if(prof)
-		{
-			CMSProfile *monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DISPLAY);
-			if(!monitorprof)
-				monitorprof=profilemanager.GetProfile(CM_COLOURDEVICE_DEFAULTRGB);
-			if(monitorprof)
-			{
-//				transform=new CMSTransform(prof,monitorprof,LCMSWRAPPER_INTENT_RELATIVE_COLORIMETRIC_BPC);
-				transform=new CMSTransform(prof,monitorprof,LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC);
-				delete monitorprof;
-			}
-			delete prof;
-		}
 	}
 	void SetImage(std::string fn)
 	{
@@ -742,15 +765,11 @@ class GUI : public DuoToner, public JobDispatcher
 	}
 	void Update()
 	{
-		if(!transform)
-			MakeTransform();
-		if(!transform)
-			throw "Can't create transform - check ICC profiles";
 		if(imposter)
 		{
 			ImageSource *is=imposter->GetImageSource();
 			is=Process(is,opts);
-			is=new ImageSource_CMS(is,transform);
+			is=ToMonitor(is);
 			is=ISScaleImageBySize(is,width,height,IS_SCALING_NEARESTNEIGHBOUR);
 
 			GdkPixbuf *pb=pixbuf_from_imagesource(is);
@@ -789,6 +808,24 @@ class GUI : public DuoToner, public JobDispatcher
 			pixbufview_set_pixbuf(PIXBUFVIEW(gui->pview),pb);
 	}
 
+	static void loadimage_clicked(GtkWidget *wid,gpointer ud)
+	{
+		try
+		{
+			GUI *gui=(GUI *)ud;
+
+			char *filename=File_Dialog(_("Load image..."),NULL,gui->window,true);
+			if(filename)
+			{
+				gui->SetImage(filename);
+				free(filename);
+			}
+		}
+		catch(const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
+		}
+	}
 	static void settingsclicked(GtkWidget *wid,gpointer ud)
 	{
 		try
@@ -796,7 +833,6 @@ class GUI : public DuoToner, public JobDispatcher
 			GUI *gui=(GUI *)ud;
 			ProfileDialog dlg(gui->profilemanager,*gui,gui->window);
 			dlg.Run();
-			gui->MakeTransform();
 			gui->Update();
 		}
 		catch(const char *err)
@@ -903,7 +939,6 @@ class GUI : public DuoToner, public JobDispatcher
 	int impostersize;
 	DeviceNColorantList colorants;
 	DuoTone_Options opts;
-	CMSTransform *transform;
 	std::string filename;
 	Job *hrpreview;
 };

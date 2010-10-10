@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+#Encoding=UTF-8
+Name=DuoToner
+GenericName=Image colour converter
+Comment=Color managed conversion of images
+Exec=duotoner %F
+Icon=duotoner
+StartupNotify=true
+Terminal=false
+Type=Application
+Categories=Graphics;Photography;GNOME;GTK;
+MimeType=image/tiff;image/jpeg;image/png;
