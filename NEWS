@@ -15,6 +15,10 @@ CMYKTool-0.1.5
 
     * SearchPaths for colour profiles are now scanned recursively.
 
+    * Devicelinks now have the chosen description embedded within them.
+
+    * Can now export a generated Devicelink for use in other programs.
+
 
 CMYKTool-0.1.4a
 

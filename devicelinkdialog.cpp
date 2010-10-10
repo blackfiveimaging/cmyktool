@@ -92,6 +92,11 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_widget_show(devicelinklist);
 
 
+		exportbutton=gtk_button_new_with_label(_("Export..."));
+		gtk_box_pack_start(GTK_BOX(vbox),exportbutton,FALSE,FALSE,0);
+		g_signal_connect(exportbutton,"clicked",G_CALLBACK(export_devicelink),this);
+		gtk_widget_show(exportbutton);
+
 		GtkWidget *label;
 		label=gtk_button_new_with_label(_("Delete"));
 		gtk_box_pack_start(GTK_BOX(vbox),label,FALSE,FALSE,0);
@@ -412,6 +417,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(inklimit),dl.FindInt("InkLimit"));
 		simplecombo_set_index(SIMPLECOMBO(quality),dl.FindInt("Quality"));
 		outprofile_changed(outprofile,this);
+		gtk_widget_set_sensitive(exportbutton,dl.DeviceLinkBuilt());
 		dirty=false;
 	}
 
@@ -421,13 +427,14 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		blackgenselector_set(BLACKGENSELECTOR(blackgen),curve);
 		gtk_entry_set_text(GTK_ENTRY(description),_("New devicelink"));
 		profileselector_set_filename(PROFILESELECTOR(inprofile),opts.GetInRGBProfile());
-		viewingcondselector_set(VIEWINGCONDSELECTOR(inputvc),"mt");
+		viewingcondselector_set(VIEWINGCONDSELECTOR(inputvc),"");
 		profileselector_set_filename(PROFILESELECTOR(outprofile),opts.GetOutProfile());
-		viewingcondselector_set(VIEWINGCONDSELECTOR(outputvc),"pp");
+		viewingcondselector_set(VIEWINGCONDSELECTOR(outputvc),"");
 		intentselector_setintent(INTENTSELECTOR(intent),opts.GetIntent());
 		gtk_spin_button_set_value(GTK_SPIN_BUTTON(inklimit),270);
 		simplecombo_set_index(SIMPLECOMBO(quality),DEVICELINK_QUALITY_MEDIUM);
 		outprofile_changed(outprofile,this);
+		gtk_widget_set_sensitive(exportbutton,false);
 		dirty=false;
 	}
 
@@ -584,6 +591,27 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		}
 		dlg->dirty=false;
 	}
+
+
+	static void export_devicelink(GtkWidget *wid,gpointer userdata)
+	{
+		DeviceLinkDialog *dlg=(DeviceLinkDialog *)userdata;
+		SimpleListViewOption *opt=simplelistview_get(SIMPLELISTVIEW(dlg->devicelinklist));
+		char *fn;
+		if(opt && (fn=opt->key))
+		{
+			if(dlg->dirty && Query_Dialog(_("Warning - you have modified the devicelink settings,"
+				"but not yet rebuild the devicelink.  The existing devicelink will be exported - is this what you want?"),dlg->window));
+			DeviceLink dl(fn);
+			char *outfn=File_Save_Dialog(_("Please choose a filename for the DeviceLink"),dl.FindString("Description"),dlg->window);
+			if(outfn)
+			{
+				dl.Export(outfn);
+				free(outfn);
+			}
+		}
+	}
+
 	CMYKTool_Core &core;
 	CMYKConversionOptions &opts;
 	GtkWidget *devicelinklist;
@@ -596,6 +624,7 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 	GtkWidget *inklimit;
 	GtkWidget *quality;
 	GtkWidget *description;
+	GtkWidget *exportbutton;
 
 	// Icons for the listview
 	GdkPixbuf *hourglass;

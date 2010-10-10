@@ -123,6 +123,26 @@ void DeviceLink::Save(DeviceLinkList_Entry &entry)
 }
 
 
+bool DeviceLink::DeviceLinkBuilt()
+{
+	if(fn.size()==0)
+		return(false);
+	return(CheckFileExists(fn.c_str()));
+}
+
+
+void DeviceLink::Export(const char *exportfilename)
+{
+	if(exportfilename)
+	{
+		if(!DeviceLinkBuilt())
+			throw "Devicelink hasn't been built yet - can't export!";
+		BinaryBlob blob(fn.c_str());
+		blob.Save(exportfilename);
+	}
+}
+
+
 void DeviceLink::Delete()
 {
 	if(fn.size())
@@ -244,12 +264,14 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 	{
 		// Avoid the command-line-and-wide-char-filenames issue on WIN32...
 		TempDeviceLink tempdl(fn);
-		collink.AddArg("\""+std::string(src.Filename())+"\"");
-		collink.AddArg("\""+std::string(dst.Filename())+"\"");
-		collink.AddArg("\""+std::string(tempdl.Filename())+"\"");
+		collink.AddArg("-D"+ShellQuote(FindString("Description")));
+		collink.AddArg(ShellQuote(src.Filename()));
+		collink.AddArg(ShellQuote(dst.Filename()));
+		collink.AddArg(ShellQuote(tempdl.Filename()));
 		collink.RunProgram();
 	}
 #else
+	collink.AddArg("-D"+std::string(FindString("Description")));
 	collink.AddArg(src.Filename());
 	collink.AddArg(dst.Filename());
 	collink.AddArg(fn);
