@@ -92,10 +92,21 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 		gtk_widget_show(devicelinklist);
 
 
+		tmp=gtk_hseparator_new();
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,4);
+		gtk_widget_show(tmp);
+
+
 		exportbutton=gtk_button_new_with_label(_("Export..."));
 		gtk_box_pack_start(GTK_BOX(vbox),exportbutton,FALSE,FALSE,0);
 		g_signal_connect(exportbutton,"clicked",G_CALLBACK(export_devicelink),this);
 		gtk_widget_show(exportbutton);
+
+
+		tmp=gtk_hseparator_new();
+		gtk_box_pack_start(GTK_BOX(vbox),tmp,FALSE,FALSE,4);
+		gtk_widget_show(tmp);
+
 
 		GtkWidget *label;
 		label=gtk_button_new_with_label(_("Delete"));

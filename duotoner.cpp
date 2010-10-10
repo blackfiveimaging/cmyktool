@@ -31,13 +31,16 @@
 
 #include "rsplwrapper.h"
 
+#include "jobqueue.h"
+#include "cmtransformworker.h"
+
 #include "config.h"
 #include "gettext.h"
 #define _(x) gettext(x)
 
 using namespace std;
 
-
+#if 0
 class RGBToCMY : public RSPLWrapper
 {
 	public:
@@ -83,6 +86,7 @@ class RGBToCMY : public RSPLWrapper
 	{
 	}
 };
+#endif
 
 
 class DuoTone_Options
@@ -312,7 +316,7 @@ class DuoToner : public ConfigFile
 	{
 		SaveConfigFile(configname.c_str());
 	}
-	ImageSource *Process(ImageSource *src, DuoTone_Options &opts, double ggamma=1.0, double cgamma=1.0)
+	ImageSource *Process(ImageSource *src, DuoTone_Options &opts)
 	{
 		src=ToRGB(src);
 		src=new ImageSource_HSV(src);
@@ -322,16 +326,38 @@ class DuoToner : public ConfigFile
 		src=new ImageSource_DuoToneToCMYK(src,opts.GetCMY(),opts.GetK());
 		return(src);
 	}
-	ImageSource *ToRGB(ImageSource *src)
+	ImageSource *ToRGB(ImageSource *src,CMTransformFactory *factory=NULL)
 	{
+		if(!factory)
+			factory=&this->factory;
 		if(STRIP_ALPHA(src->type)!=IS_TYPE_RGB)
 		{
 			CMSProfile *p=src->GetEmbeddedProfile();
 			CMSTransform *t=NULL;
 			if(p)
-				t=factory.GetTransform(CM_COLOURDEVICE_DEFAULTRGB,p);
+				t=factory->GetTransform(CM_COLOURDEVICE_DEFAULTRGB,p);
 			else
-				t=factory.GetTransform(CM_COLOURDEVICE_DEFAULTRGB,STRIP_ALPHA(src->type));
+				t=factory->GetTransform(CM_COLOURDEVICE_DEFAULTRGB,STRIP_ALPHA(src->type));
+
+			if(t)
+				return(new ImageSource_CMS(src,t));
+			else
+				throw "Conversion to RGB failed - check ICC profiles.";
+		}
+		return(src);
+	}
+	ImageSource *ToMonitor(ImageSource *src,CMTransformFactory *factory=NULL)
+	{
+		if(!factory)
+			factory=&this->factory;
+		if(STRIP_ALPHA(src->type)!=IS_TYPE_RGB)
+		{
+			CMSProfile *p=src->GetEmbeddedProfile();
+			CMSTransform *t=NULL;
+			if(p)
+				t=factory->GetTransform(CM_COLOURDEVICE_DISPLAY,p,LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC);
+			else
+				t=factory->GetTransform(CM_COLOURDEVICE_DISPLAY,STRIP_ALPHA(src->type),LCMSWRAPPER_INTENT_ABSOLUTE_COLORIMETRIC);
 
 			if(t)
 				return(new ImageSource_CMS(src,t));
@@ -448,11 +474,89 @@ class ProfileDialog
 };
 
 
-class GUI : public DuoToner
+class HighResPreview : public Job, public ThreadSync
 {
 	public:
-	GUI() : DuoToner(), pview(NULL), imposter(NULL), impostersize(256), colorants(), transform(NULL)
+	HighResPreview(DuoToner &dt,DuoTone_Options &opts,std::string filename,void (*completefunc)(GdkPixbuf *pb,void *userdata),void *ud)
+		: Job(_("Rendering preview")), ThreadSync(), dt(dt), opts(opts), filename(filename),
+		tempimage(NULL), completefunc(completefunc), userdata(ud)
 	{
+	}
+	~HighResPreview()
+	{
+	}
+	void Run(Worker *w)
+	{
+		CMTransformWorker *cw=(CMTransformWorker *)w;
+
+		Debug[TRACE] << endl << "In HighResPreview's Run() method" << endl;
+
+		// wait briefly here and bail out if cancelled.
+		for(int i=0;i<25;++i)
+		{
+#ifdef WIN32
+			Sleep(10);
+#else
+			usleep(10000);
+#endif
+			if(GetJobStatus()==JOBSTATUS_CANCELLED)
+			{
+				Debug[TRACE] << "Got break signal while pausing - Releasing" << endl;
+				return;
+			}
+		}
+
+		try
+		{
+			ImageSource *is=ISLoadImage(filename.c_str());
+			is=dt.Process(is,opts);
+			is=dt.ToMonitor(is,cw->factory);
+			tempimage=new CachedImage(is);
+
+			g_timeout_add(1,CleanupFunc,this);
+
+			WaitCondition();
+			delete tempimage;
+		}
+		catch(const char *err)
+		{
+			Debug[ERROR] << "Error: " << err << endl;
+			ErrorDialogs.AddMessage(err);
+		}
+	}
+	static gboolean CleanupFunc(gpointer ud)
+	{
+		HighResPreview *t=(HighResPreview *)ud;
+
+		Debug[TRACE] << "In cleanup function - creating pixbuf" << endl;
+
+		if(t->GetJobStatus()!=JOBSTATUS_CANCELLED)
+		{
+			ImageSource *is=t->tempimage->GetImageSource();
+			GdkPixbuf *pixbuf=pixbuf_from_imagesource(is,255,255,255);
+
+			t->completefunc(pixbuf,t->userdata);
+			g_object_unref(G_OBJECT(pixbuf));
+		}
+		t->Broadcast();
+		return(FALSE);
+	}
+	protected:
+	DuoToner &dt;
+	DuoTone_Options &opts;
+	std::string filename;
+	CachedImage *tempimage;
+	void (*completefunc)(GdkPixbuf *pb,void *userdata);
+	void *userdata;
+};
+
+
+class GUI : public DuoToner, public JobDispatcher
+{
+	public:
+	GUI() : DuoToner(), JobDispatcher(0), pview(NULL), imposter(NULL), impostersize(256), colorants(), transform(NULL), hrpreview(NULL)
+	{
+		new CMTransformWorker(*this,profilemanager);
 		new DeviceNColorant(colorants,"Red");
 		new DeviceNColorant(colorants,"Black");
 
@@ -618,6 +722,8 @@ class GUI : public DuoToner
 
 			filename=fn;
 			ImageSource *is=ISLoadImage(fn.c_str());
+			width=is->width;
+			height=is->height;
 			int w=impostersize;
 			int h=(impostersize*is->height)/is->width;
 			if(h>impostersize)
@@ -645,12 +751,16 @@ class GUI : public DuoToner
 			ImageSource *is=imposter->GetImageSource();
 			is=Process(is,opts);
 			is=new ImageSource_CMS(is,transform);
+			is=ISScaleImageBySize(is,width,height,IS_SCALING_NEARESTNEIGHBOUR);
 
 			GdkPixbuf *pb=pixbuf_from_imagesource(is);
 			delete is;
 
 			pixbufview_set_pixbuf(PIXBUFVIEW(pview),pb);
 			g_object_unref(G_OBJECT(pb));
+			if(hrpreview)
+				CancelJob(hrpreview);
+			AddJob(hrpreview=new HighResPreview(*this,opts,filename,drawhrpreview,this));
 		}
 	}
 	void Save(std::string outfn)
@@ -672,6 +782,13 @@ class GUI : public DuoToner
 			ErrorDialogs.AddMessage(err);
 		}
 	}
+
+	static void drawhrpreview(GdkPixbuf *pb,void *userdata)
+	{
+			GUI *gui=(GUI *)userdata;
+			pixbufview_set_pixbuf(PIXBUFVIEW(gui->pview),pb);
+	}
+
 	static void settingsclicked(GtkWidget *wid,gpointer ud)
 	{
 		try
@@ -781,11 +898,14 @@ class GUI : public DuoToner
 	GtkWidget *colcontrast;
 	GtkWidget *colselector;
 	CachedImage *imposter;
+	int width;
+	int height;
 	int impostersize;
 	DeviceNColorantList colorants;
 	DuoTone_Options opts;
 	CMSTransform *transform;
 	std::string filename;
+	Job *hrpreview;
 };
 
 
