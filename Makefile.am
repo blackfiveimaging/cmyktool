@@ -43,11 +43,10 @@ libdeflattenui_la_SOURCES = \
 	dialogs.cpp	\
 	dialogs.h
 
-bin_PROGRAMS = cmyktool duotoner
+bin_PROGRAMS = cmyktool
 
 check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest dltest
 
-duotoner_SOURCES = duotoner.cpp
 dltest_SOURCES = dltest.cpp
 rspltest_SOURCES = rspltest.cpp
 test_SOURCES = test.cpp
@@ -93,13 +92,13 @@ pixbufthumbnail/libpixbufthumbnail.la:
 
 
 desktopdir = $(datadir)/applications
-desktop_DATA = cmyktool.desktop duotoner.desktop
+desktop_DATA = cmyktool.desktop
 
 icondir = $(datadir)/icons/hicolor/48x48/apps/
-icon_DATA = cmyktool.png duotoner.png
+icon_DATA = cmyktool.png
 
 
 
-EXTRA_DIST = COPYING README TODO cmyktool.desktop cmyktool.png duotoner.desktop duotoner.png
+EXTRA_DIST = COPYING README TODO cmyktool.desktop cmyktool.png
 
 

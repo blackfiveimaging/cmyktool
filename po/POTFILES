@@ -20,4 +20,5 @@
      ../psrip.cpp \
      ../psripui.cpp \
      ../conversionopts.h \
-     ../devicelink.h
+     ../devicelink.h \
+     ../duotoner.cpp
