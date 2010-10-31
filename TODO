@@ -28,13 +28,13 @@ Finally, should have a "custom" option.
 Beneath the notebook we should have buttons as follows:
 
 [Generate...]
-[Export...]  (Must solve issue with -D first!)
+| [Export...]  (Must solve issue with -D first!)
 
 
 
-Need some kind of global activity indicator - something to monitor the jobqueue.
-Clicking on this should bring up a list of pending jobs, which means the jobs should have meaningful names.
-
+| Need some kind of global activity indicator - something to monitor the jobqueue.
+| Clicking on this should bring up a list of pending jobs, which means the jobs should have meaningful names.
+Actually settled on making the overall progress indicator cycle between the names of the active jobs.
 
 Add Postscript Import - recognise PS/PDF by extension when adding a file, and pop up an options dialog.
 Need to decide how to handle temporary files.  Maybe a dialog when CMYKTool quits asking whether
@@ -85,11 +85,11 @@ Consumer
 externalprogram - will Unicode parameters even work, or will filenames parameters need to be
   converted to code page?
 
-Make Win32 externalprogram escape arguments with spaces in
+| Make Win32 externalprogram escape arguments with spaces in
 
-Add ability to export a devicelink for use in other programs.
+| Add ability to export a devicelink for use in other programs.
 
-Place the "display name" for the devicelink in the argyll command line - must escape it though.
+| Place the "display name" for the devicelink in the argyll command line - must escape it though.
 
 When the user selects a preset from the preset editor then clicks OK,
 the main window's combo should be set to that preset
