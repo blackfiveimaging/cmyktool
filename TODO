@@ -54,7 +54,7 @@ The trickiest part will be having some way for nodes further down the chain to c
 how many "support" rows they need.  Maybe add a static function to the ImageSource
 
 
-Add icons for devicelink list
+| Add icons for devicelink list
 
 
 | Export resolution broken?
@@ -178,18 +178,10 @@ Preserve clipping paths, as per latest Separate+
 | (This could be useful for hold black mode, too.)
 
 
-Add DuoTone capability (probably better handled with a separate utility) which would allow 
-you to set an approximate tone for a spot colour, and have a duotone image calculated.
-Would work by finding a CMYK approximation for that colour, then building a 2D lookup-table
-using the CMYK profile.
-
-Will need several RSPLs.
-First, using a CMYK profile, ignore the K channel and build a mapping from CMY -> Lab.
-Then, given a secondary colorant, find its Lab value (Mapping white and black points in Lab)
-and from that derive CMY for the colorant (R).
-Now build a KR -> Lab RSPL, using the CMYK Profile - convert each R to CMY, add in the K and enter into
-the RSPL.
-Invert, and the RSPL will provide a mapping from Lab -> KR.
+|Add DuoTone capability (probably better handled with a separate utility) which would allow 
+|you to set an approximate tone for a spot colour, and have a duotone image calculated.
+|Would work by finding a CMYK approximation for that colour, then building a 2D lookup-table
+|using the CMYK profile.
 
 
 | Add ability to perform a "naive" RGB->CMYK conversion with no profiles.
