@@ -223,15 +223,18 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	if(mode==CMYKCONVERSIONMODE_NONE)
 		return(src);
 
-	if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
-		src=new ImageSource_Promote(src,IS_TYPE_RGB);
-
 	bool freeinprof=false;
 	CMSProfile *inprof=NULL;
 	if(!ignoreembedded)
 		inprof=src->GetEmbeddedProfile();
 	if(!inprof)
 	{
+		// Promote to RGB only if there's no embedded grey profile.
+		// FIXME - support for default grey profile.
+
+		if(STRIP_ALPHA(src->type)==IS_TYPE_GREY)
+			src=new ImageSource_Promote(src,IS_TYPE_RGB);
+
 		freeinprof=true;
 		switch(STRIP_ALPHA(src->type))
 		{

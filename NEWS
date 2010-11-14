@@ -19,6 +19,8 @@ CMYKTool-0.1.5
 
     * Can now export a generated Devicelink for use in other programs.
 
+    * Can now handle greyscale images that have a grey profile embedded.
+
 
 CMYKTool-0.1.4a
 

@@ -1,3 +1,5 @@
+Save dialog needs to allow 16-bit, 8-bit, and 8-bit dithered.
+
 DeviceLink editor needs to be split into tabs.
 
 First tab:  ("Basic")
@@ -11,9 +13,6 @@ Second tab:  ("Viewing conditions")
 Input viewing conditions
 | (Viewing condition selector needs "default" options with which no parameters are passed to Argyll.)
 Output viewing conditions
-Input spectrum (Default, D50, etc - or custom file)
-Observer (Default, 1931_2, etc.)
-[x] FWA compensation
 
 Third tab: ("Black Generation")
 Black Generation

@@ -787,8 +787,9 @@ void TestUI::AddImage(const char *filename)
 			}
 			is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
 
-			if(STRIP_ALPHA(is->type==IS_TYPE_GREY))
-				is=new ImageSource_Promote(is,IS_TYPE_RGB);
+//			We don't promote here if we can convert using profiles.
+//			if(STRIP_ALPHA(is->type==IS_TYPE_GREY))
+//				is=new ImageSource_Promote(is,IS_TYPE_RGB);
 
 			// We overlay icons depending on colourspace and whether there's an embedded profile.
 
