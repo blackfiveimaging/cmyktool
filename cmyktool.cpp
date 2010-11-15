@@ -787,10 +787,6 @@ void TestUI::AddImage(const char *filename)
 			}
 			is=ISScaleImageBySize(is,w,h,IS_SCALING_DOWNSAMPLE);
 
-//			We don't promote here if we can convert using profiles.
-//			if(STRIP_ALPHA(is->type==IS_TYPE_GREY))
-//				is=new ImageSource_Promote(is,IS_TYPE_RGB);
-
 			// We overlay icons depending on colourspace and whether there's an embedded profile.
 
 			// We check the colourspace before applying the conversion to the monitor's profile, since that's RGB!
@@ -816,6 +812,9 @@ void TestUI::AddImage(const char *filename)
 			if(transform)
 				is=new ImageSource_CMS(is,transform);
 
+			// We can promote grey to RGB here if all else has failed...
+//			if(STRIP_ALPHA(is->type==IS_TYPE_GREY))
+//				is=new ImageSource_Promote(is,IS_TYPE_RGB);
 
 			if(is->width<128)
 			{
