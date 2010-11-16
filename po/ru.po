@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.5\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-10-24 13:22+0100\n"
+"POT-Creation-Date: 2010-11-16 22:52+0000\n"
 "PO-Revision-Date: 2010-10-11 05:13+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -132,7 +132,7 @@ msgid "Shape:"
 msgstr "Форма:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#: profilemanager/profilemanager.cpp:842
+#: profilemanager/profilemanager.cpp:849
 msgid "Default"
 msgstr "По умолчанию"
 
@@ -176,160 +176,160 @@ msgstr "Исходная сцена — яркое наружное освеще
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr "Нарезанные листы на просмотровом столе"
 
-#: cmyktool.cpp:137
+#: cmyktool.cpp:139
 msgid "_File"
 msgstr "_Файл"
 
-#: cmyktool.cpp:139
+#: cmyktool.cpp:141
 msgid "_Quit"
 msgstr "В_ыход"
 
-#: cmyktool.cpp:139
+#: cmyktool.cpp:141
 msgid "Exit the program"
 msgstr "Завершить работу с программой"
 
-#: cmyktool.cpp:141
+#: cmyktool.cpp:143
 msgid "_Edit"
 msgstr "_Правка"
 
-#: cmyktool.cpp:143
+#: cmyktool.cpp:145
 msgid "Select _All"
 msgstr "Выделить _все"
 
-#: cmyktool.cpp:143
+#: cmyktool.cpp:145
 msgid "Select all images"
 msgstr "Выделить все изображения"
 
-#: cmyktool.cpp:144
+#: cmyktool.cpp:146
 msgid "Select _None"
 msgstr "_Снять выделение"
 
-#: cmyktool.cpp:144
+#: cmyktool.cpp:146
 msgid "Deselect all images"
 msgstr "Снять выделение со всех изображений"
 
-#: cmyktool.cpp:145
+#: cmyktool.cpp:147
 msgid "Preset _Editor..."
 msgstr "Пр_офили преобразования..."
 
-#: cmyktool.cpp:145
+#: cmyktool.cpp:147
 msgid "Open the preset editor"
 msgstr "Открыть редактор профилей преобразования"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:148
 msgid "_Device Link Editor..."
 msgstr "_Редактор связующих профилей..."
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:148
 msgid "Open the Device Link editor"
 msgstr "Открыть редактор связующих профилей"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:149
 msgid "Pre_ferences..."
 msgstr "_Параметры"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:149
 msgid "Set paths for colour profiles and external utilities"
 msgstr "Указать расположение цветовых профилей и внешних утилит"
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:151
 msgid "_Help"
 msgstr "_Справка"
 
-#: cmyktool.cpp:151
+#: cmyktool.cpp:153
 msgid "_About"
 msgstr "_О программе"
 
-#: cmyktool.cpp:151
+#: cmyktool.cpp:153
 msgid "Show the About dialog"
 msgstr "Об этой программе"
 
-#: cmyktool.cpp:238
+#: cmyktool.cpp:241
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:296
+#: cmyktool.cpp:299
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:303
+#: cmyktool.cpp:306
 msgid "Remove Images"
 msgstr "Удалить изображения"
 
-#: cmyktool.cpp:322
+#: cmyktool.cpp:325
 msgid "Convert"
 msgstr "Преобразовать"
 
-#: cmyktool.cpp:330
+#: cmyktool.cpp:333
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:354 dialogs.cpp:69
+#: cmyktool.cpp:357 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:404
+#: cmyktool.cpp:407
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:442 profilemanager/profileselector.cpp:195 duotoner.cpp:427
+#: cmyktool.cpp:445 profilemanager/profileselector.cpp:195 duotoner.cpp:427
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:442
+#: cmyktool.cpp:445
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:463 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:466 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:463
+#: cmyktool.cpp:466
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:595
+#: cmyktool.cpp:598
 msgid "About CMYKTool"
 msgstr "О CMYKTool"
 
-#: cmyktool.cpp:596
+#: cmyktool.cpp:599
 msgid "translator-credits"
 msgstr "Александр Прокудин <alexandre@prokoudine.info>, 2010"
 
-#: cmyktool.cpp:600
+#: cmyktool.cpp:603
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Авторские права © 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:601
+#: cmyktool.cpp:604
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Программа для преобразования изображений при помощи цветовых профилей"
 
-#: cmyktool.cpp:645
+#: cmyktool.cpp:648
 msgid "Done"
 msgstr "Готово"
 
-#: cmyktool.cpp:688
+#: cmyktool.cpp:691
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:718 cmyktool.cpp:917
+#: cmyktool.cpp:721 cmyktool.cpp:923
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
-#: cmykuitab.cpp:62 duotoner.cpp:516
+#: cmykuitab.cpp:63 duotoner.cpp:516
 msgid "Rendering preview"
 msgstr "Создаётся предпросмотр"
 
-#: cmykuitab.cpp:204
+#: cmykuitab.cpp:205
 msgid "Converting image"
 msgstr "Преобразуется изображение"
 
-#: cmykuitab.cpp:393
+#: cmykuitab.cpp:394
 msgid "Inspect"
 msgstr "Исследование"
 
-#: cmykuitab.cpp:393
+#: cmykuitab.cpp:394
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
@@ -338,11 +338,11 @@ msgstr ""
 "в пространство монитора, чтобы можно было увидеть, как преобразование "
 "изменило данные"
 
-#: cmykuitab.cpp:395
+#: cmykuitab.cpp:396
 msgid "Simulate print, adapt white"
 msgstr "Имитация печати, адаптация белого"
 
-#: cmykuitab.cpp:395
+#: cmykuitab.cpp:396
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
@@ -353,11 +353,11 @@ msgstr ""
 "колориметрической цветопередачей и включённой компенсацией чёрной точки "
 "(BPC)."
 
-#: cmykuitab.cpp:397
+#: cmykuitab.cpp:398
 msgid "Simulate print"
 msgstr "Имитация печати"
 
-#: cmykuitab.cpp:397
+#: cmykuitab.cpp:398
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
@@ -366,63 +366,79 @@ msgstr ""
 "конечного цветового пространства в пространство монитора с абсолютной "
 "колориметрической цветопередачей."
 
-#: cmykuitab.cpp:433
+#: cmykuitab.cpp:434
 msgid "Save..."
 msgstr "Сохранить..."
 
-#: cmykuitab.cpp:577
+#: cmykuitab.cpp:578
 msgid "Save Image..."
 msgstr "Сохранить изображение"
 
-#: cmykuitab.cpp:604
+#: cmykuitab.cpp:605
 msgid "File format:"
 msgstr "Формат файлов:"
 
-#: cmykuitab.cpp:609
+#: cmykuitab.cpp:610
 msgid "JPEG"
 msgstr "JPEG"
 
-#: cmykuitab.cpp:609
+#: cmykuitab.cpp:610
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG — формат сжатых файлов с потерей данных, для хранения фотографий"
 
-#: cmykuitab.cpp:610
+#: cmykuitab.cpp:611 cmykuitab.cpp:613
+#, fuzzy
+msgid "TIFF (8-bit dithered)"
+msgstr "TIFF (8-разрядный)"
+
+#: cmykuitab.cpp:611
+msgid ""
+"JPEG - 8-bits per sample, with dithering to hide contouring artifacts "
+"(results in large files)"
+msgstr ""
+
+#: cmykuitab.cpp:612
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8-разрядный)"
 
-#: cmykuitab.cpp:610
+#: cmykuitab.cpp:612
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF — 8 разрядов на цветовой канал, для повышенной совместимости"
 
-#: cmykuitab.cpp:611
+#: cmykuitab.cpp:613
+#, fuzzy
+msgid "TIFF - 8-bits per sample, with dithering to hide contouring artifacts"
+msgstr "TIFF — 8 разрядов на цветовой канал, для повышенной совместимости"
+
+#: cmykuitab.cpp:614
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16-разрядный)"
 
-#: cmykuitab.cpp:611
+#: cmykuitab.cpp:614
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr "TIFF — 8 разрядов на цветовой канал, для максимального качества"
 
-#: cmykuitab.cpp:621
+#: cmykuitab.cpp:624
 msgid "JPEG Quality:"
 msgstr "Качество JPEG:"
 
-#: cmykuitab.cpp:637
+#: cmykuitab.cpp:640
 msgid "Resolution:"
 msgstr "Разрешение:"
 
-#: cmykuitab.cpp:653
+#: cmykuitab.cpp:656
 msgid "Embed ICC Profile"
 msgstr "Встроить профиль ICC"
 
-#: cmykuitab.cpp:748
+#: cmykuitab.cpp:751
 msgid "File exists - OK to overwrite?"
 msgstr "Файл уже существует. Перезаписать?"
 
-#: cmykuitab.cpp:762 cmykuitab.cpp:830
+#: cmykuitab.cpp:765 cmykuitab.cpp:839
 msgid "Saving"
 msgstr "Сохранение"
 
-#: cmykuitab.cpp:827
+#: cmykuitab.cpp:836
 msgid "Save image - please choose filename"
 msgstr "Сохранение изображения — выберите имя файла"
 
@@ -729,27 +745,27 @@ msgstr "Добавить..."
 msgid "Remove"
 msgstr "Удалить"
 
-#: profilemanager/lcmswrapper.cpp:556
+#: profilemanager/lcmswrapper.cpp:574
 msgid "Perceptual"
 msgstr "Воспринимаемая"
 
-#: profilemanager/lcmswrapper.cpp:557
+#: profilemanager/lcmswrapper.cpp:575
 msgid "Relative Colorimetric"
 msgstr "Относительная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:558
+#: profilemanager/lcmswrapper.cpp:576
 msgid "Relative Colorimetric with BPC"
 msgstr "Относительная колориметрическая с компенсацией точки чёрного"
 
-#: profilemanager/lcmswrapper.cpp:559
+#: profilemanager/lcmswrapper.cpp:577
 msgid "Saturation"
 msgstr "Насыщенность"
 
-#: profilemanager/lcmswrapper.cpp:560
+#: profilemanager/lcmswrapper.cpp:578
 msgid "Absolute Colorimetric"
 msgstr "Абсолютная колориметрическая"
 
-#: profilemanager/lcmswrapper.cpp:565
+#: profilemanager/lcmswrapper.cpp:583
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
@@ -757,13 +773,13 @@ msgstr ""
 "Попытаться сохранить фотографическую достоверность сохранением соотношения "
 "между цветами и попыткой избежать потери недоступных при переносе цветов"
 
-#: profilemanager/lcmswrapper.cpp:566
+#: profilemanager/lcmswrapper.cpp:584
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 msgstr "Попытаться сохранить исходные цвета относительно белой точки"
 
-#: profilemanager/lcmswrapper.cpp:567
+#: profilemanager/lcmswrapper.cpp:585
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
@@ -772,7 +788,7 @@ msgstr ""
 "Попытаться сохранить исходные цвета относительно белой точки. Использовать "
 "компенсацию чёрной точки во избежание потери ярких и тёмных участков."
 
-#: profilemanager/lcmswrapper.cpp:568
+#: profilemanager/lcmswrapper.cpp:586
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
@@ -780,7 +796,7 @@ msgstr ""
 "Попытаться передать яркие, более насыщенные цвета ценой потери соотношения "
 "цветов"
 
-#: profilemanager/lcmswrapper.cpp:569
+#: profilemanager/lcmswrapper.cpp:587
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
@@ -788,23 +804,23 @@ msgstr ""
 "Попытаться передать исходные цвета (включая белую точку) для сравнения "
 "изображений бок о бок. Недостижимые цвета теряются."
 
-#: profilemanager/profilemanager.cpp:208
+#: profilemanager/profilemanager.cpp:212
 msgid "Can't do proofing without a valid Printer profile!"
 msgstr "Невозможно выполнить цветопробу без корректного профиля принтера!"
 
-#: profilemanager/profilemanager.cpp:213
+#: profilemanager/profilemanager.cpp:217
 msgid "Can't do proofing without a valid Monitor profile!"
 msgstr "Невозможно выполнить цветопробу без корректного профиля монитора!"
 
-#: profilemanager/profilemanager.cpp:218
+#: profilemanager/profilemanager.cpp:222
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr "Невозможно выполнить цветопробу без корректного профиля RGB!"
 
-#: profilemanager/profilemanager.cpp:501
+#: profilemanager/profilemanager.cpp:505
 msgid "No Proof profile provided!"
 msgstr "Профиль для цветопробы не указан!"
 
-#: profilemanager/profilemanager.cpp:850
+#: profilemanager/profilemanager.cpp:857
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
