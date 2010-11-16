@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-16 22:52+0000\n"
+"POT-Creation-Date: 2010-11-16 23:14+0000\n"
 "PO-Revision-Date: 2010-07-21 00:34+0200\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -381,16 +381,15 @@ msgstr "JPEG"
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG - Format avec perte optimisé pour photos"
 
-#: cmykuitab.cpp:611 cmykuitab.cpp:613
+#: cmykuitab.cpp:611
 #, fuzzy
-msgid "TIFF (8-bit dithered)"
+msgid "JPEG (dithered)"
 msgstr "TIFF (8-bit)"
 
 #: cmykuitab.cpp:611
-msgid ""
-"JPEG - 8-bits per sample, with dithering to hide contouring artifacts "
-"(results in large files)"
-msgstr ""
+#, fuzzy
+msgid "JPEG - Lossy format with dithering to hide contouring artifacts"
+msgstr "TIFF - 8-bits pour une meilleur compatibilité"
 
 #: cmykuitab.cpp:612
 msgid "TIFF (8-bit)"
@@ -399,6 +398,11 @@ msgstr "TIFF (8-bit)"
 #: cmykuitab.cpp:612
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF - 8-bits pour une meilleur compatibilité"
+
+#: cmykuitab.cpp:613
+#, fuzzy
+msgid "TIFF (8-bit dithered)"
+msgstr "TIFF (8-bit)"
 
 #: cmykuitab.cpp:613
 #, fuzzy

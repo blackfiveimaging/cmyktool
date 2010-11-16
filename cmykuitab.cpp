@@ -608,7 +608,7 @@ class UITab_SaveDialog
 
 		SimpleComboOptions opts;
 		opts.Add("JPEG",_("JPEG"),_("JPEG - Lossy format optimised for photographic images"));
-		opts.Add("JPEGDithered",_("TIFF (8-bit dithered)"),_("JPEG - 8-bits per sample, with dithering to hide contouring artifacts (results in large files)"));
+		opts.Add("JPEGDithered",_("JPEG (dithered)"),_("JPEG - Lossy format with dithering to hide contouring artifacts"));
 		opts.Add("TIFF",_("TIFF (8-bit)"),_("TIFF - 8-bits per sample, for increased compatibility"));
 		opts.Add("TIFFDithered",_("TIFF (8-bit dithered)"),_("TIFF - 8-bits per sample, with dithering to hide contouring artifacts"));
 		opts.Add("TIFF16",_("TIFF (16-bit)"),_("TIFF - 16-bits per sample, for maximum quality"));
@@ -688,7 +688,7 @@ class UITab_SaveDialog
 		if(fn)
 		{
 			Debug[TRACE] << "Got filename: " << fn << endl;
-			char *newfn=BuildFilename(fn,NULL,fmt==FORMAT_JPEG ? "jpg" : "tif");
+			char *newfn=BuildFilename(fn,NULL,(fmt==FORMAT_JPEG || fmt==FORMAT_JPEGDITHERED) ? "jpg" : "tif");
 			Debug[TRACE] << "Built new filename: " << newfn << endl;
 
 //			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog),g_path_get_dirname(newfn));

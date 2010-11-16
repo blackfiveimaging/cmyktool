@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.5\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-16 22:52+0000\n"
+"POT-Creation-Date: 2010-11-16 23:14+0000\n"
 "PO-Revision-Date: 2010-10-11 05:13+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -386,16 +386,15 @@ msgstr "JPEG"
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG — формат сжатых файлов с потерей данных, для хранения фотографий"
 
-#: cmykuitab.cpp:611 cmykuitab.cpp:613
+#: cmykuitab.cpp:611
 #, fuzzy
-msgid "TIFF (8-bit dithered)"
+msgid "JPEG (dithered)"
 msgstr "TIFF (8-разрядный)"
 
 #: cmykuitab.cpp:611
-msgid ""
-"JPEG - 8-bits per sample, with dithering to hide contouring artifacts "
-"(results in large files)"
-msgstr ""
+#, fuzzy
+msgid "JPEG - Lossy format with dithering to hide contouring artifacts"
+msgstr "TIFF — 8 разрядов на цветовой канал, для повышенной совместимости"
 
 #: cmykuitab.cpp:612
 msgid "TIFF (8-bit)"
@@ -404,6 +403,11 @@ msgstr "TIFF (8-разрядный)"
 #: cmykuitab.cpp:612
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF — 8 разрядов на цветовой канал, для повышенной совместимости"
+
+#: cmykuitab.cpp:613
+#, fuzzy
+msgid "TIFF (8-bit dithered)"
+msgstr "TIFF (8-разрядный)"
 
 #: cmykuitab.cpp:613
 #, fuzzy
