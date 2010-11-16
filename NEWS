@@ -21,6 +21,8 @@ CMYKTool-0.1.5
 
     * Can now handle greyscale images that have a grey profile embedded.
 
+    * Can now export 8-bit dithered JPEGs and TIFFs.
+
 
 CMYKTool-0.1.4a
 

@@ -15,6 +15,7 @@
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/imagesource_colorantmask.h"
+#include "imagesource/imagesource_dither.h"
 #include "imagesource/pixbuf_from_imagesource.h"
 #include "cachedimage.h"
 
@@ -564,7 +565,7 @@ void CMYKUITab::Redraw()
 
 /////////// Save Dialog ////////////
 
-enum SaveDialog_Format {FORMAT_JPEG,FORMAT_TIFF,FORMAT_TIFF16};
+enum SaveDialog_Format {FORMAT_JPEG,FORMAT_JPEGDITHERED,FORMAT_TIFF,FORMAT_TIFFDITHERED,FORMAT_TIFF16};
 
 class UITab_SaveDialog
 {
@@ -607,7 +608,9 @@ class UITab_SaveDialog
 
 		SimpleComboOptions opts;
 		opts.Add("JPEG",_("JPEG"),_("JPEG - Lossy format optimised for photographic images"));
+		opts.Add("JPEGDithered",_("TIFF (8-bit dithered)"),_("JPEG - 8-bits per sample, with dithering to hide contouring artifacts (results in large files)"));
 		opts.Add("TIFF",_("TIFF (8-bit)"),_("TIFF - 8-bits per sample, for increased compatibility"));
+		opts.Add("TIFFDithered",_("TIFF (8-bit dithered)"),_("TIFF - 8-bits per sample, with dithering to hide contouring artifacts"));
 		opts.Add("TIFF16",_("TIFF (16-bit)"),_("TIFF - 16-bits per sample, for maximum quality"));
 
 		format=simplecombo_new(opts);
@@ -675,7 +678,7 @@ class UITab_SaveDialog
 
 		Debug[TRACE] << "Got format: " << fmt << endl;
 
-		gtk_widget_set_sensitive(dlg->quality,fmt==FORMAT_JPEG);
+		gtk_widget_set_sensitive(dlg->quality,fmt==FORMAT_JPEG || fmt==FORMAT_JPEGDITHERED);
 
 		Debug[TRACE] << "Set widget sensitivity " << endl;
 
@@ -772,12 +775,18 @@ class UITab_SaveDialog
 					ImageSaver *imgsaver=NULL;
 					switch(fmt)
 					{
+						case FORMAT_TIFFDITHERED:
+							is=new ImageSource_Dither(is,8);
+							// Fall through to TIFF...
 						case FORMAT_TIFF:
 							imgsaver=new TIFFSaver(fn,is);
 							break;
 						case FORMAT_TIFF16:
 							imgsaver=new TIFFSaver(fn,is,true);
 							break;
+						case FORMAT_JPEGDITHERED:
+							is=new ImageSource_Dither(is,8);
+							// Fall through to JPEG...
 						case FORMAT_JPEG:
 							imgsaver=new JPEGSaver(fn,is,quality);
 							break;
