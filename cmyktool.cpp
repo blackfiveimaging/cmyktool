@@ -40,6 +40,7 @@
 
 #include "progressbar.h"
 
+#include "gfx/grey.cpp"
 #include "gfx/rgb.cpp"
 #include "gfx/cmyk.cpp"
 #include "gfx/profile.cpp"
@@ -104,6 +105,7 @@ class TestUI : public CMYKTool_Core
 	Callback *progresscallback;
 	bool shuttingdown;
 	bool timeoutrunning;
+	GdkPixbuf *greypb;
 	GdkPixbuf *rgbpb;
 	GdkPixbuf *cmykpb;
 	GdkPixbuf *profpb;
@@ -226,6 +228,7 @@ TestUI::TestUI() : CMYKTool_Core()
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
 
+	greypb=PixbufFromImageData(grey_data,sizeof(grey_data));
 	rgbpb=PixbufFromImageData(rgb_data,sizeof(rgb_data));
 	cmykpb=PixbufFromImageData(cmyk_data,sizeof(cmyk_data));
 	profpb=PixbufFromImageData(profile_data,sizeof(profile_data));
@@ -798,6 +801,9 @@ void TestUI::AddImage(const char *filename)
 			ImageSource *emblem=NULL;
 			switch(STRIP_ALPHA(is->type))
 			{
+				case IS_TYPE_GREY:
+					emblem=new ImageSource_GdkPixbuf(greypb);
+					break;
 				case IS_TYPE_RGB:
 					emblem=new ImageSource_GdkPixbuf(rgbpb);
 					break;
