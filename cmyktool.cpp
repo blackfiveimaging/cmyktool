@@ -774,7 +774,6 @@ void TestUI::showpreferencesdialog(GtkWidget *wid,gpointer userdata)
 
 void TestUI::AddImage(const char *filename)
 {
-	Debug.SetLevel(TRACE);
 	try
 	{
 		ImageSource_Montage *mon=new ImageSource_Montage(IS_TYPE_RGB);

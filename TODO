@@ -2,7 +2,9 @@
 
 | Save dialog needs to allow 16-bit, 8-bit, and 8-bit dithered.
 
-DeviceLink editor needs to be split into tabs.
+Replace spinners wth GTK inbuilt ones.
+
+DeviceLink editor needs to be split into tabs. (or maybe dividers?)
 
 First tab:  ("Basic")
 Input
