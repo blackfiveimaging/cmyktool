@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-16 23:14+0000\n"
+"POT-Creation-Date: 2010-11-22 16:51+0000\n"
 "PO-Revision-Date: 2010-07-21 00:34+0200\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -239,77 +239,77 @@ msgstr "_A Propos"
 msgid "Show the About dialog"
 msgstr "Voir les informations sur le logiciels"
 
-#: cmyktool.cpp:241
+#: cmyktool.cpp:257
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:299
+#: cmyktool.cpp:315
 msgid "Add Images..."
 msgstr "Ajouter des images..."
 
-#: cmyktool.cpp:306
+#: cmyktool.cpp:322
 msgid "Remove Images"
 msgstr "Supprimer les images"
 
-#: cmyktool.cpp:325
+#: cmyktool.cpp:341
 msgid "Convert"
 msgstr "Converti"
 
-#: cmyktool.cpp:333
+#: cmyktool.cpp:349
 msgid "Using conversion preset:"
 msgstr "Utilise les réglages prédéfinis"
 
-#: cmyktool.cpp:357 dialogs.cpp:69
+#: cmyktool.cpp:373 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Préférences..."
 
-#: cmyktool.cpp:407
+#: cmyktool.cpp:425
 msgid "Previous settings"
 msgstr "Paramètres Précédents"
 
-#: cmyktool.cpp:445 profilemanager/profileselector.cpp:195 duotoner.cpp:427
+#: cmyktool.cpp:463 profilemanager/profileselector.cpp:195 duotoner.cpp:427
 msgid "None"
 msgstr "Aucun"
 
-#: cmyktool.cpp:445
+#: cmyktool.cpp:463
 msgid "No conversion"
 msgstr "Aucune conversion"
 
-#: cmyktool.cpp:466 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:484 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Autre..."
 
-#: cmyktool.cpp:466
+#: cmyktool.cpp:484
 msgid "Create a new preset"
 msgstr "Créer de nouveaux réglages"
 
-#: cmyktool.cpp:598
+#: cmyktool.cpp:616
 msgid "About CMYKTool"
 msgstr "A propos de CMYKTool"
 
-#: cmyktool.cpp:599
+#: cmyktool.cpp:617
 msgid "translator-credits"
 msgstr "Crédits traducteurs"
 
-#: cmyktool.cpp:603
+#: cmyktool.cpp:621
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:604
+#: cmyktool.cpp:622
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "A outils de conversion d'image utilisant les profils ICC."
 
-#: cmyktool.cpp:648
+#: cmyktool.cpp:666
 #, fuzzy
 msgid "Done"
 msgstr "Aucun"
 
-#: cmyktool.cpp:691
+#: cmyktool.cpp:709
 msgid "Open File"
 msgstr "Ouvrir un fichier"
 
-#: cmyktool.cpp:721 cmyktool.cpp:923
+#: cmyktool.cpp:739 cmyktool.cpp:940
 msgid "Adding images..."
 msgstr "Ajouter des images..."
 

@@ -224,6 +224,22 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 }
 
 
+class PreloadProfiles : public Job
+{
+	public:
+	PreloadProfiles(ProfileManager &pm) : Job("Searching for colour profiles..."), pm(pm)
+	{
+	}
+	void Run(Worker *w)
+	{
+		Debug[TRACE] << "Getting profile list..." << endl;
+		pm.GetFirstProfileInfo();
+	}
+	protected:
+	ProfileManager &pm;
+};
+
+
 TestUI::TestUI() : CMYKTool_Core()
 {
 	profilemanager.SetInt("DefaultCMYKProfileActive",1);
@@ -389,6 +405,8 @@ TestUI::TestUI() : CMYKTool_Core()
 	progresscallback=new ProgressCallback(*this);
 	GetDispatcher().SetAddJobCallback(progresscallback);
 	timeoutrunning=shuttingdown=false;
+
+	GetDispatcher().AddJob(new PreloadProfiles(GetProfileManager()));
 }
 
 
