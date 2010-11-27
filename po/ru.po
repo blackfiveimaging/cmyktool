@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.5\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-27 12:00+0000\n"
+"POT-Creation-Date: 2010-11-27 17:52+0000\n"
 "PO-Revision-Date: 2010-10-11 05:13+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -132,7 +132,7 @@ msgid "Shape:"
 msgstr "Форма:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#: profilemanager/profilemanager.cpp:849
+#: profilemanager/profilemanager.cpp:856
 msgid "Default"
 msgstr "По умолчанию"
 
@@ -244,76 +244,76 @@ msgstr "_О программе"
 msgid "Show the About dialog"
 msgstr "Об этой программе"
 
-#: cmyktool.cpp:269
+#: cmyktool.cpp:271
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:327
+#: cmyktool.cpp:329
 msgid "Add Images..."
 msgstr "Добавить изображения..."
 
-#: cmyktool.cpp:334
+#: cmyktool.cpp:336
 msgid "Remove Images"
 msgstr "Удалить изображения"
 
-#: cmyktool.cpp:353
+#: cmyktool.cpp:355
 msgid "Convert"
 msgstr "Преобразовать"
 
-#: cmyktool.cpp:361
+#: cmyktool.cpp:363
 msgid "Using conversion preset:"
 msgstr "По профилю преобразования:"
 
-#: cmyktool.cpp:385 dialogs.cpp:69
+#: cmyktool.cpp:387 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Параметры CMYKTool"
 
-#: cmyktool.cpp:437
+#: cmyktool.cpp:439
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:475 profilemanager/profileselector.cpp:195 duotoner.cpp:427
+#: cmyktool.cpp:477 profilemanager/profileselector.cpp:201 duotoner.cpp:427
 msgid "None"
 msgstr "Без профиля"
 
-#: cmyktool.cpp:475
+#: cmyktool.cpp:477
 msgid "No conversion"
 msgstr "Без преобразования"
 
-#: cmyktool.cpp:496 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:498 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Заказные параметры"
 
-#: cmyktool.cpp:496
+#: cmyktool.cpp:498
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:628
+#: cmyktool.cpp:630
 msgid "About CMYKTool"
 msgstr "О CMYKTool"
 
-#: cmyktool.cpp:629
+#: cmyktool.cpp:631
 msgid "translator-credits"
 msgstr "Александр Прокудин <alexandre@prokoudine.info>, 2010"
 
-#: cmyktool.cpp:633
+#: cmyktool.cpp:635
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Авторские права © 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:634
+#: cmyktool.cpp:636
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Программа для преобразования изображений при помощи цветовых профилей"
 
-#: cmyktool.cpp:678
+#: cmyktool.cpp:680
 msgid "Done"
 msgstr "Готово"
 
-#: cmyktool.cpp:721
+#: cmyktool.cpp:723
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:751 cmyktool.cpp:952
+#: cmyktool.cpp:753 cmyktool.cpp:954
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -824,15 +824,15 @@ msgstr "Невозможно выполнить цветопробу без ко
 msgid "No Proof profile provided!"
 msgstr "Профиль для цветопробы не указан!"
 
-#: profilemanager/profilemanager.cpp:857
+#: profilemanager/profilemanager.cpp:864
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
-#: profilemanager/profileselector.cpp:227
+#: profilemanager/profileselector.cpp:233
 msgid "Choose ICC Profile..."
 msgstr "Выберите ICC-профиль…"
 
-#: profilemanager/profileselector.cpp:394
+#: profilemanager/profileselector.cpp:400
 msgid "Please choose a valid ICC profile"
 msgstr "Выберите корректный цветовой профиль"
 
@@ -847,6 +847,14 @@ msgstr "Тест PSRip"
 #: conversionopts.h:206 devicelink.h:101 devicelink.h:146
 msgid "<unknown>"
 msgstr "<неизвестно>"
+
+#: devicelink.cpp:170
+msgid "Devicelink: Can't open source profile!"
+msgstr ""
+
+#: devicelink.cpp:177
+msgid "Devicelink: Can't open destination profile!"
+msgstr ""
 
 #: duotoner.cpp:392
 msgid "Setup colour options..."

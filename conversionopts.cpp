@@ -17,6 +17,7 @@
 
 using namespace std;
 
+#define DEFAULTCMYK "coated_FOGRA39L_argl.icc"
 
 
 ConfigTemplate CMYKConversionPreset::Template[]=
@@ -24,8 +25,8 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 //	ConfigTemplate("PresetID",PRESET_PREVIOUS_ESCAPE),
 	ConfigTemplate("DisplayName","unnamed preset"),
 	ConfigTemplate("InRGBProfile",BUILTINSRGB_ESCAPESTRING),
-	ConfigTemplate("InCMYKProfile","USWebCoatedSWOP.icc"),
-	ConfigTemplate("OutProfile","USWebCoatedSWOP.icc"),
+	ConfigTemplate("InCMYKProfile",DEFAULTCMYK),
+	ConfigTemplate("OutProfile",DEFAULTCMYK),
 	ConfigTemplate("IgnoreEmbedded",int(0)),
 	ConfigTemplate("UseDevicelink",int(0)),
 	ConfigTemplate("Devicelink",""),
@@ -37,8 +38,8 @@ ConfigTemplate CMYKConversionPreset::Template[]=
 
 
 CMYKConversionOptions::CMYKConversionOptions(ProfileManager &pm)
-	: profilemanager(pm), inrgbprofile("sRGB Color Space Profile.icm"), incmykprofile("USWebCoatedSWOP.icc"),
-	outprofile("USWebCoatedSWOP.icc"), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL),
+	: profilemanager(pm), inrgbprofile("sRGB Color Space Profile.icm"), incmykprofile(DEFAULTCMYK),
+	outprofile(DEFAULTCMYK), intent(LCMSWRAPPER_INTENT_DEFAULT), mode(CMYKCONVERSIONMODE_NORMAL),
 	ignoreembedded(false), usedevicelink(false), width(0)
 {
 }

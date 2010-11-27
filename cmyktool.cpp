@@ -233,6 +233,7 @@ class PreloadProfiles : public Job
 	void Run(Worker *w)
 	{
 		Debug[TRACE] << "Getting profile list..." << endl;
+		pm.ObtainMutex();
 		ProfileInfo *pi=pm.GetFirstProfileInfo();
 		while(pi)
 		{
@@ -246,6 +247,7 @@ class PreloadProfiles : public Job
 			}
 			pi=pi->Next();
 		}		
+		pm.ReleaseMutex();
 	}
 	protected:
 	ProfileManager &pm;
@@ -606,6 +608,8 @@ void TestUI::file_quit(GtkAction *action,gpointer ob)
 void TestUI::edit_preseteditor(GtkAction *action,gpointer ob)
 {
 	TestUI *ui=(TestUI *)ob;
+	ui->profilemanager.ObtainMutex();	// We don't actually need to hold the mutex, but it ensures the profile-list 
+	ui->profilemanager.ReleaseMutex();	// generating job has completed, and helps sidestep a Win32 exception issue which needs further investigation.
 	CMYKConversionOptions_Dialog(*ui,ui->window);
 }
 

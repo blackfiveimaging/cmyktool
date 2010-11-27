@@ -52,7 +52,7 @@ class TempDeviceLink : public TempFile
 	}
 	~TempDeviceLink()
 	{
-		Debug[TRACE] << "Loading blob from " << Filename() << std::endl;
+		Debug[TRACE] << "TempDeviceLink: Loading blob from " << Filename() << std::endl;
 		BinaryBlob dl(Filename());
 		dl.Save(finalfn.c_str());
 	}
@@ -166,11 +166,15 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 {
 	CMSProfile *tmp;
 	tmp=pm.GetProfile(FindString("SourceProfile"));
+	if(!tmp)
+		throw _("Devicelink: Can't open source profile!");
 	TempProfile src(tmp);
 	SetString("SourceProfileHash",tmp->GetMD5()->GetPrintableDigest());
 	delete tmp;
 
 	tmp=pm.GetProfile(FindString("DestProfile"));
+	if(!tmp)
+		throw _("Devicelink: Can't open destination profile!");
 	IS_TYPE type=tmp->GetColourSpace();
 	TempProfile dst(tmp);
 	SetString("DestProfileHash",tmp->GetMD5()->GetPrintableDigest());
