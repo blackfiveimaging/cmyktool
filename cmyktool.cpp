@@ -227,13 +227,25 @@ void TestUI::get_dnd_data(GtkWidget *widget, GdkDragContext *context,
 class PreloadProfiles : public Job
 {
 	public:
-	PreloadProfiles(ProfileManager &pm) : Job("Searching for colour profiles..."), pm(pm)
+	PreloadProfiles(ProfileManager &pm) : Job("Finding ICC profiles..."), pm(pm)
 	{
 	}
 	void Run(Worker *w)
 	{
 		Debug[TRACE] << "Getting profile list..." << endl;
-		pm.GetFirstProfileInfo();
+		ProfileInfo *pi=pm.GetFirstProfileInfo();
+		while(pi)
+		{
+			try
+			{
+				pi->GetColourSpace();	// Trigger loading and caching of profile info
+			}
+			catch(const char *err)
+			{
+				Debug[WARN] << "Error: " << err << std::endl;
+			}
+			pi=pi->Next();
+		}		
 	}
 	protected:
 	ProfileManager &pm;

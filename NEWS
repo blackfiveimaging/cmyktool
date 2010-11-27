@@ -23,6 +23,9 @@ CMYKTool-0.1.5
 
     * Can now export 8-bit dithered JPEGs and TIFFs.
 
+    * Now finds and caches colour profiles immediately after startup, to speed up
+      appearance of dialogs the first time they're used.
+
 
 CMYKTool-0.1.4a
 

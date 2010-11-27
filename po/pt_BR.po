@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-22 16:51+0000\n"
+"POT-Creation-Date: 2010-11-27 12:00+0000\n"
 "PO-Revision-Date: 2010-08-06 09:52-0300\n"
 "Last-Translator: Banto Palmarino <bantopalmarino@nkosi.org>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -240,77 +240,77 @@ msgstr "_Sobre"
 msgid "Show the About dialog"
 msgstr "Show the About dialog"
 
-#: cmyktool.cpp:257
+#: cmyktool.cpp:269
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:315
+#: cmyktool.cpp:327
 msgid "Add Images..."
 msgstr "Adicionar imagens..."
 
-#: cmyktool.cpp:322
+#: cmyktool.cpp:334
 msgid "Remove Images"
 msgstr "Remover imagens"
 
-#: cmyktool.cpp:341
+#: cmyktool.cpp:353
 msgid "Convert"
 msgstr "Converter"
 
-#: cmyktool.cpp:349
+#: cmyktool.cpp:361
 msgid "Using conversion preset:"
 msgstr "Usando conversão pré-definido"
 
-#: cmyktool.cpp:373 dialogs.cpp:69
+#: cmyktool.cpp:385 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferências..."
 
-#: cmyktool.cpp:425
+#: cmyktool.cpp:437
 msgid "Previous settings"
 msgstr "Configuração anterior"
 
-#: cmyktool.cpp:463 profilemanager/profileselector.cpp:195 duotoner.cpp:427
+#: cmyktool.cpp:475 profilemanager/profileselector.cpp:195 duotoner.cpp:427
 msgid "None"
 msgstr "Nada"
 
-#: cmyktool.cpp:463
+#: cmyktool.cpp:475
 msgid "No conversion"
 msgstr "Nenhuma conversão"
 
-#: cmyktool.cpp:484 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:496 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Outros..."
 
-#: cmyktool.cpp:484
+#: cmyktool.cpp:496
 msgid "Create a new preset"
 msgstr "Criar uma nova pré-definição"
 
-#: cmyktool.cpp:616
+#: cmyktool.cpp:628
 msgid "About CMYKTool"
 msgstr "Sobre CMYKTool"
 
-#: cmyktool.cpp:617
+#: cmyktool.cpp:629
 msgid "translator-credits"
 msgstr "Créditos de tradução"
 
-#: cmyktool.cpp:621
+#: cmyktool.cpp:633
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:622
+#: cmyktool.cpp:634
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Um utilitário para conversão de imagens usando os perfis de cores ICC."
 
-#: cmyktool.cpp:666
+#: cmyktool.cpp:678
 #, fuzzy
 msgid "Done"
 msgstr "Nada"
 
-#: cmyktool.cpp:709
+#: cmyktool.cpp:721
 msgid "Open File"
 msgstr "Abrir arquivo"
 
-#: cmyktool.cpp:739 cmyktool.cpp:940
+#: cmyktool.cpp:751 cmyktool.cpp:952
 msgid "Adding images..."
 msgstr "Adicionando imagens..."
 
@@ -694,15 +694,15 @@ msgstr "Caminhos de pesquisa para utilitários Argyll (TIFFGamut, ColLink, etc)"
 msgid "Search paths for GhostScript executable"
 msgstr "Busca por caminhos GhostScript executável"
 
-#: imageutils/jpegsave.cpp:153
+#: imageutils/jpegsave.cpp:154
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr "JPEG suporta salvar apenas imagens em tons de cinza e cores!"
 
-#: imageutils/jpegsave.cpp:174
+#: imageutils/jpegsave.cpp:175
 msgid "Can't open file for saving"
 msgstr "Não é possível abrir o arquivo"
 
-#: imageutils/jpegsave.cpp:209
+#: imageutils/jpegsave.cpp:210
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr ""
 "JPEG salvo atualmente só pode salvar RGB, CMYK ou imagens em escala de "
@@ -744,27 +744,27 @@ msgstr "Adicionar..."
 msgid "Remove"
 msgstr "Remover"
 
-#: profilemanager/lcmswrapper.cpp:574
+#: profilemanager/lcmswrapper.cpp:569
 msgid "Perceptual"
 msgstr "Percetual"
 
-#: profilemanager/lcmswrapper.cpp:575
+#: profilemanager/lcmswrapper.cpp:570
 msgid "Relative Colorimetric"
 msgstr "Colorimétrico relativo"
 
-#: profilemanager/lcmswrapper.cpp:576
+#: profilemanager/lcmswrapper.cpp:571
 msgid "Relative Colorimetric with BPC"
 msgstr "Colorimétrico relativo comBPC"
 
-#: profilemanager/lcmswrapper.cpp:577
+#: profilemanager/lcmswrapper.cpp:572
 msgid "Saturation"
 msgstr "Saturação"
 
-#: profilemanager/lcmswrapper.cpp:578
+#: profilemanager/lcmswrapper.cpp:573
 msgid "Absolute Colorimetric"
 msgstr "Colorimétrico absoluto"
 
-#: profilemanager/lcmswrapper.cpp:583
+#: profilemanager/lcmswrapper.cpp:578
 msgid ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
@@ -772,7 +772,7 @@ msgstr ""
 "Aims for pleasing photographic results by preserving relationships between "
 "colours, and avoiding clipping of unattainable colours"
 
-#: profilemanager/lcmswrapper.cpp:584
+#: profilemanager/lcmswrapper.cpp:579
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
@@ -780,7 +780,7 @@ msgstr ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences."
 
-#: profilemanager/lcmswrapper.cpp:585
+#: profilemanager/lcmswrapper.cpp:580
 msgid ""
 "Attempts to preserve the original colours, relative to white-point "
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
@@ -790,7 +790,7 @@ msgstr ""
 "differences.  Uses Black Point Compensation to avoid clipping of highlights "
 "and shadows."
 
-#: profilemanager/lcmswrapper.cpp:586
+#: profilemanager/lcmswrapper.cpp:581
 msgid ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
@@ -798,7 +798,7 @@ msgstr ""
 "Attempts to provide brighter, more saturated colours, at the expense of "
 "colour relationships."
 
-#: profilemanager/lcmswrapper.cpp:587
+#: profilemanager/lcmswrapper.cpp:582
 msgid ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
