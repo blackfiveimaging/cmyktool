@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.5\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-27 23:56+0000\n"
+"POT-Creation-Date: 2010-11-28 09:59+0000\n"
 "PO-Revision-Date: 2010-10-11 05:13+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -848,11 +848,11 @@ msgstr "Тест PSRip"
 msgid "<unknown>"
 msgstr "<неизвестно>"
 
-#: devicelink.cpp:170
+#: devicelink.cpp:176
 msgid "Devicelink: Can't open source profile!"
 msgstr ""
 
-#: devicelink.cpp:177
+#: devicelink.cpp:183
 msgid "Devicelink: Can't open destination profile!"
 msgstr ""
 

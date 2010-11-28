@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-27 23:56+0000\n"
+"POT-Creation-Date: 2010-11-28 09:59+0000\n"
 "PO-Revision-Date: 2010-08-06 09:52-0300\n"
 "Last-Translator: Banto Palmarino <bantopalmarino@nkosi.org>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -846,11 +846,11 @@ msgstr "Teste PSRip"
 msgid "<unknown>"
 msgstr "<desconhecido>"
 
-#: devicelink.cpp:170
+#: devicelink.cpp:176
 msgid "Devicelink: Can't open source profile!"
 msgstr ""
 
-#: devicelink.cpp:177
+#: devicelink.cpp:183
 msgid "Devicelink: Can't open destination profile!"
 msgstr ""
 

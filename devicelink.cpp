@@ -6,6 +6,7 @@
 #include "tempfile.h"
 #include "externalprog.h"
 #include "binaryblob.h"
+#include "errordialogqueue.h"
 
 #include "devicelink.h"
 
@@ -273,12 +274,19 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 	{
 		// Avoid the command-line-and-wide-char-filenames issue on WIN32...
 		TempDeviceLink tempdl(fn);
-		collink.AddArg("-D"+ShellQuote(FindString("Description")));
-		collink.AddArg(ShellQuote(src.Filename()));
-		collink.AddArg(ShellQuote(dst.Filename()));
-		collink.AddArg(ShellQuote(tempdl.Filename()));
-		collink.RunProgram();
-		tempdl.Save();
+		try
+		{
+			collink.AddArg("-D"+ShellQuote(FindString("Description")));
+			collink.AddArg(ShellQuote(src.Filename()));
+			collink.AddArg(ShellQuote(dst.Filename()));
+			collink.AddArg(ShellQuote(tempdl.Filename()));
+			collink.RunProgram();
+			tempdl.Save();
+		}
+		catch(const char *err)
+		{
+			ErrorDialogs.AddMessage(err);
+		}
 	}
 #else
 	collink.AddArg("-D"+std::string(FindString("Description")));
