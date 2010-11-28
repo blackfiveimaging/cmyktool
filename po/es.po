@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-28 09:59+0000\n"
+"POT-Creation-Date: 2010-11-28 11:29+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -644,30 +644,34 @@ msgstr ""
 "Ha cambiado los parámetros de device link pero no ha generado el perfil. "
 "Salir del editor de device link de todas formas?"
 
-#: devicelinkdialog.cpp:384
+#: devicelinkdialog.cpp:381
+msgid "Can't find collink - please check Argyll path"
+msgstr ""
+
+#: devicelinkdialog.cpp:390
 msgid "Are you sure you want to overwrite an existing device link?"
 msgstr "Está seguro que desea sobreescribir el device link existente?"
 
-#: devicelinkdialog.cpp:439
+#: devicelinkdialog.cpp:445
 msgid "New devicelink"
 msgstr "Nuevo Devicelink"
 
-#: devicelinkdialog.cpp:462
+#: devicelinkdialog.cpp:468
 msgid "New Devicelink"
 msgstr "Nuevo Devicelink"
 
-#: devicelinkdialog.cpp:597
+#: devicelinkdialog.cpp:603
 msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Está seguro de querer borrar este perfil devicelink?"
 
-#: devicelinkdialog.cpp:614
+#: devicelinkdialog.cpp:620
 msgid ""
 "Warning - you have modified the devicelink settings,but not yet rebuild the "
 "devicelink.  The existing devicelink will be exported - is this what you "
 "want?"
 msgstr ""
 
-#: devicelinkdialog.cpp:617
+#: devicelinkdialog.cpp:623
 msgid "Please choose a filename for the DeviceLink"
 msgstr ""
 
@@ -847,15 +851,15 @@ msgstr "Archivo de Ripeado."
 msgid "PSRip Test"
 msgstr "Prueba de PSRip"
 
-#: conversionopts.h:206 devicelink.h:101 devicelink.h:146
+#: conversionopts.h:206 devicelink.h:102 devicelink.h:147
 msgid "<unknown>"
 msgstr "<desconocido>"
 
-#: devicelink.cpp:176
+#: devicelink.cpp:195
 msgid "Devicelink: Can't open source profile!"
 msgstr ""
 
-#: devicelink.cpp:183
+#: devicelink.cpp:202
 msgid "Devicelink: Can't open destination profile!"
 msgstr ""
 

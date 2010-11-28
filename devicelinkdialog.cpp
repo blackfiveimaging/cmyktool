@@ -375,6 +375,12 @@ class DeviceLinkDialog : public ThreadFunction, public Thread
 			DeviceLink *dl=new DeviceLink;
 			dlg->dialog_to_devicelink(*dl);
 
+			if(!dl->CheckArgyllPath(dlg->core.FindString("ArgyllPath")))
+			{
+				delete dl;
+				throw _("Can't find collink - please check Argyll path");
+			}
+
 			DeviceLinkList dll;
 			for(unsigned int idx=0;idx<dll.size();++idx)
 			{

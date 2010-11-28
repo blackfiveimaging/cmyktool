@@ -168,6 +168,25 @@ void DeviceLink::Delete()
 }
 
 
+bool DeviceLink::CheckArgyllPath(std::string argyllpath)
+{
+#ifdef WIN32
+	const char *cmd="collink.exe";
+#else
+	const char *cmd="collink";
+#endif
+	SearchPathHandler sp;
+	sp.AddPath(argyllpath.c_str());
+	char *prgname=sp.SearchPaths(cmd);
+	if(prgname)
+	{
+		free(prgname);
+		return(true);
+	}
+	return(false);
+}
+
+
 void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 {
 	CMSProfile *tmp;
