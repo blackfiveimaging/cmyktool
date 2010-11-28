@@ -41,6 +41,7 @@ class TempProfile : public TempFile
 };
 
 
+#ifdef WIN32
 // We use this to provide a filename that can be presented to collink on the command line without hitting
 // unicode character problems.  Once the devicelink's created we copy it to its destination.
 
@@ -50,15 +51,19 @@ class TempDeviceLink : public TempFile
 	TempDeviceLink(std::string finalfilename) : TempFile(NULL,"cktl"), finalfn(finalfilename)
 	{
 	}
-	~TempDeviceLink()
+	void Save()	// Since BinaryBlob can throw exceptions, it's not safe to do this from the destructor!
 	{
 		Debug[TRACE] << "TempDeviceLink: Loading blob from " << Filename() << std::endl;
 		BinaryBlob dl(Filename());
 		dl.Save(finalfn.c_str());
 	}
+	~TempDeviceLink()
+	{
+	}
 	protected:
 	std::string finalfn;
 };
+#endif
 
 
 DeviceLink::DeviceLink(const char *filename) : ConfigFile(), ConfigDB(configtemplate)
@@ -273,6 +278,7 @@ void DeviceLink::CreateDeviceLink(std::string argyllpath, ProfileManager &pm)
 		collink.AddArg(ShellQuote(dst.Filename()));
 		collink.AddArg(ShellQuote(tempdl.Filename()));
 		collink.RunProgram();
+		tempdl.Save();
 	}
 #else
 	collink.AddArg("-D"+std::string(FindString("Description")));

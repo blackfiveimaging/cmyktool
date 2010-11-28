@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.5\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-27 17:52+0000\n"
+"POT-Creation-Date: 2010-11-27 23:56+0000\n"
 "PO-Revision-Date: 2010-10-11 05:13+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -132,7 +132,7 @@ msgid "Shape:"
 msgstr "Форма:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#: profilemanager/profilemanager.cpp:856
+#: profilemanager/profilemanager.cpp:878
 msgid "Default"
 msgstr "По умолчанию"
 
@@ -272,7 +272,7 @@ msgstr "Параметры CMYKTool"
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:477 profilemanager/profileselector.cpp:201 duotoner.cpp:427
+#: cmyktool.cpp:477 profilemanager/profileselector.cpp:204 duotoner.cpp:427
 msgid "None"
 msgstr "Без профиля"
 
@@ -289,31 +289,31 @@ msgstr "Заказные параметры"
 msgid "Create a new preset"
 msgstr "Создать новый профиль"
 
-#: cmyktool.cpp:630
+#: cmyktool.cpp:632
 msgid "About CMYKTool"
 msgstr "О CMYKTool"
 
-#: cmyktool.cpp:631
+#: cmyktool.cpp:633
 msgid "translator-credits"
 msgstr "Александр Прокудин <alexandre@prokoudine.info>, 2010"
 
-#: cmyktool.cpp:635
+#: cmyktool.cpp:637
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Авторские права © 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:636
+#: cmyktool.cpp:638
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Программа для преобразования изображений при помощи цветовых профилей"
 
-#: cmyktool.cpp:680
+#: cmyktool.cpp:682
 msgid "Done"
 msgstr "Готово"
 
-#: cmyktool.cpp:723
+#: cmyktool.cpp:725
 msgid "Open File"
 msgstr "Открыть файл"
 
-#: cmyktool.cpp:753 cmyktool.cpp:954
+#: cmyktool.cpp:755 cmyktool.cpp:956
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
@@ -824,15 +824,15 @@ msgstr "Невозможно выполнить цветопробу без ко
 msgid "No Proof profile provided!"
 msgstr "Профиль для цветопробы не указан!"
 
-#: profilemanager/profilemanager.cpp:864
+#: profilemanager/profilemanager.cpp:886
 msgid "Default rendering intent"
 msgstr "Цветопередача по умолчанию"
 
-#: profilemanager/profileselector.cpp:233
+#: profilemanager/profileselector.cpp:236
 msgid "Choose ICC Profile..."
 msgstr "Выберите ICC-профиль…"
 
-#: profilemanager/profileselector.cpp:400
+#: profilemanager/profileselector.cpp:403
 msgid "Please choose a valid ICC profile"
 msgstr "Выберите корректный цветовой профиль"
 
