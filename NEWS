@@ -26,6 +26,8 @@ CMYKTool-0.1.5
     * Now finds and caches colour profiles immediately after startup, to speed up
       appearance of dialogs the first time they're used.
 
+	* Updated Spanish translation, with thanks to Guillermo Espertino.
+
 
 CMYKTool-0.1.4a
 
