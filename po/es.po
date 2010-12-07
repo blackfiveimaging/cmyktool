@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-28 11:29+0000\n"
+"POT-Creation-Date: 2010-12-07 20:01+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -17,16 +17,24 @@ msgid "Absolute black generation (target, -k)"
 msgstr "Generación de negro absoluta (destino, -k)"
 
 #: argyllsupport/blackgenselector.cpp:255
-msgid "The black generation will attempt to use the actual level of black specified by the curve"
-msgstr "La generación de negro intentará usar el nivel de negro real especificado por la curva"
+msgid ""
+"The black generation will attempt to use the actual level of black specified "
+"by the curve"
+msgstr ""
+"La generación de negro intentará usar el nivel de negro real especificado "
+"por la curva"
 
 #: argyllsupport/blackgenselector.cpp:256
 msgid "Proportional black generation (locus, -K)"
 msgstr "Generación de negro proporcional (locus, -K)"
 
 #: argyllsupport/blackgenselector.cpp:256
-msgid "The black generation will pick a black level between the minimum and maximum possible, based on the curve"
-msgstr "La generación de negro elegirá un nivel de negro entre el mínimo y el máximpo posible, basado en la curva"
+msgid ""
+"The black generation will pick a black level between the minimum and maximum "
+"possible, based on the curve"
+msgstr ""
+"La generación de negro elegirá un nivel de negro entre el mínimo y el "
+"máximpo posible, basado en la curva"
 
 #: argyllsupport/blackgenselector.cpp:265
 msgid "Minimum black"
@@ -34,7 +42,8 @@ msgstr "Negro mínimo"
 
 #: argyllsupport/blackgenselector.cpp:265
 msgid "Aims for 0% black when mixing colours, using just C, M and Y."
-msgstr "Apunta a un 0% de negro cuando se mezclan los colores, usando sólo C, M e Y."
+msgstr ""
+"Apunta a un 0% de negro cuando se mezclan los colores, usando sólo C, M e Y."
 
 #: argyllsupport/blackgenselector.cpp:266
 msgid "Medium black"
@@ -50,15 +59,21 @@ msgstr "Negro máximo"
 
 #: argyllsupport/blackgenselector.cpp:267
 msgid "Aims to use as much black, and as little C, M and Y as possible."
-msgstr "Apunta a usar la mayor cantidad de negro y menores cantidades de C, M e Y posibles."
+msgstr ""
+"Apunta a usar la mayor cantidad de negro y menores cantidades de C, M e Y "
+"posibles."
 
 #: argyllsupport/blackgenselector.cpp:268
 msgid "Ramp min to max"
 msgstr "Rampa mínimo a máximo"
 
 #: argyllsupport/blackgenselector.cpp:268
-msgid "Uses a transition from 0% black for light colours, and 100% black for dark colours."
-msgstr "Usa una transición desde el 0% de negro para colores claros y 100% de negro para colores oscuros."
+msgid ""
+"Uses a transition from 0% black for light colours, and 100% black for dark "
+"colours."
+msgstr ""
+"Usa una transición desde el 0% de negro para colores claros y 100% de negro "
+"para colores oscuros."
 
 #: argyllsupport/blackgenselector.cpp:269
 msgid "Custom"
@@ -73,16 +88,23 @@ msgid "Transfer from source profile"
 msgstr "Transferir desde el perfil de origen"
 
 #: argyllsupport/blackgenselector.cpp:270
-msgid "Attempts to retain the black-generation from the source profile (if source profile is CMYK)"
-msgstr "Intenta retener la generación de negro desde el perfil de origen (si éste es CMYK)"
+msgid ""
+"Attempts to retain the black-generation from the source profile (if source "
+"profile is CMYK)"
+msgstr ""
+"Intenta retener la generación de negro desde el perfil de origen (si éste es "
+"CMYK)"
 
 #: argyllsupport/blackgenselector.cpp:271
 msgid "Retain from target profile"
 msgstr "Mantener desde el perfil de destino"
 
 #: argyllsupport/blackgenselector.cpp:271
-msgid "Attempts to retain the existing black generation from the destination profile."
-msgstr "Intenta mantener la generación de negro existente en el perfil de destino."
+msgid ""
+"Attempts to retain the existing black generation from the destination "
+"profile."
+msgstr ""
+"Intenta mantener la generación de negro existente en el perfil de destino."
 
 #: argyllsupport/blackgenselector.cpp:283
 msgid "Start level:"
@@ -237,8 +259,7 @@ msgstr "Convertir"
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:387
-#: dialogs.cpp:69
+#: cmyktool.cpp:387 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferencias..."
 
@@ -246,9 +267,7 @@ msgstr "Preferencias..."
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:477
-#: profilemanager/profileselector.cpp:204
-#: duotoner.cpp:427
+#: cmyktool.cpp:477 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "Ninguno"
 
@@ -256,11 +275,8 @@ msgstr "Ninguno"
 msgid "No conversion"
 msgstr "Sin conversión"
 
-#: cmyktool.cpp:498
-#: conversionoptsdialog.cpp:209
-#: conversionoptsdialog.cpp:689
-#: miscwidgets/imageselector.cpp:478
-#: profilemanager/profileselector.cpp:40
+#: cmyktool.cpp:498 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Otro..."
 
@@ -292,13 +308,11 @@ msgstr "Hecho"
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:755
-#: cmyktool.cpp:956
+#: cmyktool.cpp:755 cmyktool.cpp:956
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 
 #: cmykuitab.cpp:63
-#: duotoner.cpp:516
 msgid "Rendering preview"
 msgstr "Previsualización de renderizado"
 
@@ -311,24 +325,40 @@ msgid "Inspect"
 msgstr "Inspeccionar"
 
 #: cmykuitab.cpp:394
-msgid "Displays image data without conversion from target space to monitor, allowing you to see how the data has been modified by the conversion."
-msgstr "Muestra los información de imagen sin conversión desde el espacio de destino al monitor, permitiendo ver cómo la información ha sido modificada por la conversión."
+msgid ""
+"Displays image data without conversion from target space to monitor, "
+"allowing you to see how the data has been modified by the conversion."
+msgstr ""
+"Muestra los información de imagen sin conversión desde el espacio de destino "
+"al monitor, permitiendo ver cómo la información ha sido modificada por la "
+"conversión."
 
 #: cmykuitab.cpp:396
 msgid "Simulate print, adapt white"
 msgstr "Simular impresión, adaptar blanco"
 
 #: cmykuitab.cpp:396
-msgid "Simulates printed colours but uses the monitor's white point. (Conversion from destination to monitor profiles, using Relative Colorimetric intent with BlackPoint Compensation.)"
-msgstr "Simula los colores impresos, pero usa el punto blanco del monitor. (Conversión desde el perfil de destino al perfil del monitor, usando el intento Colorimétrico Relativo con Compensación de Punto Negro.)"
+msgid ""
+"Simulates printed colours but uses the monitor's white point. (Conversion "
+"from destination to monitor profiles, using Relative Colorimetric intent "
+"with BlackPoint Compensation.)"
+msgstr ""
+"Simula los colores impresos, pero usa el punto blanco del monitor. "
+"(Conversión desde el perfil de destino al perfil del monitor, usando el "
+"intento Colorimétrico Relativo con Compensación de Punto Negro.)"
 
 #: cmykuitab.cpp:398
 msgid "Simulate print"
 msgstr "Simular impresión"
 
 #: cmykuitab.cpp:398
-msgid "Simulates printed colours, using paper white. (Conversion from destination to monitor profiles, using Absolute Colorimetric intent.)"
-msgstr "Simula los colores impresos, usando el blanco del papel. (Conversión desde el perfil de destino al perfil del monitor, usando el intento Colorimétrico Absoluto.)"
+msgid ""
+"Simulates printed colours, using paper white. (Conversion from destination "
+"to monitor profiles, using Absolute Colorimetric intent.)"
+msgstr ""
+"Simula los colores impresos, usando el blanco del papel. (Conversión desde "
+"el perfil de destino al perfil del monitor, usando el intento Colorimétrico "
+"Absoluto.)"
 
 #: cmykuitab.cpp:434
 msgid "Save..."
@@ -356,7 +386,8 @@ msgstr "JPEG (con tramado)"
 
 #: cmykuitab.cpp:611
 msgid "JPEG - Lossy format with dithering to hide contouring artifacts"
-msgstr "JPEG - Formato con pérdida, con tramado para ocultar errores de contorno"
+msgstr ""
+"JPEG - Formato con pérdida, con tramado para ocultar errores de contorno"
 
 #: cmykuitab.cpp:612
 msgid "TIFF (8-bit)"
@@ -372,7 +403,8 @@ msgstr "TIFF (8 bits con tramado)"
 
 #: cmykuitab.cpp:613
 msgid "TIFF - 8-bits per sample, with dithering to hide contouring artifacts"
-msgstr "TIFF - 8 bits por muestra, con tramado para ocultar errores de contorno"
+msgstr ""
+"TIFF - 8 bits por muestra, con tramado para ocultar errores de contorno"
 
 #: cmykuitab.cpp:614
 msgid "TIFF (16-bit)"
@@ -398,8 +430,7 @@ msgstr "Incrustar Perfil ICC"
 msgid "File exists - OK to overwrite?"
 msgstr "El archivo existe - Desea sobreescribirlo?"
 
-#: cmykuitab.cpp:765
-#: cmykuitab.cpp:839
+#: cmykuitab.cpp:765 cmykuitab.cpp:839
 msgid "Saving"
 msgstr "Guardando"
 
@@ -411,8 +442,7 @@ msgstr "Guardar imagen - por favor ingrese un nombre de archivo"
 msgid "Colour conversion options"
 msgstr "Opciones de conversión de color"
 
-#: conversionoptsdialog.cpp:67
-#: devicelinkdialog.cpp:112
+#: conversionoptsdialog.cpp:67 devicelinkdialog.cpp:112
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -497,8 +527,12 @@ msgid "Overprint"
 msgstr "Sompreimprimir"
 
 #: conversionoptsdialog.cpp:228
-msgid "Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most recent non-black pixel."
-msgstr "Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-negros más recientes."
+msgid ""
+"Maps pure black to CMYK (0,0,0,100) and copies C, M and Y from the most "
+"recent non-black pixel."
+msgstr ""
+"Mapea el negro puro a CMYK (0,0,0,100) y copia C, M, Y desde los pixels no-"
+"negros más recientes."
 
 #: conversionoptsdialog.cpp:246
 msgid "Transition width:"
@@ -536,13 +570,11 @@ msgstr "Exportar..."
 msgid "Input options:"
 msgstr "Opciones de entrada:"
 
-#: devicelinkdialog.cpp:142
-#: devicelinkdialog.cpp:176
+#: devicelinkdialog.cpp:142 devicelinkdialog.cpp:176
 msgid "Profile:"
 msgstr "Perfil:"
 
-#: devicelinkdialog.cpp:154
-#: devicelinkdialog.cpp:188
+#: devicelinkdialog.cpp:154 devicelinkdialog.cpp:188
 msgid "Viewing Conditions:"
 msgstr "Condiciones de visualización:"
 
@@ -599,8 +631,12 @@ msgid "Build Device Link"
 msgstr "Construir Device Link"
 
 #: devicelinkdialog.cpp:337
-msgid "You have changed device link parameters but not generated the actual device link profile.  OK to leave the device link editor?"
-msgstr "Ha cambiado los parámetros de device link pero no ha generado el perfil. Salir del editor de device link de todas formas?"
+msgid ""
+"You have changed device link parameters but not generated the actual device "
+"link profile.  OK to leave the device link editor?"
+msgstr ""
+"Ha cambiado los parámetros de device link pero no ha generado el perfil. "
+"Salir del editor de device link de todas formas?"
 
 #: devicelinkdialog.cpp:381
 msgid "Can't find collink - please check Argyll path"
@@ -623,8 +659,14 @@ msgid "Are you sure you want to delete this devicelink profile?"
 msgstr "Está seguro de querer borrar este perfil devicelink?"
 
 #: devicelinkdialog.cpp:620
-msgid "Warning - you have modified the devicelink settings,but not yet rebuild the devicelink.  The existing devicelink will be exported - is this what you want?"
-msgstr "Advertencia - Ha modificado los ajustes de devicelink, pero no ha reconstruído aún el devicelink. El perfil existente será exportado - es lo que desea?"
+msgid ""
+"Warning - you have modified the devicelink settings,but not yet rebuild the "
+"devicelink.  The existing devicelink will be exported - is this what you "
+"want?"
+msgstr ""
+"Advertencia - Ha modificado los ajustes de devicelink, pero no ha "
+"reconstruído aún el devicelink. El perfil existente será exportado - es lo "
+"que desea?"
 
 #: devicelinkdialog.cpp:623
 msgid "Please choose a filename for the DeviceLink"
@@ -648,7 +690,8 @@ msgstr "Utilidades externas"
 
 #: dialogs.cpp:158
 msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
-msgstr "Rutas de búsqueda para las utilidades Argyll (TIFFGamut, ColLink, etc.)"
+msgstr ""
+"Rutas de búsqueda para las utilidades Argyll (TIFFGamut, ColLink, etc.)"
 
 #: dialogs.cpp:176
 msgid "Search paths for GhostScript executable"
@@ -656,7 +699,8 @@ msgstr "Rutas de búsqueda para el ejecutable GhostScript"
 
 #: imageutils/jpegsave.cpp:154
 msgid "JPEG Saver only supports greyscale and colour images!"
-msgstr "La grabación de JPEG sólo soporta imágenes en color y escala de grises!"
+msgstr ""
+"La grabación de JPEG sólo soporta imágenes en color y escala de grises!"
 
 #: imageutils/jpegsave.cpp:175
 msgid "Can't open file for saving"
@@ -664,10 +708,11 @@ msgstr "No se puede abrir el archivo para guardar"
 
 #: imageutils/jpegsave.cpp:210
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
-msgstr "Por el momento la grabación de JPEG sólo puede guardar imágenes RGB, CMYK y en escala de grises."
+msgstr ""
+"Por el momento la grabación de JPEG sólo puede guardar imágenes RGB, CMYK y "
+"en escala de grises."
 
-#: miscwidgets/imageselector.cpp:458
-#: miscwidgets/simplelistview.cpp:150
+#: miscwidgets/imageselector.cpp:458 miscwidgets/simplelistview.cpp:150
 msgid "Image"
 msgstr "Imagen"
 
@@ -679,8 +724,7 @@ msgstr "Activo"
 msgid "Icon"
 msgstr "Ícono"
 
-#: miscwidgets/colorantselector.cpp:189
-#: miscwidgets/simplelistview.cpp:156
+#: miscwidgets/colorantselector.cpp:189 miscwidgets/simplelistview.cpp:156
 msgid "Name"
 msgstr "Nombre:"
 
@@ -725,24 +769,47 @@ msgid "Absolute Colorimetric"
 msgstr "Colorimétrico Absoluto"
 
 #: profilemanager/lcmswrapper.cpp:578
-msgid "Aims for pleasing photographic results by preserving relationships between colours, and avoiding clipping of unattainable colours"
-msgstr "Apunta a resultados fotográficos agradables mediante la preservación de las relaciones entre colores y evitando el recorte de colores no reproducibles"
+msgid ""
+"Aims for pleasing photographic results by preserving relationships between "
+"colours, and avoiding clipping of unattainable colours"
+msgstr ""
+"Apunta a resultados fotográficos agradables mediante la preservación de las "
+"relaciones entre colores y evitando el recorte de colores no reproducibles"
 
 #: profilemanager/lcmswrapper.cpp:579
-msgid "Attempts to preserve the original colours, relative to white-point differences."
-msgstr "Intenta preservar los colores originales, relativos a las diferencias de punto blanco."
+msgid ""
+"Attempts to preserve the original colours, relative to white-point "
+"differences."
+msgstr ""
+"Intenta preservar los colores originales, relativos a las diferencias de "
+"punto blanco."
 
 #: profilemanager/lcmswrapper.cpp:580
-msgid "Attempts to preserve the original colours, relative to white-point differences.  Uses Black Point Compensation to avoid clipping of highlights and shadows."
-msgstr "Intenta preservar los colores originales, relativos a las diferencias de punto blanco. Usa Compensación de Punto Negro para evitar el recorte de luces y sombras."
+msgid ""
+"Attempts to preserve the original colours, relative to white-point "
+"differences.  Uses Black Point Compensation to avoid clipping of highlights "
+"and shadows."
+msgstr ""
+"Intenta preservar los colores originales, relativos a las diferencias de "
+"punto blanco. Usa Compensación de Punto Negro para evitar el recorte de "
+"luces y sombras."
 
 #: profilemanager/lcmswrapper.cpp:581
-msgid "Attempts to provide brighter, more saturated colours, at the expense of colour relationships."
-msgstr "Intenta proveer colores más brillantes y saturados, a expensas de las relaciones entre ellos."
+msgid ""
+"Attempts to provide brighter, more saturated colours, at the expense of "
+"colour relationships."
+msgstr ""
+"Intenta proveer colores más brillantes y saturados, a expensas de las "
+"relaciones entre ellos."
 
 #: profilemanager/lcmswrapper.cpp:582
-msgid "Mimics the original colours (including white point) as closely as possible, for side-by-side comparisons.  Clips unattainable colours."
-msgstr "Imita los colores originales (incluyendo el punto blanco) de la forma más aproximada posible, para comparaciones lado a lado. Recorta los colores no reproducibles."
+msgid ""
+"Mimics the original colours (including white point) as closely as possible, "
+"for side-by-side comparisons.  Clips unattainable colours."
+msgstr ""
+"Imita los colores originales (incluyendo el punto blanco) de la forma más "
+"aproximada posible, para comparaciones lado a lado. Recorta los colores no "
+"reproducibles."
 
 #: profilemanager/profilemanager.cpp:212
 msgid "Can't do proofing without a valid Printer profile!"
@@ -754,7 +821,8 @@ msgstr "No se puede realizar una prueba sin un perfil de Monitor válido!"
 
 #: profilemanager/profilemanager.cpp:222
 msgid "Can't do proofing without a valid Default RGB profile!"
-msgstr "No se puede realizar una prueba sin un perfil RGB predeterminado válido!"
+msgstr ""
+"No se puede realizar una prueba sin un perfil RGB predeterminado válido!"
 
 #: profilemanager/profilemanager.cpp:505
 msgid "No Proof profile provided!"
@@ -780,9 +848,7 @@ msgstr "Archivo de Ripeado."
 msgid "PSRip Test"
 msgstr "Prueba de PSRip"
 
-#: conversionopts.h:206
-#: devicelink.h:102
-#: devicelink.h:147
+#: conversionopts.h:206 devicelink.h:102 devicelink.h:147
 msgid "<unknown>"
 msgstr "<desconocido>"
 
@@ -794,135 +860,143 @@ msgstr "Devicelink: No se puede abrir el perfil de origen!"
 msgid "Devicelink: Can't open destination profile!"
 msgstr "Devicelink: No se puede abrir el perfil de destino!"
 
-#: duotoner.cpp:392
-msgid "Setup colour options..."
-msgstr "Ajustar opciones de color..."
+#~ msgid "Setup colour options..."
+#~ msgstr "Ajustar opciones de color..."
 
-#: duotoner.cpp:413
-msgid "Press profile:"
-msgstr "Perfil de prensa:"
+#~ msgid "Press profile:"
+#~ msgstr "Perfil de prensa:"
 
-#: duotoner.cpp:417
-msgid "Proofing mode:"
-msgstr "Modo de prueba:"
+#~ msgid "Proofing mode:"
+#~ msgstr "Modo de prueba:"
 
-#: duotoner.cpp:428
-msgid "Simulate Print"
-msgstr "Simular impresión"
+#~ msgid "Simulate Print"
+#~ msgstr "Simular impresión"
 
-#: duotoner.cpp:429
-msgid "Simulate Print, Adapt White"
-msgstr "Simular impresión, adaptar blanco"
+#~ msgid "Simulate Print, Adapt White"
+#~ msgstr "Simular impresión, adaptar blanco"
 
-#: duotoner.cpp:600
-msgid "DuoToner"
-msgstr "DuoToner"
+#~ msgid "DuoToner"
+#~ msgstr "DuoToner"
 
-#: duotoner.cpp:644
-msgid "Hue Rotation"
-msgstr "Rotación de matiz"
+#~ msgid "Hue Rotation"
+#~ msgstr "Rotación de matiz"
 
-#: duotoner.cpp:653
-msgid "Grey gamma"
-msgstr "Gamma de grises"
+#~ msgid "Grey gamma"
+#~ msgstr "Gamma de grises"
 
-#: duotoner.cpp:663
-msgid "Grey contrast"
-msgstr "Contraste de grises"
+#~ msgid "Grey contrast"
+#~ msgstr "Contraste de grises"
 
-#: duotoner.cpp:673
-msgid "Colour gamma"
-msgstr "Gamma de color"
+#~ msgid "Colour gamma"
+#~ msgstr "Gamma de color"
 
-#: duotoner.cpp:683
-msgid "Colour contrast"
-msgstr "Contraste de color"
+#~ msgid "Colour contrast"
+#~ msgstr "Contraste de color"
 
-#: duotoner.cpp:693
-msgid "DuoTone colour"
-msgstr "Color de Duotono"
+#~ msgid "DuoTone colour"
+#~ msgstr "Color de Duotono"
 
-#: duotoner.cpp:714
-msgid "Save DuoTone Image..."
-msgstr "Guardar imagen de Duotono..."
+#~ msgid "Save DuoTone Image..."
+#~ msgstr "Guardar imagen de Duotono..."
 
-#: duotoner.cpp:727
-msgid "Settings..."
-msgstr "Ajustes..."
+#~ msgid "Settings..."
+#~ msgstr "Ajustes..."
 
-#: duotoner.cpp:789
-msgid "Saving..."
-msgstr "Guardando..."
+#~ msgid "Saving..."
+#~ msgstr "Guardando..."
 
-#: duotoner.cpp:817
-msgid "Load image..."
-msgstr "Cargar Imagen..."
+#~ msgid "Load image..."
+#~ msgstr "Cargar Imagen..."
 
-#: duotoner.cpp:851
-msgid "Please choose a filename for the duotone image..."
-msgstr "Por favor Seleccione un nombre para la imagen de duotono..."
+#~ msgid "Please choose a filename for the duotone image..."
+#~ msgstr "Por favor Seleccione un nombre para la imagen de duotono..."
 
 #~ msgid "Automatic"
 #~ msgstr "Automático"
+
 #~ msgid "Selects a scaling algorithm based on scale factor"
 #~ msgstr "Selecciona un algoritmo de escalado basado en el factor de escala"
+
 #~ msgid "Fast"
 #~ msgstr "Rápido"
+
 #~ msgid "Very fast scaling with no interpolation"
 #~ msgstr "Escalado muy rápido sin interpolación"
+
 #~ msgid "Bilinear"
 #~ msgstr "Bilinear"
+
 #~ msgid "An interpolation filter with mediocre speed and quality"
 #~ msgstr "Un filtro de interpolación con velocidad y calidad mediocres"
+
 #~ msgid "LanczosSinc"
 #~ msgstr "LanczosSinc"
+
 #~ msgid "Slow but very high quality interpolation filter"
 #~ msgstr "Filtro de interpolación lento pero de muy alta calidad"
+
 #~ msgid "Downsample"
 #~ msgstr "Downsample"
+
 #~ msgid "High quality filter for reductions only"
 #~ msgstr "filtro de alta calidad sólo para reducciones"
 
 #, fuzzy
 #~ msgid "Profile"
 #~ msgstr "Perfil de Salida:"
+
 #~ msgid "Default RGB Profile:"
 #~ msgstr "Perfil RGB Predeterminado:"
+
 #~ msgid "Default CMYK Profile:"
 #~ msgstr "Perfil CMYK Predeterminado:"
+
 #~ msgid "Default Output Profile:"
 #~ msgstr "Perfil de Salida Predeterminado:"
+
 #~ msgid "Path to Argyll's 'tiffgamut' command"
 #~ msgstr "Ruta para el comando 'tiffgamut' de Argyll"
+
 #~ msgid "Path to Argyll utilities (TIFFGamut and ICCLink)"
 #~ msgstr "Ruta para las utilidades Argyll (TIFFGamut e ICCLink)"
+
 #~ msgid "Path to Argyll's 'collink' command"
 #~ msgstr "Euta para el comando 'collink' de Argyll"
+
 #~ msgid "Path to Argyll's collink command"
 #~ msgstr "Ruta para el comando collink de Argyll"
+
 #~ msgid "Error creating directory `%s': %s"
 #~ msgstr "Error creando directorio `%s': %s"
+
 #~ msgid "Error opening `%s': %s"
 #~ msgstr "Error abriendo `%s': %s"
+
 #~ msgid "Error reading `%s': file contains no data."
 #~ msgstr "Error leyendo `%s': el archivo no contiene datos."
+
 #~ msgid "Error reading `%s': %s"
 #~ msgstr "Error leyendo `%s': %s"
+
 #~ msgid ""
 #~ "Failed to load image '%s': reason not known, probably a corrupt image file"
 #~ msgstr ""
 #~ "Falló al cargar la imagen '%s': razón desconocida, probablemente el "
 #~ "archivo de imagen está dañado"
+
 #~ msgid "Error verifying `%s': %s"
 #~ msgstr "Error verificando `%s': %s"
+
 #~ msgid "Error reading `%s': file is not a regular file or symbolic link."
 #~ msgstr ""
 #~ "Error leyendo `%s': El archivo no es un archivo común o un enlace "
 #~ "simbólico."
+
 #~ msgid "Error creating temporary thumbnail file for `%s': %s"
 #~ msgstr "Error creando el archivo de miniatura temporal para `%s': %s"
+
 #~ msgid "Fallback Input Profile (RGB):"
 #~ msgstr "Perfil de Respaldo de Entrada (RGB):"
+
 #~ msgid "Fallback Input Profile (CMYK):"
 #~ msgstr "Perfil de Respaldo de Salida (CMYK):"
-

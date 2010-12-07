@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.5\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-11-28 11:29+0000\n"
+"POT-Creation-Date: 2010-12-07 20:01+0000\n"
 "PO-Revision-Date: 2010-10-11 05:13+0400\n"
 "Last-Translator: Александр Прокудин <alexandre.prokoudine@gmail.com>\n"
 "Language-Team: Russian <gnome-cyr@lists.gnome.org>\n"
@@ -272,7 +272,7 @@ msgstr "Параметры CMYKTool"
 msgid "Previous settings"
 msgstr "Предыдущий раз"
 
-#: cmyktool.cpp:477 profilemanager/profileselector.cpp:204 duotoner.cpp:427
+#: cmyktool.cpp:477 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "Без профиля"
 
@@ -317,7 +317,7 @@ msgstr "Открыть файл"
 msgid "Adding images..."
 msgstr "Добавляются изображения..."
 
-#: cmykuitab.cpp:63 duotoner.cpp:516
+#: cmykuitab.cpp:63
 msgid "Rendering preview"
 msgstr "Создаётся предпросмотр"
 
@@ -860,84 +860,49 @@ msgstr ""
 msgid "Devicelink: Can't open destination profile!"
 msgstr ""
 
-#: duotoner.cpp:392
-msgid "Setup colour options..."
-msgstr ""
-
-#: duotoner.cpp:413
 #, fuzzy
-msgid "Press profile:"
-msgstr "Профиль:"
+#~ msgid "Press profile:"
+#~ msgstr "Профиль:"
 
-#: duotoner.cpp:417
 #, fuzzy
-msgid "Proofing mode:"
-msgstr "Профиль:"
+#~ msgid "Proofing mode:"
+#~ msgstr "Профиль:"
 
-#: duotoner.cpp:428
 #, fuzzy
-msgid "Simulate Print"
-msgstr "Имитация печати"
+#~ msgid "Simulate Print"
+#~ msgstr "Имитация печати"
 
-#: duotoner.cpp:429
 #, fuzzy
-msgid "Simulate Print, Adapt White"
-msgstr "Имитация печати, адаптация белого"
+#~ msgid "Simulate Print, Adapt White"
+#~ msgstr "Имитация печати, адаптация белого"
 
-#: duotoner.cpp:600
 #, fuzzy
-msgid "DuoToner"
-msgstr "Готово"
+#~ msgid "DuoToner"
+#~ msgstr "Готово"
 
-#: duotoner.cpp:644
-msgid "Hue Rotation"
-msgstr ""
-
-#: duotoner.cpp:653
-msgid "Grey gamma"
-msgstr ""
-
-#: duotoner.cpp:663
-msgid "Grey contrast"
-msgstr ""
-
-#: duotoner.cpp:673
 #, fuzzy
-msgid "Colour gamma"
-msgstr "Управление цветом"
+#~ msgid "Colour gamma"
+#~ msgstr "Управление цветом"
 
-#: duotoner.cpp:683
 #, fuzzy
-msgid "Colour contrast"
-msgstr "Параметры преобразования цвета"
+#~ msgid "Colour contrast"
+#~ msgstr "Параметры преобразования цвета"
 
-#: duotoner.cpp:693
-msgid "DuoTone colour"
-msgstr ""
-
-#: duotoner.cpp:714
 #, fuzzy
-msgid "Save DuoTone Image..."
-msgstr "Сохранить изображение"
+#~ msgid "Save DuoTone Image..."
+#~ msgstr "Сохранить изображение"
 
-#: duotoner.cpp:727
-msgid "Settings..."
-msgstr ""
-
-#: duotoner.cpp:789
 #, fuzzy
-msgid "Saving..."
-msgstr "Сохранение"
+#~ msgid "Saving..."
+#~ msgstr "Сохранение"
 
-#: duotoner.cpp:817
 #, fuzzy
-msgid "Load image..."
-msgstr "Добавить изображения..."
+#~ msgid "Load image..."
+#~ msgstr "Добавить изображения..."
 
-#: duotoner.cpp:851
 #, fuzzy
-msgid "Please choose a filename for the duotone image..."
-msgstr "Выберите имя файла для связующего профиля"
+#~ msgid "Please choose a filename for the duotone image..."
+#~ msgstr "Выберите имя файла для связующего профиля"
 
 #~ msgid "DeviceLink manager"
 #~ msgstr "Управление DeviceLink"
