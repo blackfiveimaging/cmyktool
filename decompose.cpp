@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 					cerr << "CMYK" << endl;
 					for(int channel=0;channel<4;++channel)
 					{
-						const char *channelnames[]={"C","M","Y","K"};
+						const char *channelnames[]={"-C","-M","-Y","-K"};
 						if(!src)
 							src=ISLoadImage(argv[i]);
 						src=new ImageSource_ExtractChannel(src,channel);

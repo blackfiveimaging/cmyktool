@@ -81,14 +81,16 @@ int main(int argc, char **argv)
 	{
 		ImageSource *src=NULL;
 
-		for(int i=optind;i<argc;++i)
+		for(int i=1;i<argc;++i)
 		{
+			cerr << "Index " << i << endl;
 			ISDeviceNValue col(4);
 			cerr << "Getting colour from " << argv[i] << endl;
 			GetColourFromFilename(col,argv[i]);
 			ImageSource *img=ISLoadImage(argv[i]);
 			src=new ImageSource_Combine(img,col,src);
 		}
+		cerr << "Checking combined image and saving..." << endl;
 		if(src)
 		{
 			char *fn=GetRootFilename(argv[optind]);

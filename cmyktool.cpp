@@ -233,21 +233,27 @@ class PreloadProfiles : public Job
 	void Run(Worker *w)
 	{
 		Debug[TRACE] << "Getting profile list..." << endl;
-		pm.ObtainMutex();
-		ProfileInfo *pi=pm.GetFirstProfileInfo();
-		while(pi)
+		try
 		{
-			try
+			PTMutex::Lock lock(pm);
+			ProfileInfo *pi=pm.GetFirstProfileInfo();
+			while(pi)
 			{
-				pi->GetColourSpace();	// Trigger loading and caching of profile info
-			}
-			catch(const char *err)
-			{
-				Debug[WARN] << "Error: " << err << std::endl;
-			}
-			pi=pi->Next();
-		}		
-		pm.ReleaseMutex();
+				try
+				{
+					pi->GetColourSpace();	// Trigger loading and caching of profile info
+				}
+				catch(const char *err)
+				{
+					Debug[WARN] << "Error: " << err << std::endl;
+				}
+				pi=pi->Next();
+			}		
+		}
+		catch(const char *err)
+		{
+			Debug[ERROR] << "Error: " << err << std::endl;
+		}
 	}
 	protected:
 	ProfileManager &pm;

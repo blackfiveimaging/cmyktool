@@ -45,7 +45,7 @@ libdeflattenui_la_SOURCES = \
 
 bin_PROGRAMS = cmyktool
 
-check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest dltest
+check_PROGRAMS = queuetest convertcmyk deflatten recombine decompose psrip test rspltest dltest preloadtest
 
 dltest_SOURCES = dltest.cpp
 rspltest_SOURCES = rspltest.cpp
@@ -57,6 +57,7 @@ decompose_SOURCES = decompose.cpp
 deflatten_SOURCES = deflatten.cpp
 psrip_SOURCES = psrip.cpp
 cmyktool_SOURCES = cmyktool.cpp
+preloadtest_SOURCES = preloadtest.cpp
 
 LDADD = \
 	libdeflattenui.la \

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
 "POT-Creation-Date: 2010-12-07 20:01+0000\n"
-"PO-Revision-Date: 2010-07-21 00:34+0200\n"
+"PO-Revision-Date: 2010-12-22 12:16+0100\n"
 "Last-Translator: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -301,9 +301,8 @@ msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "A outils de conversion d'image utilisant les profils ICC."
 
 #: cmyktool.cpp:682
-#, fuzzy
 msgid "Done"
-msgstr "Aucun"
+msgstr "Accompli"
 
 #: cmyktool.cpp:725
 msgid "Open File"
@@ -314,14 +313,12 @@ msgid "Adding images..."
 msgstr "Ajouter des images..."
 
 #: cmykuitab.cpp:63
-#, fuzzy
 msgid "Rendering preview"
-msgstr "Intention de rendu:"
+msgstr "Génération de l'aperçu"
 
 #: cmykuitab.cpp:205
-#, fuzzy
 msgid "Converting image"
-msgstr "Mode de conversion:"
+msgstr "Conversion d'image en cours"
 
 #: cmykuitab.cpp:394
 msgid "Inspect"
@@ -382,14 +379,12 @@ msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG - Format avec perte optimisé pour photos"
 
 #: cmykuitab.cpp:611
-#, fuzzy
 msgid "JPEG (dithered)"
-msgstr "TIFF (8-bit)"
+msgstr "JPEG (dithered)"
 
 #: cmykuitab.cpp:611
-#, fuzzy
 msgid "JPEG - Lossy format with dithering to hide contouring artifacts"
-msgstr "TIFF - 8-bits pour une meilleur compatibilité"
+msgstr "JPEG - Format avec perte masquant les artefact aux contours"
 
 #: cmykuitab.cpp:612
 msgid "TIFF (8-bit)"
@@ -400,14 +395,12 @@ msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF - 8-bits pour une meilleur compatibilité"
 
 #: cmykuitab.cpp:613
-#, fuzzy
 msgid "TIFF (8-bit dithered)"
-msgstr "TIFF (8-bit)"
+msgstr "TIFF (8-bit  dithered)"
 
 #: cmykuitab.cpp:613
-#, fuzzy
 msgid "TIFF - 8-bits per sample, with dithering to hide contouring artifacts"
-msgstr "TIFF - 8-bits pour une meilleur compatibilité"
+msgstr "TIFF - 8-bits, avec dithering pour une meilleur compatibilité "
 
 #: cmykuitab.cpp:614
 msgid "TIFF (16-bit)"
@@ -446,9 +439,8 @@ msgid "Colour conversion options"
 msgstr "Options de conversion de couleur"
 
 #: conversionoptsdialog.cpp:67 devicelinkdialog.cpp:112
-#, fuzzy
 msgid "Delete"
-msgstr "Defaut"
+msgstr "Effacer"
 
 #: conversionoptsdialog.cpp:86
 msgid "<- Save"
@@ -475,9 +467,8 @@ msgid "Ignore embedded profiles"
 msgstr "Ignore les profils incorpors"
 
 #: conversionoptsdialog.cpp:155
-#, fuzzy
 msgid "Output:"
-msgstr "Profil de sortie:"
+msgstr "Sortie:"
 
 #: conversionoptsdialog.cpp:165
 msgid "Output Profile:"
@@ -560,9 +551,8 @@ msgid "Are you sure you want to delete this preset?"
 msgstr "Êtes vous sûr de supprimer ce réglage ?"
 
 #: devicelinkdialog.cpp:32
-#, fuzzy
 msgid "Generating Device Link"
-msgstr "Utiliser Device Link:"
+msgstr "Génération Device Link en cours"
 
 #: devicelinkdialog.cpp:71
 msgid "Device Link Editor"
@@ -570,7 +560,7 @@ msgstr "Editeur Device Link"
 
 #: devicelinkdialog.cpp:100
 msgid "Export..."
-msgstr ""
+msgstr "Exporter..."
 
 #: devicelinkdialog.cpp:134
 msgid "Input options:"
@@ -646,7 +636,7 @@ msgstr ""
 
 #: devicelinkdialog.cpp:381
 msgid "Can't find collink - please check Argyll path"
-msgstr ""
+msgstr "Collink introuvable - vérifiez le chemin d'installation d'Argyll"
 
 #: devicelinkdialog.cpp:390
 msgid "Are you sure you want to overwrite an existing device link?"
@@ -670,10 +660,12 @@ msgid ""
 "devicelink.  The existing devicelink will be exported - is this what you "
 "want?"
 msgstr ""
+"Attention - Vous avez modifié les paramètres devicelink, mais ne les avez "
+"pas encore reconstruits. "
 
 #: devicelinkdialog.cpp:623
 msgid "Please choose a filename for the DeviceLink"
-msgstr ""
+msgstr "Choisissez un nom de fichier pour le DeviceLink"
 
 #: dialogs.cpp:84
 msgid "Colour Management"
@@ -692,9 +684,9 @@ msgid "External utilities"
 msgstr "Outils Externes"
 
 #: dialogs.cpp:158
-#, fuzzy
 msgid "Search paths for Argyll utilities (TIFFGamut, ColLink, etc.)"
-msgstr "Chemin vers les utilitaires Argyll TIFFGamut et ICCLink"
+msgstr ""
+"Cherche les chemins vers les utilitaires Argyll (TIFFGamut, Collink, etc.)"
 
 #: dialogs.cpp:176
 msgid "Search paths for GhostScript executable"
@@ -830,9 +822,8 @@ msgid "Default rendering intent"
 msgstr "Intention de rendu par défaut"
 
 #: profilemanager/profileselector.cpp:236
-#, fuzzy
 msgid "Choose ICC Profile..."
-msgstr "Profil ICC incorporé"
+msgstr "Choisir le profil ICC..."
 
 #: profilemanager/profileselector.cpp:403
 msgid "Please choose a valid ICC profile"
@@ -852,11 +843,11 @@ msgstr "<Inconnu>"
 
 #: devicelink.cpp:195
 msgid "Devicelink: Can't open source profile!"
-msgstr ""
+msgstr "Devicelink: Ne peut ouvrir le profil source!"
 
 #: devicelink.cpp:202
 msgid "Devicelink: Can't open destination profile!"
-msgstr ""
+msgstr "Devicelink: Ne peut ouvrir le profil de destination!"
 
 #, fuzzy
 #~ msgid "Press profile:"
