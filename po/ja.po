@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.5-rc1\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-12-07 20:01+0000\n"
+"POT-Creation-Date: 2010-12-31 11:29+0000\n"
 "PO-Revision-Date: 2010-12-12 12:27+0900\n"
 "Last-Translator: Yoshinori Yamakawa <yamma-ma@users.sourceforge.jp>\n"
 "Language-Team: Japanese <LL@li.org>\n"
@@ -121,7 +121,7 @@ msgid "Shape:"
 msgstr "形状:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#: profilemanager/profilemanager.cpp:878
+#: profilemanager/profilemanager.cpp:877
 msgid "Default"
 msgstr "デフォルト"
 
@@ -233,76 +233,76 @@ msgstr "CMYKToolについて(_A)"
 msgid "Show the About dialog"
 msgstr "「CMYKToolについて」ダイアログを表示します"
 
-#: cmyktool.cpp:271
+#: cmyktool.cpp:277
 msgid "CMYKTool"
 msgstr ""
 
-#: cmyktool.cpp:329
+#: cmyktool.cpp:335
 msgid "Add Images..."
 msgstr "画像をリストに追加..."
 
-#: cmyktool.cpp:336
+#: cmyktool.cpp:342
 msgid "Remove Images"
 msgstr "画像をリストから削除"
 
-#: cmyktool.cpp:355
+#: cmyktool.cpp:361
 msgid "Convert"
 msgstr "変換"
 
-#: cmyktool.cpp:363
+#: cmyktool.cpp:369
 msgid "Using conversion preset:"
 msgstr "変換プリセットを使用:"
 
-#: cmyktool.cpp:387 dialogs.cpp:69
+#: cmyktool.cpp:393 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "環境設定..."
 
-#: cmyktool.cpp:439
+#: cmyktool.cpp:445
 msgid "Previous settings"
 msgstr "前回の設定"
 
-#: cmyktool.cpp:477 profilemanager/profileselector.cpp:204
+#: cmyktool.cpp:483 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "なし"
 
-#: cmyktool.cpp:477
+#: cmyktool.cpp:483
 msgid "No conversion"
 msgstr "変換なし"
 
-#: cmyktool.cpp:498 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:504 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "その他..."
 
-#: cmyktool.cpp:498
+#: cmyktool.cpp:504
 msgid "Create a new preset"
 msgstr "新しいプリセットを作成"
 
-#: cmyktool.cpp:632
+#: cmyktool.cpp:638
 msgid "About CMYKTool"
 msgstr "CMYKToolについて"
 
-#: cmyktool.cpp:633
+#: cmyktool.cpp:639
 msgid "translator-credits"
 msgstr ""
 
-#: cmyktool.cpp:637
+#: cmyktool.cpp:643
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr ""
 
-#: cmyktool.cpp:638
+#: cmyktool.cpp:644
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "ICCプロファイルによる画像変換ユーティリティー"
 
-#: cmyktool.cpp:682
+#: cmyktool.cpp:688
 msgid "Done"
 msgstr "完了"
 
-#: cmyktool.cpp:725
+#: cmyktool.cpp:731
 msgid "Open File"
 msgstr "ファイルを開く"
 
-#: cmyktool.cpp:755 cmyktool.cpp:956
+#: cmyktool.cpp:761 cmyktool.cpp:962
 msgid "Adding images..."
 msgstr ""
 
@@ -804,7 +804,7 @@ msgstr ""
 msgid "No Proof profile provided!"
 msgstr ""
 
-#: profilemanager/profilemanager.cpp:886
+#: profilemanager/profilemanager.cpp:885
 msgid "Default rendering intent"
 msgstr "既定のレンダリングインテント"
 

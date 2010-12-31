@@ -51,6 +51,7 @@
 #include "conversionopts.h"
 #include "conversionoptsdialog.h"
 #include "devicelinkdialog.h"
+#include "naivecmyktransform.h"
 
 #include "cmyktool_core.h"
 #include "dialogs.h"
@@ -854,8 +855,23 @@ void TestUI::AddImage(const char *filename)
 			}
 
 			CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+
+			// If we don't have a transform then probably we can't open the default CMYK profile,
+			// so we try replacing it with the fallback CMYK Profile from the convopts.
+			if(!transform)
+			{
+				profilemanager.SetString("DefaultCMYKProfile",convopts.GetInCMYKProfile());
+				transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+			}
+			if(!transform)
+			{
+				// Still couldn't open the CMYK profile?  We'd better fall back to a naive transform then.
+				transform=new NaiveCMYKToRGBTransform(is);
+			}
 			if(transform)
+			{
 				is=new ImageSource_CMS(is,transform);
+			}
 
 			// We can promote grey to RGB here if all else has failed...
 //			if(STRIP_ALPHA(is->type==IS_TYPE_GREY))

@@ -302,7 +302,7 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	else
 	{
 		// No output profile - use a naive conversion instead.
-		CMSTransform *trans=new NaiveCMYKTransform(src);
+		CMSTransform *trans=new NaiveRGBToCMYKTransform(src);
 		src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 			mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 	}

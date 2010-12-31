@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-12-07 20:01+0000\n"
+"POT-Creation-Date: 2010-12-31 11:29+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -127,7 +127,7 @@ msgid "Shape:"
 msgstr "Forma:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#: profilemanager/profilemanager.cpp:878
+#: profilemanager/profilemanager.cpp:877
 msgid "Default"
 msgstr "Predeterminado"
 
@@ -239,76 +239,76 @@ msgstr "_Acerca de"
 msgid "Show the About dialog"
 msgstr "Muestra información acerca del programa"
 
-#: cmyktool.cpp:271
+#: cmyktool.cpp:277
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:329
+#: cmyktool.cpp:335
 msgid "Add Images..."
 msgstr "Agregar Imágenes..."
 
-#: cmyktool.cpp:336
+#: cmyktool.cpp:342
 msgid "Remove Images"
 msgstr "Quitar Imágenes"
 
-#: cmyktool.cpp:355
+#: cmyktool.cpp:361
 msgid "Convert"
 msgstr "Convertir"
 
-#: cmyktool.cpp:363
+#: cmyktool.cpp:369
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:387 dialogs.cpp:69
+#: cmyktool.cpp:393 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferencias..."
 
-#: cmyktool.cpp:439
+#: cmyktool.cpp:445
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:477 profilemanager/profileselector.cpp:204
+#: cmyktool.cpp:483 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "Ninguno"
 
-#: cmyktool.cpp:477
+#: cmyktool.cpp:483
 msgid "No conversion"
 msgstr "Sin conversión"
 
-#: cmyktool.cpp:498 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:504 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Otro..."
 
-#: cmyktool.cpp:498
+#: cmyktool.cpp:504
 msgid "Create a new preset"
 msgstr "Crear un nuevo ajuste predefinido"
 
-#: cmyktool.cpp:632
+#: cmyktool.cpp:638
 msgid "About CMYKTool"
 msgstr "Acerca de CMYKTool"
 
-#: cmyktool.cpp:633
+#: cmyktool.cpp:639
 msgid "translator-credits"
 msgstr "Créditos de la traducción"
 
-#: cmyktool.cpp:637
+#: cmyktool.cpp:643
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:638
+#: cmyktool.cpp:644
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Una utilidad para convertir imágenes usando perfiles de color ICC."
 
-#: cmyktool.cpp:682
+#: cmyktool.cpp:688
 msgid "Done"
 msgstr "Hecho"
 
-#: cmyktool.cpp:725
+#: cmyktool.cpp:731
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:755 cmyktool.cpp:956
+#: cmyktool.cpp:761 cmyktool.cpp:962
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 
@@ -828,7 +828,7 @@ msgstr ""
 msgid "No Proof profile provided!"
 msgstr "No se ha provisto un perfil de Prueba!"
 
-#: profilemanager/profilemanager.cpp:886
+#: profilemanager/profilemanager.cpp:885
 msgid "Default rendering intent"
 msgstr "Intento de renderizado predeterminado"
 
