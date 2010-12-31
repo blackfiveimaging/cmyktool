@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CMYKTool 0.1.3\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-12-31 11:29+0000\n"
+"POT-Creation-Date: 2010-12-31 12:19+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Guillermo Espertino <gespertino@gmail.com>\n"
 "Language-Team: \n"
@@ -171,144 +171,144 @@ msgstr "Escena original - Exteriores luminosos"
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr "Transparencias en caja de luz"
 
-#: cmyktool.cpp:139
+#: cmyktool.cpp:140
 msgid "_File"
 msgstr "_Archivo"
 
-#: cmyktool.cpp:141
+#: cmyktool.cpp:142
 msgid "_Quit"
 msgstr "_Quitar"
 
-#: cmyktool.cpp:141
+#: cmyktool.cpp:142
 msgid "Exit the program"
 msgstr "Salir del programa"
 
-#: cmyktool.cpp:143
+#: cmyktool.cpp:144
 msgid "_Edit"
 msgstr "_Editar"
 
-#: cmyktool.cpp:145
+#: cmyktool.cpp:146
 msgid "Select _All"
 msgstr "Seleccionar _Todo"
 
-#: cmyktool.cpp:145
+#: cmyktool.cpp:146
 msgid "Select all images"
 msgstr "Seleccionar todas las imágenes"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:147
 msgid "Select _None"
 msgstr "Seleccionar _Nada"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:147
 msgid "Deselect all images"
 msgstr "Deseleccionar todas las imágenes"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:148
 msgid "Preset _Editor..."
 msgstr "_Editor de Ajustes Predefinidos"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:148
 msgid "Open the preset editor"
 msgstr "Abrir el editor de ajustes predefinidos"
 
-#: cmyktool.cpp:148
+#: cmyktool.cpp:149
 msgid "_Device Link Editor..."
 msgstr "Editor de _Device Link..."
 
-#: cmyktool.cpp:148
+#: cmyktool.cpp:149
 msgid "Open the Device Link editor"
 msgstr "Abrir el editor de Device Link"
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:150
 msgid "Pre_ferences..."
 msgstr "Pre_ferencias..."
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:150
 msgid "Set paths for colour profiles and external utilities"
 msgstr "Ajustar las rutas de perfiles de color y utilidades externas"
 
-#: cmyktool.cpp:151
+#: cmyktool.cpp:152
 msgid "_Help"
 msgstr "Ay_uda"
 
-#: cmyktool.cpp:153
+#: cmyktool.cpp:154
 msgid "_About"
 msgstr "_Acerca de"
 
-#: cmyktool.cpp:153
+#: cmyktool.cpp:154
 msgid "Show the About dialog"
 msgstr "Muestra información acerca del programa"
 
-#: cmyktool.cpp:277
+#: cmyktool.cpp:278
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:335
+#: cmyktool.cpp:336
 msgid "Add Images..."
 msgstr "Agregar Imágenes..."
 
-#: cmyktool.cpp:342
+#: cmyktool.cpp:343
 msgid "Remove Images"
 msgstr "Quitar Imágenes"
 
-#: cmyktool.cpp:361
+#: cmyktool.cpp:362
 msgid "Convert"
 msgstr "Convertir"
 
-#: cmyktool.cpp:369
+#: cmyktool.cpp:370
 msgid "Using conversion preset:"
 msgstr "Usar ajuste predefinido de conversión:"
 
-#: cmyktool.cpp:393 dialogs.cpp:69
+#: cmyktool.cpp:394 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferencias..."
 
-#: cmyktool.cpp:445
+#: cmyktool.cpp:446
 msgid "Previous settings"
 msgstr "Ajustes previos"
 
-#: cmyktool.cpp:483 profilemanager/profileselector.cpp:204
+#: cmyktool.cpp:484 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "Ninguno"
 
-#: cmyktool.cpp:483
+#: cmyktool.cpp:484
 msgid "No conversion"
 msgstr "Sin conversión"
 
-#: cmyktool.cpp:504 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:505 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Otro..."
 
-#: cmyktool.cpp:504
+#: cmyktool.cpp:505
 msgid "Create a new preset"
 msgstr "Crear un nuevo ajuste predefinido"
 
-#: cmyktool.cpp:638
+#: cmyktool.cpp:639
 msgid "About CMYKTool"
 msgstr "Acerca de CMYKTool"
 
-#: cmyktool.cpp:639
+#: cmyktool.cpp:640
 msgid "translator-credits"
 msgstr "Créditos de la traducción"
 
-#: cmyktool.cpp:643
+#: cmyktool.cpp:644
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:644
+#: cmyktool.cpp:645
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Una utilidad para convertir imágenes usando perfiles de color ICC."
 
-#: cmyktool.cpp:688
+#: cmyktool.cpp:689
 msgid "Done"
 msgstr "Hecho"
 
-#: cmyktool.cpp:731
+#: cmyktool.cpp:732
 msgid "Open File"
 msgstr "Abrir archivo"
 
-#: cmyktool.cpp:761 cmyktool.cpp:962
+#: cmyktool.cpp:762 cmyktool.cpp:978
 msgid "Adding images..."
 msgstr "Agregando imágenes..."
 

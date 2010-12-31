@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.5-rc1\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-12-31 11:29+0000\n"
+"POT-Creation-Date: 2010-12-31 12:19+0000\n"
 "PO-Revision-Date: 2010-12-12 12:27+0900\n"
 "Last-Translator: Yoshinori Yamakawa <yamma-ma@users.sourceforge.jp>\n"
 "Language-Team: Japanese <LL@li.org>\n"
@@ -165,144 +165,144 @@ msgstr ""
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr ""
 
-#: cmyktool.cpp:139
+#: cmyktool.cpp:140
 msgid "_File"
 msgstr "ファイル(_F)"
 
-#: cmyktool.cpp:141
+#: cmyktool.cpp:142
 msgid "_Quit"
 msgstr "終了(_Q)"
 
-#: cmyktool.cpp:141
+#: cmyktool.cpp:142
 msgid "Exit the program"
 msgstr "プログラムを終了"
 
-#: cmyktool.cpp:143
+#: cmyktool.cpp:144
 msgid "_Edit"
 msgstr "編集(_E)"
 
-#: cmyktool.cpp:145
+#: cmyktool.cpp:146
 msgid "Select _All"
 msgstr "すべて選択(_A)"
 
-#: cmyktool.cpp:145
+#: cmyktool.cpp:146
 msgid "Select all images"
 msgstr "すべての画像を選択"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:147
 msgid "Select _None"
 msgstr "選択なし(_N)"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:147
 msgid "Deselect all images"
 msgstr ""
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:148
 msgid "Preset _Editor..."
 msgstr "プリセット エディタ(_E)"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:148
 msgid "Open the preset editor"
 msgstr ""
 
-#: cmyktool.cpp:148
+#: cmyktool.cpp:149
 msgid "_Device Link Editor..."
 msgstr "デバイスリンク エディタ(_D)"
 
-#: cmyktool.cpp:148
+#: cmyktool.cpp:149
 msgid "Open the Device Link editor"
 msgstr ""
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:150
 msgid "Pre_ferences..."
 msgstr "環境設定(_F)..."
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:150
 msgid "Set paths for colour profiles and external utilities"
 msgstr ""
 
-#: cmyktool.cpp:151
+#: cmyktool.cpp:152
 msgid "_Help"
 msgstr "ヘルプ(_H)"
 
-#: cmyktool.cpp:153
+#: cmyktool.cpp:154
 msgid "_About"
 msgstr "CMYKToolについて(_A)"
 
-#: cmyktool.cpp:153
+#: cmyktool.cpp:154
 msgid "Show the About dialog"
 msgstr "「CMYKToolについて」ダイアログを表示します"
 
-#: cmyktool.cpp:277
+#: cmyktool.cpp:278
 msgid "CMYKTool"
 msgstr ""
 
-#: cmyktool.cpp:335
+#: cmyktool.cpp:336
 msgid "Add Images..."
 msgstr "画像をリストに追加..."
 
-#: cmyktool.cpp:342
+#: cmyktool.cpp:343
 msgid "Remove Images"
 msgstr "画像をリストから削除"
 
-#: cmyktool.cpp:361
+#: cmyktool.cpp:362
 msgid "Convert"
 msgstr "変換"
 
-#: cmyktool.cpp:369
+#: cmyktool.cpp:370
 msgid "Using conversion preset:"
 msgstr "変換プリセットを使用:"
 
-#: cmyktool.cpp:393 dialogs.cpp:69
+#: cmyktool.cpp:394 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "環境設定..."
 
-#: cmyktool.cpp:445
+#: cmyktool.cpp:446
 msgid "Previous settings"
 msgstr "前回の設定"
 
-#: cmyktool.cpp:483 profilemanager/profileselector.cpp:204
+#: cmyktool.cpp:484 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "なし"
 
-#: cmyktool.cpp:483
+#: cmyktool.cpp:484
 msgid "No conversion"
 msgstr "変換なし"
 
-#: cmyktool.cpp:504 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:505 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "その他..."
 
-#: cmyktool.cpp:504
+#: cmyktool.cpp:505
 msgid "Create a new preset"
 msgstr "新しいプリセットを作成"
 
-#: cmyktool.cpp:638
+#: cmyktool.cpp:639
 msgid "About CMYKTool"
 msgstr "CMYKToolについて"
 
-#: cmyktool.cpp:639
+#: cmyktool.cpp:640
 msgid "translator-credits"
 msgstr ""
 
-#: cmyktool.cpp:643
+#: cmyktool.cpp:644
 msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
 msgstr ""
 
-#: cmyktool.cpp:644
+#: cmyktool.cpp:645
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "ICCプロファイルによる画像変換ユーティリティー"
 
-#: cmyktool.cpp:688
+#: cmyktool.cpp:689
 msgid "Done"
 msgstr "完了"
 
-#: cmyktool.cpp:731
+#: cmyktool.cpp:732
 msgid "Open File"
 msgstr "ファイルを開く"
 
-#: cmyktool.cpp:761 cmyktool.cpp:962
+#: cmyktool.cpp:762 cmyktool.cpp:978
 msgid "Adding images..."
 msgstr ""
 
