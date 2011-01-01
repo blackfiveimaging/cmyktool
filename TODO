@@ -2,6 +2,8 @@
 
 | Save dialog needs to allow 16-bit, 8-bit, and 8-bit dithered.
 
+Problem with rendering icons for images with alpha channel?
+
 Replace spinners wth GTK inbuilt ones.
 
 DeviceLink editor needs to be split into tabs. (or maybe dividers?)
@@ -38,6 +40,7 @@ Beneath the notebook we should have buttons as follows:
 | Need some kind of global activity indicator - something to monitor the jobqueue.
 | Clicking on this should bring up a list of pending jobs, which means the jobs should have meaningful names.
 Actually settled on making the overall progress indicator cycle between the names of the active jobs.
+Can we give each progress a queryable percentage so the activity indicator can show a global complete percentage?
 
 Add Postscript Import - recognise PS/PDF by extension when adding a file, and pop up an options dialog.
 Need to decide how to handle temporary files.  Maybe a dialog when CMYKTool quits asking whether
@@ -116,7 +119,7 @@ If the user tries to use a devicelink that's not yet generated, complain.
 
 | Sort out proofing of devicelinked images - currently resembles "inspect" mode.
 
-Add proper support for greyscale images and profiles.
+| Add proper support for greyscale images and profiles.
 
 | Fix issue with X libs not being linked on some platforms
 

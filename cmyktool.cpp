@@ -51,7 +51,7 @@
 #include "conversionopts.h"
 #include "conversionoptsdialog.h"
 #include "devicelinkdialog.h"
-#include "naivecmyktransform.h"
+#include "naivetransforms.h"
 
 #include "cmyktool_core.h"
 #include "dialogs.h"
@@ -866,7 +866,7 @@ void TestUI::AddImage(const char *filename)
 			if(!transform)
 			{
 				// Still couldn't open the CMYK profile?  We'd better fall back to a naive transform then.
-				transform=new NaiveCMYKToRGBTransform(is);
+				transform=new NaiveCMYKToRGBCMSTransform(is);
 			}
 			if(transform)
 			{

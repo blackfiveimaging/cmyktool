@@ -13,7 +13,7 @@
 #include "imagesource_mask.h"
 #include "imagesource_montage.h"
 #include "imagesource_flatten.h"
-#include "naivecmyktransform.h"
+#include "naivetransforms.h"
 
 using namespace std;
 
@@ -302,7 +302,7 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	else
 	{
 		// No output profile - use a naive conversion instead.
-		CMSTransform *trans=new NaiveRGBToCMYKTransform(src);
+		CMSTransform *trans=new NaiveRGBToCMYKCMSTransform(src);
 		src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 			mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 	}

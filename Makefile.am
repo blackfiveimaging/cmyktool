@@ -22,7 +22,6 @@ libdeflatten_la_SOURCES = \
 	imagesource_flatten.h \
 	imagesource_combine.cpp \
 	imagesource_combine.h \
-	naivecmyktransform.h \
 	externalghostscript.h \
 	psrip_core.cpp	\
 	psrip_core.h	\
