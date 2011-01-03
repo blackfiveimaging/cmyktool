@@ -183,7 +183,7 @@ ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp
 		throw "No input profile supplied";
 	if(!emb)
 		throw "Unable to open output profile";
-	SetEmbeddedProfile(emb,true);
+	SetEmbeddedProfile(emb);
 	if(inp->IsDeviceLink())
 		transform=new CMSTransform(inp);
 	else

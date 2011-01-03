@@ -227,7 +227,7 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	bool freeinprof=false;
 	CMSProfile *inprof=NULL;
 	if(!ignoreembedded)
-		inprof=src->GetEmbeddedProfile();
+		inprof=&*src->GetEmbeddedProfile();
 	if(!inprof)
 	{
 		// Promote to RGB only if there's no embedded grey profile.
@@ -283,10 +283,12 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 			src=new ImageSource_Deflatten(src,dlprof,NULL,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 				mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 
-		src->SetEmbeddedProfile(outprof,true);
+		Debug[TRACE] << "Setting embedded output profile... (DL)" << std::endl;
+		src->SetEmbeddedProfile(outprof);
 	}
 	else if(outprof)
 	{
+		Debug[TRACE] << "Not using DeviceLink profile" << endl;
 		if(factory)
 		{
 			CMSTransform *trans=factory->GetTransform(outprof,inprof,intent);
@@ -297,7 +299,10 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 		else
 			src=new ImageSource_Deflatten(src,inprof,outprof,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 				mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
-		src->SetEmbeddedProfile(outprof,true);
+
+		Debug[TRACE] << "Setting embedded output profile to " << long(outprof) << std::endl;
+		src->SetEmbeddedProfile(outprof);
+		Debug[TRACE] << "Verifying embedded output profile: " << long(&*src->GetEmbeddedProfile()) << std::endl;
 	}
 	else
 	{

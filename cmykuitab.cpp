@@ -264,6 +264,7 @@ class UITab_CacheJob : public Job
 
 static void setlinkedview(GtkWidget *widget,gpointer userdata)
 {
+	Debug[TRACE] << "In CMYKUITab::setlinkedview" << endl;
 	CMYKUITab_View *view=(CMYKUITab_View *)userdata;
 	GQuark quark=g_quark_from_static_string("TabPointer");
 	gpointer qdata=g_object_get_qdata(G_OBJECT(widget),quark);
@@ -278,6 +279,7 @@ static void setlinkedview(GtkWidget *widget,gpointer userdata)
 
 void CMYKUITab::ViewChanged(GtkWidget *widget,gpointer userdata)
 {
+	Debug[TRACE] << "In CMYKUITab::ViewChanged" << endl;
 	CMYKUITab *tab=(CMYKUITab *)userdata;
 	if(!tab->GetLinked())
 		return;
@@ -292,6 +294,7 @@ void CMYKUITab::ViewChanged(GtkWidget *widget,gpointer userdata)
 
 void CMYKUITab::MouseMove(GtkWidget *widget,gpointer userdata)
 {
+	Debug[TRACE] << "In CMYKUITab::MouseMove" << endl;
 	CMYKUITab *tab=(CMYKUITab *)userdata;
 	if(!tab->image)
 		return;
@@ -299,9 +302,12 @@ void CMYKUITab::MouseMove(GtkWidget *widget,gpointer userdata)
 	int x=pixbufview_get_mousex(PIXBUFVIEW(tab->pbview));
 	int y=pixbufview_get_mousey(PIXBUFVIEW(tab->pbview));
 
+	Debug[TRACE] << "Calling GetPixel()" << endl;
 	ISDeviceNValue val=tab->image->GetPixel(x,y);
 
+	Debug[TRACE] << "Setting value()" << endl;
 	coloranttoggle_set_value(COLORANTTOGGLE(tab->colsel),val);
+	Debug[TRACE] << "Calculating sum..." << endl;
 
 	int sum=0;
 	for(int i=0;i<val.GetChannels();++i)
@@ -410,7 +416,7 @@ CMYKUITab::CMYKUITab(GtkWidget *parent,GtkWidget *notebook,CMYKTool_Core &core,c
 	gtk_box_pack_start(GTK_BOX(hbox2),colsel,FALSE,FALSE,0);
 	gtk_widget_show(colsel);
 
-	gtk_signal_connect (GTK_OBJECT (pbview), "changed",(GtkSignalFunc)MouseMove, this);
+	gtk_signal_connect (GTK_OBJECT (pbview), "mousemove",(GtkSignalFunc)MouseMove, this);
 
 
 	GtkWidget *tmp;
@@ -554,6 +560,7 @@ void CMYKUITab::ColorantsChanged(GtkWidget *wid,gpointer userdata)
 
 void CMYKUITab::Redraw()
 {
+	Debug[TRACE] << "In CMYKUITab::Redraw()" << endl;
 	// Cancel existing render job.  This is harmless if the job's completed already,
 	// even if the object's been deleted
 	if(renderjob)
