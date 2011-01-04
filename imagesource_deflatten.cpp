@@ -26,9 +26,6 @@ ImageSource_Deflatten::~ImageSource_Deflatten()
 
 	if(source)
 		delete source;
-		
-	if(disposetransform)
-		delete transform;
 }
 
 
@@ -185,22 +182,20 @@ ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSProfile *inp
 		throw "Unable to open output profile";
 	SetEmbeddedProfile(emb);
 	if(inp->IsDeviceLink())
-		transform=new CMSTransform(inp);
+		transform=RefCountPtr<CMSTransform>(new CMSTransform(inp));
 	else
-		transform=new CMSTransform(inp,outp);
-	disposetransform=true;
+		transform=RefCountPtr<CMSTransform>(new CMSTransform(inp,outp));
 
 	Init();
 }
 
 
-ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,
+ImageSource_Deflatten::ImageSource_Deflatten(ImageSource *source,RefCountPtr<CMSTransform> transform,
 		bool preserveblack,bool overprintblack,bool preservegrey, int effectwidth)
 	: ImageSource(source), source(source), transform(transform), preserveblack(preserveblack),
 		overprintblack(overprintblack), preservegrey(preservegrey), effectwidth(effectwidth)
 {
 	SetEmbeddedProfile(NULL);
-	disposetransform=false;
 
 	Init();
 }

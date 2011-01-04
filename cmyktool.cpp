@@ -854,7 +854,7 @@ void TestUI::AddImage(const char *filename)
 					break;
 			}
 
-			CMSTransform *transform=factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is);
+			RefCountPtr<CMSTransform> transform(factory.GetTransform(CM_COLOURDEVICE_DISPLAY,is));
 
 			// If we don't have a transform then probably we can't open the default CMYK profile,
 			// so we try replacing it with the fallback CMYK Profile from the convopts.

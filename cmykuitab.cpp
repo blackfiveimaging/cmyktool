@@ -111,7 +111,7 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 					break;
 			}
 
-			CMSTransform *transform=cw->factory->GetTransform(CM_COLOURDEVICE_DISPLAY,is,intent);
+			RefCountPtr<CMSTransform> transform(cw->factory->GetTransform(CM_COLOURDEVICE_DISPLAY,is,intent));
 			if(transform)
 				is=new ImageSource_CMS(is,transform);
 			else

@@ -23,15 +23,14 @@ class ImageSource_Deflatten : public ImageSource
 	public:
 	ImageSource_Deflatten(ImageSource *source,CMSProfile *inp,CMSProfile *outp,
 		bool preserveblack=true,bool overprintblack=false,bool preservegrey=false,int effectwidth=0);
-	ImageSource_Deflatten(ImageSource *source,CMSTransform *transform,
+	ImageSource_Deflatten(ImageSource *source,RefCountPtr<CMSTransform> transform,
 		bool preserveblack=true,bool overprintblack=false,bool preservegrey=false,int effectwidth=0);
 	~ImageSource_Deflatten();
 	ISDataType *GetRow(int row);
 	private:
 	void Init();
 	ImageSource *source;
-	CMSTransform *transform;
-	bool disposetransform;
+	RefCountPtr<CMSTransform> transform;
 	bool preserveblack;
 	bool overprintblack;
 	bool preservegrey;

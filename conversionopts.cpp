@@ -274,7 +274,7 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 		if(factory)
 		{
 			Debug[TRACE] << "Getting transform from factory" << endl;
-			CMSTransform *trans=factory->GetTransform(dlprof,NULL,intent);
+			RefCountPtr<CMSTransform> trans=factory->GetTransform(dlprof,NULL,intent);
 			if(trans)
 				src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 					mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
@@ -291,7 +291,7 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 		Debug[TRACE] << "Not using DeviceLink profile" << endl;
 		if(factory)
 		{
-			CMSTransform *trans=factory->GetTransform(outprof,inprof,intent);
+			RefCountPtr<CMSTransform> trans=factory->GetTransform(outprof,inprof,intent);
 			if(trans)
 				src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 					mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
@@ -307,7 +307,8 @@ ImageSource *CMYKConversionOptions::Apply(ImageSource *src,ImageSource *mask,CMT
 	else
 	{
 		// No output profile - use a naive conversion instead.
-		CMSTransform *trans=new NaiveRGBToCMYKCMSTransform(src);
+		RefCountPtr<CMSTransform> trans;
+		trans=new NaiveRGBToCMYKCMSTransform(src);
 		src=new ImageSource_Deflatten(src,trans,mode==CMYKCONVERSIONMODE_HOLDBLACK,
 			mode==CMYKCONVERSIONMODE_OVERPRINT,mode==CMYKCONVERSIONMODE_HOLDGREY,width);
 	}
