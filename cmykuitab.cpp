@@ -124,13 +124,13 @@ class UITab_RenderJob : public Job, public ThreadSync, public Progress
 			// to fail due to address space exhaustion!
 			try
 			{
-				tempimage=new CachedImage(is,this);
+				tempimage=new CachedImage(RefCountPtr<ImageSource>(is),this);
 			}
 			catch(const char *err)
 			{
 				// If creating the cached image failed we try again having scaled down.
 				is=ISScaleImageBySize(is,is->width/4,is->height/4);
-				tempimage=new CachedImage(is,this);
+				tempimage=new CachedImage(RefCountPtr<ImageSource>(is),this);
 			}
 //			delete is;
 		}
@@ -235,7 +235,7 @@ class UITab_CacheJob : public Job
 			// FIXME - need mutex protection here...
 			if(tab.image)
 				delete tab.image;
-			tab.image=new CachedImage(is);
+			tab.image=new CachedImage(RefCountPtr<ImageSource>(is));
 
 			Debug[TRACE] << "Cached image generated - triggering render job" << endl;
 			UITab_RenderJob renderjob(tab);
