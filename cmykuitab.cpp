@@ -10,8 +10,8 @@
 #include "support/thread.h"
 #include "support/util.h"
 
-#include "imageutils/tiffsave.h"
-#include "imageutils/jpegsave.h"
+#include "imageutils/tiffsaver.h"
+#include "imageutils/jpegsaver.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_cms.h"
 #include "imagesource/imagesource_colorantmask.h"
@@ -786,16 +786,16 @@ class UITab_SaveDialog
 							is=new ImageSource_Dither(is,8);
 							// Fall through to TIFF...
 						case FORMAT_TIFF:
-							imgsaver=new TIFFSaver(fn,is);
+							imgsaver=new TIFFSaver(fn,RefCountPtr<ImageSource>(is));
 							break;
 						case FORMAT_TIFF16:
-							imgsaver=new TIFFSaver(fn,is,true);
+							imgsaver=new TIFFSaver(fn,RefCountPtr<ImageSource>(is),true);
 							break;
 						case FORMAT_JPEGDITHERED:
 							is=new ImageSource_Dither(is,8);
 							// Fall through to JPEG...
 						case FORMAT_JPEG:
-							imgsaver=new JPEGSaver(fn,is,quality);
+							imgsaver=new JPEGSaver(fn,RefCountPtr<ImageSource>(is),quality);
 							break;
 					}
 

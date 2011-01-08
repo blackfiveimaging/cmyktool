@@ -19,7 +19,6 @@
 #include "support/dirtreewalker.h"
 #include "support/util.h"
 
-#include "imageutils/tiffsave.h"
 #include "imagesource/imagesource_util.h"
 #include "imagesource/imagesource_promote.h"
 #include "imagesource/imagesource_cms.h"
