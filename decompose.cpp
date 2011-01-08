@@ -1,6 +1,7 @@
 #include <iostream>
+#include <vector>
 
-#include "tiffsave.h"
+#include "tiffsaver.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -8,11 +9,13 @@
 #include "util.h"
 
 #include "lcmswrapper.h"
+#include "imagesource_tee.h"
 #include "imagesource_cms.h"
 #include "imagesource_extractchannel.h"
 
 #include "imagesource_util.h"
 
+#include "debug.h"
 
 #ifdef WIN32
 #include "getopt.h"
@@ -23,59 +26,59 @@
 
 int main(int argc, char **argv)
 {
+	Debug.SetLevel(TRACE);
 	try
 	{
-		ImageSource *src;
-
 		for(int i=optind;i<argc;++i)
 		{
-			src=ISLoadImage(argv[i]);
+			ImageSource_rp src=ImageSource_rp(ISLoadImage(argv[i]));
+			Progress p;
+			std::vector<RefCountPtr<TIFFSaver> > savers;
+
 			switch(STRIP_ALPHA(src->type))
 			{
 				case IS_TYPE_RGB:
-					cerr << "RGB" << endl;
-					for(int channel=0;channel<3;++channel)
 					{
-						const char *channelnames[]={"R","G","B"};
-						if(!src)
-							src=ISLoadImage(argv[i]);
-						src=new ImageSource_ExtractChannel(src,channel);
-						Progress p;
-						char *filename=BuildFilename(argv[i],channelnames[channel],"tif");
-						cerr << "Saving " << filename << endl;
+						Debug[TRACE] << "RGB" << std::endl;
+						char *filename;
+						const char *channelnames[]={"-R","-G","-B","-A"};
+						for(int channel=0;channel<src->samplesperpixel;++channel)
 						{
-							TIFFSaver ts(filename,src);
-							ts.SetProgress(&p);
-							ts.Save();
+							ImageSource *s=new ImageSource_Tee(&*src);
+							s=new ImageSource_ExtractChannel(s,channel);
+							filename=BuildFilename(argv[i],channelnames[channel],"tif");
+							RefCountPtr<TIFFSaver> ts(new TIFFSaver(filename,ImageSource_rp(s)));
+							savers.push_back(ts);
+							free(filename);
 						}
-						delete src;
-						src=NULL;
-						free(filename);
 					}
 					break;
 				case IS_TYPE_CMYK:
-					cerr << "CMYK" << endl;
-					for(int channel=0;channel<4;++channel)
 					{
-						const char *channelnames[]={"-C","-M","-Y","-K"};
-						if(!src)
-							src=ISLoadImage(argv[i]);
-						src=new ImageSource_ExtractChannel(src,channel);
-						Progress p;
-						char *filename=BuildFilename(argv[i],channelnames[channel],"tif");
-						cerr << "Saving " << filename << endl;
+						Debug[TRACE] << "CMYK" << std::endl;
+						char *filename;
+						const char *channelnames[]={"-C","-M","-Y","-K","-A"};
+						for(int channel=0;channel<src->samplesperpixel;++channel)
 						{
-							TIFFSaver ts(filename,src);
-							ts.SetProgress(&p);
-							ts.Save();
+							ImageSource *s=new ImageSource_Tee(&*src);
+							s=new ImageSource_ExtractChannel(s,channel);
+							filename=BuildFilename(argv[i],channelnames[channel],"tif");
+							RefCountPtr<TIFFSaver> ts(new TIFFSaver(filename,ImageSource_rp(s)));
+							savers.push_back(ts);
+							free(filename);
 						}
-						delete src;
-						src=NULL;
-						free(filename);
 					}
 					break;
 				default:
 					throw "Only RGB and CMYK images are currently supported";
+			}
+			for(int row=0;row<src->height;++row)
+			{
+				for(unsigned int i=0;i<savers.size();++i)
+				{
+					savers[i]->ProcessRow(row);
+				}
+				p.DoProgress(row,src->height);
 			}
 		}
 	}

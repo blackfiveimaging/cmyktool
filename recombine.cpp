@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "imageutils/tiffsave.h"
+#include "imageutils/tiffsaver.h"
 #include "support/progresstext.h"
 
 #include "lcmswrapper.h"
@@ -95,12 +95,11 @@ int main(int argc, char **argv)
 		{
 			char *fn=GetRootFilename(argv[optind]);
 			cerr << "Filename " << fn << endl;
-			TIFFSaver ts(fn,src);
+			TIFFSaver ts(fn,ImageSource_rp(src));
 			ProgressText p;
 			ts.SetProgress(&p);
 			ts.Save();
 	
-			delete src;
 			free(fn);
 		}
 	}

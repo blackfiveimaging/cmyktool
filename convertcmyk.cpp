@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "tiffsave.h"
+#include "tiffsaver.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -125,7 +125,7 @@ class ConversionJob : public Job
 
 		try
 		{
-			ImageSource *src=ISLoadImage(filename);
+			ImageSource *src(ISLoadImage(filename));
 			src=opts.Apply(src,NULL,tw->factory);
 
 			char *outfilename=BuildFilename(filename,"-CMYK","tif");
@@ -133,11 +133,10 @@ class ConversionJob : public Job
 			cerr << "Saving " << outfilename << endl;
 			{
 				Progress p;
-				TIFFSaver ts(outfilename,src);
+				TIFFSaver ts(outfilename,ImageSource_rp(src));
 				ts.SetProgress(&p);
 				ts.Save();
 			}
-			delete src;
 			free(outfilename);
 		}
 		catch(const char *err)

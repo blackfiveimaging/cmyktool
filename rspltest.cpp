@@ -11,7 +11,7 @@ using namespace std;
 #include "configdb.h"
 #include "imagesource_util.h"
 #include "util.h"
-#include "tiffsave.h"
+#include "tiffsaver.h"
 #include "progresstext.h"
 #include "profilemanager.h"
 
@@ -368,11 +368,10 @@ int main(int argc,char **argv)
 			ImageSource *is=ISLoadImage(argv[1]);
 			char *outfn=BuildFilename(argv[1],"_duo","tif");
 			is=new ImageSource_DuoTone(is,rgbkr);
-			TIFFSaver ts(outfn,is);
+			TIFFSaver ts(outfn,ImageSource_rp(is));
 			ProgressText p;
 			ts.SetProgress(&p);
 			ts.Save();
-			delete is;
 			free(outfn);
 		}
 		else

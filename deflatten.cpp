@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "tiffsave.h"
+#include "tiffsaver.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -145,7 +145,7 @@ int main(int argc, char **argv)
 		cerr << "Overprint: " << opts.overprintblack << endl;
 		cerr << "PreserveGrey: " << opts.preservegrey << endl;
 
-		CMSTransform *transform=NULL;
+		RefCountPtr<CMSTransform> transform;
 		CMSProfile in(opts.sourceprofile);
 		if(in.IsDeviceLink())
 		{
@@ -188,15 +188,12 @@ int main(int argc, char **argv)
 			cerr << "Saving " << filename << endl;
 			{
 				Progress p;
-				TIFFSaver ts(filename,src);
+				TIFFSaver ts(filename,ImageSource_rp(src));
 				ts.SetProgress(&p);
 				ts.Save();
 			}
-			delete src;
 			free(filename);
 		}
-		if(transform)
-			delete transform;
 	}
 	catch(const char *err)
 	{
