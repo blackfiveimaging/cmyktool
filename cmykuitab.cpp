@@ -803,7 +803,6 @@ class UITab_SaveDialog
 					imgsaver->Save();
 
 					delete imgsaver;
-					delete is;
 
 					done=true;
 				}
