@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cmyktool 0.1.4\n"
 "Report-Msgid-Bugs-To: blackfive@fakenhamweb.co.uk\n"
-"POT-Creation-Date: 2010-12-31 12:19+0000\n"
+"POT-Creation-Date: 2011-01-20 23:37+0000\n"
 "PO-Revision-Date: 2010-12-08 07:53-0300\n"
 "Last-Translator: banto palmarino <bantopalmarino@nkosi.org>\n"
 "Language-Team: CEDRIC GEMY <cedric.gemy@gmail.com>\n"
@@ -127,7 +127,7 @@ msgid "Shape:"
 msgstr "Shape:"
 
 #: argyllsupport/viewingcondselector.cpp:43
-#: profilemanager/profilemanager.cpp:877
+#: profilemanager/profilemanager.cpp:879
 msgid "Default"
 msgstr "Padrão"
 
@@ -171,145 +171,146 @@ msgstr "Original scene - Bright Outdoors"
 msgid "Cut Sheet Transparencies on a viewing box"
 msgstr "Cut Sheet Transparencies on a viewing box"
 
-#: cmyktool.cpp:140
+#: cmyktool.cpp:139
 msgid "_File"
 msgstr "_Arquivo"
 
-#: cmyktool.cpp:142
+#: cmyktool.cpp:141
 msgid "_Quit"
 msgstr "_Sair"
 
-#: cmyktool.cpp:142
+#: cmyktool.cpp:141
 msgid "Exit the program"
 msgstr "Sair do programa"
 
-#: cmyktool.cpp:144
+#: cmyktool.cpp:143
 msgid "_Edit"
 msgstr "_Editar"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:145
 msgid "Select _All"
 msgstr "Selecionar tudo (_A)"
 
-#: cmyktool.cpp:146
+#: cmyktool.cpp:145
 msgid "Select all images"
 msgstr "Selecionar todas imagens"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:146
 msgid "Select _None"
 msgstr "Selecionar _nada"
 
-#: cmyktool.cpp:147
+#: cmyktool.cpp:146
 msgid "Deselect all images"
 msgstr "Deselecionar todas imagens"
 
-#: cmyktool.cpp:148
+#: cmyktool.cpp:147
 msgid "Preset _Editor..."
 msgstr "_Editor de pré-definição"
 
-#: cmyktool.cpp:148
+#: cmyktool.cpp:147
 msgid "Open the preset editor"
 msgstr "Abrir o editor de pré-definição"
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:148
 msgid "_Device Link Editor..."
 msgstr "Editor _Device Link"
 
-#: cmyktool.cpp:149
+#: cmyktool.cpp:148
 msgid "Open the Device Link editor"
 msgstr "Abrir o editor Device Link"
 
-#: cmyktool.cpp:150
+#: cmyktool.cpp:149
 msgid "Pre_ferences..."
 msgstr "Preferências..."
 
-#: cmyktool.cpp:150
+#: cmyktool.cpp:149
 msgid "Set paths for colour profiles and external utilities"
 msgstr "Caminhos definidos por perfis de cores e externo utilitários"
 
-#: cmyktool.cpp:152
+#: cmyktool.cpp:151
 msgid "_Help"
 msgstr "_Ajuda (_H)"
 
-#: cmyktool.cpp:154
+#: cmyktool.cpp:153
 msgid "_About"
 msgstr "_Sobre"
 
-#: cmyktool.cpp:154
+#: cmyktool.cpp:153
 msgid "Show the About dialog"
 msgstr "Show the About dialog"
 
-#: cmyktool.cpp:278
+#: cmyktool.cpp:277
 msgid "CMYKTool"
 msgstr "CMYKTool"
 
-#: cmyktool.cpp:336
+#: cmyktool.cpp:335
 msgid "Add Images..."
 msgstr "Adicionar imagens..."
 
-#: cmyktool.cpp:343
+#: cmyktool.cpp:342
 msgid "Remove Images"
 msgstr "Remover imagens"
 
-#: cmyktool.cpp:362
+#: cmyktool.cpp:361
 msgid "Convert"
 msgstr "Converter"
 
-#: cmyktool.cpp:370
+#: cmyktool.cpp:369
 msgid "Using conversion preset:"
 msgstr "Usando conversão pré-definido"
 
-#: cmyktool.cpp:394 dialogs.cpp:69
+#: cmyktool.cpp:393 dialogs.cpp:69
 msgid "Preferences..."
 msgstr "Preferências..."
 
-#: cmyktool.cpp:446
+#: cmyktool.cpp:445
 msgid "Previous settings"
 msgstr "Configuração anterior"
 
-#: cmyktool.cpp:484 profilemanager/profileselector.cpp:204
+#: cmyktool.cpp:483 profilemanager/profileselector.cpp:204
 msgid "None"
 msgstr "Nada"
 
-#: cmyktool.cpp:484
+#: cmyktool.cpp:483
 msgid "No conversion"
 msgstr "Nenhuma conversão"
 
-#: cmyktool.cpp:505 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
+#: cmyktool.cpp:504 conversionoptsdialog.cpp:209 conversionoptsdialog.cpp:689
 #: miscwidgets/imageselector.cpp:478 profilemanager/profileselector.cpp:40
 msgid "Other..."
 msgstr "Outros..."
 
-#: cmyktool.cpp:505
+#: cmyktool.cpp:504
 msgid "Create a new preset"
 msgstr "Criar uma nova pré-definição"
 
-#: cmyktool.cpp:639
+#: cmyktool.cpp:638
 msgid "About CMYKTool"
 msgstr "Sobre CMYKTool"
 
-#: cmyktool.cpp:640
+#: cmyktool.cpp:639
 msgid "translator-credits"
 msgstr "Créditos de tradução"
 
-#: cmyktool.cpp:644
-msgid "Copyright (c) 2009-2010 Alastair M. Robinson"
+#: cmyktool.cpp:643
+#, fuzzy
+msgid "Copyright (c) 2009-2011 Alastair M. Robinson"
 msgstr "Copyright (c) 2009-2010 Alastair M. Robinson"
 
-#: cmyktool.cpp:645
+#: cmyktool.cpp:644
 msgid "A utility for conversion of images using ICC colour profiles."
 msgstr "Um utilitário para conversão de imagens usando os perfis de cores ICC."
 
-#: cmyktool.cpp:689
+#: cmyktool.cpp:688
 #, fuzzy
 msgid "Done"
 msgstr "Nada"
 
-#: cmyktool.cpp:732
+#: cmyktool.cpp:731
 msgid "Open File"
 msgstr "Abrir arquivo"
 
-#: cmyktool.cpp:762 cmyktool.cpp:978
+#: cmyktool.cpp:761 cmyktool.cpp:977
 msgid "Adding images..."
 msgstr "Adicionando imagens..."
 
@@ -323,11 +324,11 @@ msgstr "Renderizando a intenção:"
 msgid "Converting image"
 msgstr "Modo de conversão:"
 
-#: cmykuitab.cpp:394
+#: cmykuitab.cpp:400
 msgid "Inspect"
 msgstr "Inspecionar"
 
-#: cmykuitab.cpp:394
+#: cmykuitab.cpp:400
 msgid ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
@@ -335,11 +336,11 @@ msgstr ""
 "Displays image data without conversion from target space to monitor, "
 "allowing you to see how the data has been modified by the conversion."
 
-#: cmykuitab.cpp:396
+#: cmykuitab.cpp:402
 msgid "Simulate print, adapt white"
 msgstr "Simule impressão, adaptar branco"
 
-#: cmykuitab.cpp:396
+#: cmykuitab.cpp:402
 msgid ""
 "Simulates printed colours but uses the monitor's white point. (Conversion "
 "from destination to monitor profiles, using Relative Colorimetric intent "
@@ -349,11 +350,11 @@ msgstr ""
 "destino para monitorar perfis, com a intenção relativa colorimétrico com a "
 "compensação do ponto preto.)"
 
-#: cmykuitab.cpp:398
+#: cmykuitab.cpp:404
 msgid "Simulate print"
 msgstr "Simular impressão"
 
-#: cmykuitab.cpp:398
+#: cmykuitab.cpp:404
 msgid ""
 "Simulates printed colours, using paper white. (Conversion from destination "
 "to monitor profiles, using Absolute Colorimetric intent.)"
@@ -361,82 +362,82 @@ msgstr ""
 "Simula as cores impressas, utilizando papel branco. (Conversão de destino "
 "para monitorar perfis, com a intenção Colorimétrico absoluto)."
 
-#: cmykuitab.cpp:434
+#: cmykuitab.cpp:440
 msgid "Save..."
 msgstr "Salvar..."
 
-#: cmykuitab.cpp:578
+#: cmykuitab.cpp:585
 msgid "Save Image..."
 msgstr "Salvar imagem..."
 
-#: cmykuitab.cpp:605
+#: cmykuitab.cpp:612
 msgid "File format:"
 msgstr "Tipo de Arquivo:"
 
-#: cmykuitab.cpp:610
+#: cmykuitab.cpp:617
 msgid "JPEG"
 msgstr "JPEG"
 
-#: cmykuitab.cpp:610
+#: cmykuitab.cpp:617
 msgid "JPEG - Lossy format optimised for photographic images"
 msgstr "JPEG - formato lossy otimizado para imagens fotográficas"
 
-#: cmykuitab.cpp:611
+#: cmykuitab.cpp:618
 #, fuzzy
 msgid "JPEG (dithered)"
 msgstr "TIFF (8-bit)"
 
-#: cmykuitab.cpp:611
+#: cmykuitab.cpp:618
 #, fuzzy
 msgid "JPEG - Lossy format with dithering to hide contouring artifacts"
 msgstr "TIFF - 8-bits por amostra, para uma maior compatibilidade"
 
-#: cmykuitab.cpp:612
+#: cmykuitab.cpp:619
 msgid "TIFF (8-bit)"
 msgstr "TIFF (8-bit)"
 
-#: cmykuitab.cpp:612
+#: cmykuitab.cpp:619
 msgid "TIFF - 8-bits per sample, for increased compatibility"
 msgstr "TIFF - 8-bits por amostra, para uma maior compatibilidade"
 
-#: cmykuitab.cpp:613
+#: cmykuitab.cpp:620
 msgid "TIFF (8-bit dithered)"
 msgstr "TIFF (8-bit pontilhada)"
 
-#: cmykuitab.cpp:613
+#: cmykuitab.cpp:620
 #, fuzzy
 msgid "TIFF - 8-bits per sample, with dithering to hide contouring artifacts"
 msgstr "TIFF - 8-bits por amostra, para uma maior compatibilidade"
 
-#: cmykuitab.cpp:614
+#: cmykuitab.cpp:621
 msgid "TIFF (16-bit)"
 msgstr "TIFF (16-bit)"
 
-#: cmykuitab.cpp:614
+#: cmykuitab.cpp:621
 msgid "TIFF - 16-bits per sample, for maximum quality"
 msgstr "TIFF - 16 bits por amostra, para qualidade máxima"
 
-#: cmykuitab.cpp:624
+#: cmykuitab.cpp:631
 msgid "JPEG Quality:"
 msgstr "Qualidade JPEG :"
 
-#: cmykuitab.cpp:640
+#: cmykuitab.cpp:647
 msgid "Resolution:"
 msgstr "Resolução:"
 
-#: cmykuitab.cpp:656
+#: cmykuitab.cpp:663
 msgid "Embed ICC Profile"
 msgstr "Embutir perfil ICC"
 
-#: cmykuitab.cpp:751
+#: cmykuitab.cpp:758
 msgid "File exists - OK to overwrite?"
 msgstr "O arquivo já existe - OK para substituir?"
 
-#: cmykuitab.cpp:765 cmykuitab.cpp:839
+#: cmykuitab.cpp:772 cmykuitab.cpp:845
 msgid "Saving"
 msgstr "Salvando"
 
-#: cmykuitab.cpp:836
+#: cmykuitab.cpp:842
 msgid "Save image - please choose filename"
 msgstr "Salvar imagem - por favor escolha nome do arquivo"
 
@@ -698,15 +699,15 @@ msgstr "Caminhos de pesquisa para utilitários Argyll (TIFFGamut, ColLink, etc)"
 msgid "Search paths for GhostScript executable"
 msgstr "Busca por caminhos GhostScript executável"
 
-#: imageutils/jpegsave.cpp:154
+#: imageutils/jpegsaver.cpp:220
 msgid "JPEG Saver only supports greyscale and colour images!"
 msgstr "JPEG suporta salvar apenas imagens em tons de cinza e cores!"
 
-#: imageutils/jpegsave.cpp:175
+#: imageutils/jpegsaver.cpp:246
 msgid "Can't open file for saving"
 msgstr "Não é possível abrir o arquivo"
 
-#: imageutils/jpegsave.cpp:210
+#: imageutils/jpegsaver.cpp:282
 msgid "JPEG Saver can currently only save RGB, CMYK or Greyscale images."
 msgstr ""
 "JPEG salvo atualmente só pode salvar RGB, CMYK ou imagens em escala de "
@@ -810,23 +811,23 @@ msgstr ""
 "Mimics the original colours (including white point) as closely as possible, "
 "for side-by-side comparisons.  Clips unattainable colours."
 
-#: profilemanager/profilemanager.cpp:212
+#: profilemanager/profilemanager.cpp:213
 msgid "Can't do proofing without a valid Printer profile!"
 msgstr "Não pode fazer prova sem um perfil de Impressora válido!"
 
-#: profilemanager/profilemanager.cpp:217
+#: profilemanager/profilemanager.cpp:218
 msgid "Can't do proofing without a valid Monitor profile!"
 msgstr "Não pode fazer prova sem um perfil de Monitor válido!"
 
-#: profilemanager/profilemanager.cpp:222
+#: profilemanager/profilemanager.cpp:223
 msgid "Can't do proofing without a valid Default RGB profile!"
 msgstr "Não pode fazer prova sem um perfil padrão de RGB válido!"
 
-#: profilemanager/profilemanager.cpp:505
+#: profilemanager/profilemanager.cpp:508
 msgid "No Proof profile provided!"
 msgstr "Nenhum perfil de prova prevista!"
 
-#: profilemanager/profilemanager.cpp:885
+#: profilemanager/profilemanager.cpp:887
 msgid "Default rendering intent"
 msgstr "Intenção de renderização padrão"
 

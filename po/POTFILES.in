@@ -5,7 +5,7 @@ cmykuitab.cpp
 conversionoptsdialog.cpp
 devicelinkdialog.cpp
 dialogs.cpp
-imageutils/jpegsave.cpp
+imageutils/jpegsaver.cpp
 miscwidgets/imageselector.cpp
 miscwidgets/colorantselector.cpp
 miscwidgets/coloranttoggle.cpp

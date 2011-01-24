@@ -1,3 +1,5 @@
+Use a more sensible error message if the user attempts to convert a CMYK image through an RGB -> CMYK devicelink.
+
 | Need an icon for greyscale images!
 
 | Save dialog needs to allow 16-bit, 8-bit, and 8-bit dithered.
@@ -174,6 +176,11 @@ and preferably the conversion mode too.
 
 
 Preserve clipping paths, as per latest Separate+
+Means we need to carry around binary blobs with the ImageSource (more refcounted pointers?)
+The tag to fetch and store is TIFFTAG_PHOTOSHOP.  Maybe also carry around EXIF and XML data?  Though these may
+well be invalidated by converting the image.
+There is a similar tag (or APP marker) for JPEGs, too, it seems.
+
 
 | Since we need to call both Argyll utilities and GhostScript, need to create a better solution
 | for calling command-line programs.
