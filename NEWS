@@ -2,6 +2,8 @@ CMYKTool-0.1.6
 
 	* Now preserves PhotoShop Image Resource Blocks in TIFF images.
 
+    * Rudimentary batch mode implemented.  Use -b switch.
+
 
 CMYKTool-0.1.5
 

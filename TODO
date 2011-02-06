@@ -1,5 +1,7 @@
 Use a more sensible error message if the user attempts to convert a CMYK image through an RGB -> CMYK devicelink.
 
+Problem with exceptions if you disable embedded profiles then convert a CMYK image with no fallback profile.
+
 | Need an icon for greyscale images!
 
 | Save dialog needs to allow 16-bit, 8-bit, and 8-bit dithered.

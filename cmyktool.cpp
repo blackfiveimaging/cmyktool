@@ -56,6 +56,9 @@
 #include "dialogs.h"
 #include "cmykuitab.h"
 
+#include "progresstext.h"
+#include "tiffsaver.h"
+
 #include "config.h"
 #include "gettext.h"
 #define _(x) gettext(x)
@@ -67,6 +70,7 @@ using namespace std;
 
 class UITab_RenderThread;
 
+bool batchmode=false;
 
 class TestUI : public CMYKTool_Core
 {
@@ -911,6 +915,7 @@ void ParseOptions(int argc,char *argv[])
 	{
 		{"help",no_argument,NULL,'h'},
 		{"version",no_argument,NULL,'v'},
+		{"batch",no_argument,NULL,'b'},
 		{"debug",required_argument,NULL,'d'},
 		{0, 0, 0, 0}
 	};
@@ -918,7 +923,7 @@ void ParseOptions(int argc,char *argv[])
 	while(1)
 	{
 		int c;
-		c = getopt_long(argc,argv,"hvd:",long_options,NULL);
+		c = getopt_long(argc,argv,"hvbd:",long_options,NULL);
 		if(c==-1)
 			break;
 		switch (c)
@@ -928,11 +933,15 @@ void ParseOptions(int argc,char *argv[])
 				printf("\t -h --help\t\tdisplay this message\n");
 				printf("\t -v --version\t\tdisplay version\n");
 				printf("\t -d --debug\t\tset debugging level - 0 for silent, 4 for verbose");
+				printf("\t -b --batch\t\tbatch mode\n");
 				throw 0;
 				break;
 			case 'v':
 				printf("%s\n",PACKAGE_STRING);
 				throw 0;
+				break;
+			case 'b':
+				batchmode=true;
 				break;
 			case 'd':
 				Debug.SetLevel(DebugLevel(atoi(optarg)));
@@ -940,6 +949,44 @@ void ParseOptions(int argc,char *argv[])
 		}
 	}
 }
+
+
+class Batch : public CMYKTool_Core
+{
+	public:
+	Batch() : CMYKTool_Core(), presets(), preset(), opts(profilemanager), factory(profilemanager)
+	{
+		profilemanager.SetInt("DefaultCMYKProfileActive",1);
+		preset.Load(presets[presets.GetPreviousIndex()].filename.c_str());
+		preset.Retrieve(opts);
+	}
+	virtual ~Batch()
+	{
+	}
+	void ProcessImage(const char *filename)
+	{
+		char *tmpfn;
+		if(opts.GetOutputType()==IS_TYPE_CMYK)
+			tmpfn=BuildFilename(filename,"-CMYK","tif");
+		else
+			tmpfn=BuildFilename(filename,"-Exported","tif");
+
+		ImageSource *is=ISLoadImage(filename);
+		is=opts.Apply(is,NULL,&factory);
+
+		ProgressText prog;
+		TIFFSaver t(tmpfn,ImageSource_rp(is));
+		t.SetProgress(&prog);
+		t.Save();
+		free(tmpfn);
+	}
+	protected:
+	PresetList presets;
+	CMYKConversionPreset preset;
+	CMYKConversionOptions opts;
+	CMTransformFactory factory;
+};
+
 
 
 int main(int argc,char *argv[])
@@ -972,19 +1019,30 @@ int main(int argc,char *argv[])
 
 	try
 	{
-		TestUI ui;
-
-		ProgressBar *prog=new ProgressBar(_("Adding images..."),true,ui.window);
-
-		for(int i=optind;i<argc;++i)
+		if(batchmode)
 		{
-			ui.AddImage(argv[i]);
-			if(!prog->DoProgress(i,argc))
-				i=argc;
+			Batch batch;
+			for(int i=optind;i<argc;++i)
+			{
+				batch.ProcessImage(argv[i]);
+			}
 		}
-		delete prog;
+		else
+		{
+			TestUI ui;
 
-		gtk_main();
+			ProgressBar *prog=new ProgressBar(_("Adding images..."),true,ui.window);
+
+			for(int i=optind;i<argc;++i)
+			{
+				ui.AddImage(argv[i]);
+				if(!prog->DoProgress(i,argc))
+					i=argc;
+			}
+			delete prog;
+
+			gtk_main();
+		}
 	}
 	catch(const char *err)
 	{
