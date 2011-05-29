@@ -71,8 +71,6 @@ AC_FUNC_STAT
 AC_CHECK_FUNCS([memset mkdir strcasecmp strdup strncasecmp])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in
-                 numlib/Makefile
-                 rspl/Makefile
                  argyllsupport/Makefile
                  imagesource/Makefile
                  imageutils/Makefile
