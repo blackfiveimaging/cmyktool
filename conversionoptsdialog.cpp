@@ -2,17 +2,17 @@
 
 #include <gtk/gtk.h>
 
-#include "support/debug.h"
-#include "support/util.h"
-#include "support/thread.h"
+#include "debug.h"
+#include "util.h"
+#include "thread.h"
 
-#include "miscwidgets/simplecombo.h"
-#include "miscwidgets/simplelistview.h"
-#include "miscwidgets/generaldialogs.h"
+#include "simplecombo.h"
+#include "simplelistview.h"
+#include "generaldialogs.h"
 
-#include "profilemanager/profilemanager.h"
-#include "profilemanager/profileselector.h"
-#include "profilemanager/intentselector.h"
+#include "profilemanager.h"
+#include "profileselector.h"
+#include "intentselector.h"
 
 #include "conversionoptsdialog.h"
 #include "devicelink.h"

@@ -7,10 +7,10 @@
 #include <sys/wait.h>
 #endif
 
-#include "imagesource/imagesource.h"
-#include "support/util.h"
-#include "support/thread.h"
-#include "support/threadutil.h"
+#include "imagesource.h"
+#include "util.h"
+#include "thread.h"
+#include "threadutil.h"
 #include "psrip_core.h"
 
 using namespace std;

@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "support/jobqueue.h"
-#include "support/configdb.h"
+#include "jobqueue.h"
+#include "configdb.h"
 
-#include "profilemanager/profilemanager.h"
+#include "profilemanager.h"
 #include "cmtransformworker.h"
 #include "threadevent.h"
 #include "conversionopts.h"

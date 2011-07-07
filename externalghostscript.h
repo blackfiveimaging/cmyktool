@@ -1,11 +1,11 @@
 #ifndef EXTERNALGHOSTSCRIPT_H
 #define EXTERNALGHOSTSCRIPT_H
 
-#include "support/dirtreewalker.h"
-#include "support/searchpath.h"
-#include "support/debug.h"
-#include "support/externalprog.h"
-#include "support/util.h"
+#include "dirtreewalker.h"
+#include "searchpath.h"
+#include "debug.h"
+#include "externalprog.h"
+#include "util.h"
 
 #ifdef WIN32
 #include <w32api.h>

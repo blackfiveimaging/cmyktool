@@ -1,11 +1,11 @@
 # Makefile.am
 
-SUBDIRS = po argyllsupport support imagesource imageutils miscwidgets profilemanager pixbufthumbnail gfx
+SUBDIRS = po library/argyllsupport library/support library/imagesource library/imageutils library/miscwidgets library/profilemanager library/pixbufthumbnail gfx
 
 localedir=$(datadir)/locale
 
-AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -I./support/ -I./imagesource/ -I./imageutils \
-	-I./miscwidgets -I./profilemanager -I./pixbufthumbnail -I./argyllsupport \
+AM_CXXFLAGS = -DLOCALEDIR=\"$(localedir)\" -Wall -Ilibrary/support/ -Ilibrary/imagesource/ -Ilibrary/imageutils \
+	-Ilibrary/miscwidgets -Ilibrary/profilemanager -Ilibrary/pixbufthumbnail -Ilibrary/argyllsupport \
 	$(LCMS_CFLAGS) $(GTK2_CFLAGS)
 
 noinst_LTLIBRARIES = libdeflatten.la libdeflattenui.la
@@ -60,31 +60,31 @@ preloadtest_SOURCES = preloadtest.cpp
 LDADD = \
 	libdeflattenui.la \
 	libdeflatten.la \
-	argyllsupport/libargyllsupport.la \
-	imageutils/libimageutils.la	\
-	miscwidgets/libmiscwidgets.la	\
-	support/libsupport.la	\
-	imagesource/libimagesource.la	\
-	profilemanager/libprofilemanager.la	\
-	support/libsupport.la	\
-	pixbufthumbnail/libpixbufthumbnail.la	\
+	library/argyllsupport/libargyllsupport.la \
+	library/imageutils/libimageutils.la	\
+	library/miscwidgets/libmiscwidgets.la	\
+	library/support/libsupport.la	\
+	library/imagesource/libimagesource.la	\
+	library/profilemanager/libprofilemanager.la	\
+	library/support/libsupport.la	\
+	library/pixbufthumbnail/libpixbufthumbnail.la	\
 	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS) $(X11_LIBS)
 
 
-imagesource/libimagesource.la:
-	cd imagesource
+library/imagesource/libimagesource.la:
+	cd library/imagesource
 	$(MAKE) libimagesource.la
 	
-support/libsupport.la:
-	cd support
+library/support/libsupport.la:
+	cd library/support
 	$(MAKE) libsupport.la
 
-profilemanager/libprofilemanager.la:
-	cd profilemanager
+library/profilemanager/libprofilemanager.la:
+	cd library/profilemanager
 	$(MAKE) libprofilemanager.la
 
-pixbufthumbnail/libpixbufthumbnail.la:
-	cd pixbufthumbnail
+library/pixbufthumbnail/libpixbufthumbnail.la:
+	cd library/pixbufthumbnail
 	$(MAKE) libpixbufthumbnail.la
 
 
@@ -97,5 +97,4 @@ icon_DATA = cmyktool.png
 
 
 EXTRA_DIST = COPYING README TODO cmyktool.desktop cmyktool.png
-
 

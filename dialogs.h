@@ -3,7 +3,7 @@
 
 #include <gtk/gtk.h>
 #include "cmyktool_core.h"
-#include "profilemanager/profilemanager.h"
+#include "profilemanager.h"
 
 void PreferencesDialog(GtkWindow *parent,CMYKTool_Core &core);
 

@@ -7,9 +7,9 @@
 #include "configdb.h"
 #include "dirtreewalker.h"
 #include "pathsupport.h"
-#include "argyllsupport/argyllbg.h"
-#include "profilemanager/profilemanager.h"
-#include "profilemanager/lcmswrapper.h"
+#include "argyllbg.h"
+#include "profilemanager.h"
+#include "lcmswrapper.h"
 
 #include "config.h"
 #include "gettext.h"

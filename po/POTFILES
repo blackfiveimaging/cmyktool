@@ -1,22 +1,22 @@
-     ../argyllsupport/blackgenselector.cpp \
-     ../argyllsupport/viewingcondselector.cpp \
+     ../library/argyllsupport/blackgenselector.cpp \
+     ../library/argyllsupport/viewingcondselector.cpp \
      ../cmyktool.cpp \
      ../cmykuitab.cpp \
      ../conversionoptsdialog.cpp \
      ../devicelinkdialog.cpp \
      ../dialogs.cpp \
-     ../imageutils/jpegsaver.cpp \
-     ../miscwidgets/imageselector.cpp \
-     ../miscwidgets/colorantselector.cpp \
-     ../miscwidgets/coloranttoggle.cpp \
-     ../miscwidgets/simplelistview.cpp \
-     ../miscwidgets/simplecombo.cpp \
-     ../miscwidgets/uitab.cpp \
-     ../miscwidgets/progressbar.cpp \
-     ../miscwidgets/patheditor.cpp \
-     ../profilemanager/lcmswrapper.cpp \
-     ../profilemanager/profilemanager.cpp \
-     ../profilemanager/profileselector.cpp \
+     ../library/imageutils/jpegsaver.cpp \
+     ../library/miscwidgets/imageselector.cpp \
+     ../library/miscwidgets/colorantselector.cpp \
+     ../library/miscwidgets/coloranttoggle.cpp \
+     ../library/miscwidgets/simplelistview.cpp \
+     ../library/miscwidgets/simplecombo.cpp \
+     ../library/miscwidgets/uitab.cpp \
+     ../library/miscwidgets/progressbar.cpp \
+     ../library/miscwidgets/patheditor.cpp \
+     ../library/profilemanager/lcmswrapper.cpp \
+     ../library/profilemanager/profilemanager.cpp \
+     ../library/profilemanager/profileselector.cpp \
      ../psrip.cpp \
      ../psripui.cpp \
      ../conversionopts.h \

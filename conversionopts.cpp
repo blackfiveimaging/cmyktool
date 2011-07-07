@@ -2,10 +2,10 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "support/debug.h"
-#include "support/util.h"
-#include "support/pathsupport.h"
-#include "support/configdb.h"
+#include "debug.h"
+#include "util.h"
+#include "pathsupport.h"
+#include "configdb.h"
 #include "conversionopts.h"
 #include "imagesource_promote.h"
 #include "imagesource_cms.h"

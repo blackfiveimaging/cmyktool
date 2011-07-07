@@ -21,10 +21,10 @@
 #include "imagesource_montage.h"
 #include "pixbuf_from_imagesource.h"
 
-#include "miscwidgets/pixbuf_from_imagedata.h"
+#include "pixbuf_from_imagedata.h"
 
-#include "argyllsupport/viewingcondselector.h"
-#include "argyllsupport/blackgenselector.h"
+#include "viewingcondselector.h"
+#include "blackgenselector.h"
 
 class DeviceLinkJob : public Job
 {

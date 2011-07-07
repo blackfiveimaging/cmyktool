@@ -3,11 +3,11 @@
 
 #include <gtk/gtk.h>
 #include <gdk/gdkpixbuf.h>
-#include "miscwidgets/uitab.h"
-#include "miscwidgets/spinner.h"
+#include "uitab.h"
+#include "spinner.h"
 #include "conversionopts.h"
-#include "support/debug.h"
-#include "support/ptmutex.h"
+#include "debug.h"
+#include "ptmutex.h"
 
 #include "cmyktool_core.h"
 

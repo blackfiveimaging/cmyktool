@@ -7,13 +7,13 @@
 #include <deque>
 
 #include "debug.h"
-#include "support/configdb.h"
-#include "support/pathsupport.h"
-#include "imagesource/imagesource.h"
-#include "profilemanager/profilemanager.h"
-#include "support/md5.h"
-#include "support/util.h"
-#include "support/dirtreewalker.h"
+#include "configdb.h"
+#include "pathsupport.h"
+#include "imagesource.h"
+#include "profilemanager.h"
+#include "md5.h"
+#include "util.h"
+#include "dirtreewalker.h"
 
 #include "config.h"
 #include "gettext.h"

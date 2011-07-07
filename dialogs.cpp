@@ -1,12 +1,12 @@
 #include <iostream>
 
 #include <gtk/gtk.h>
-#include "imagesource/imagesource.h"
-#include "support/pathsupport.h"
-#include "miscwidgets/patheditor.h"
-#include "miscwidgets/generaldialogs.h"
-#include "profilemanager/profileselector.h"
-#include "profilemanager/intentselector.h"
+#include "imagesource.h"
+#include "pathsupport.h"
+#include "patheditor.h"
+#include "generaldialogs.h"
+#include "profileselector.h"
+#include "intentselector.h"
 #include "simplecombo.h"
 
 #include "util.h"

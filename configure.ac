@@ -8,7 +8,7 @@ AC_CONFIG_SRCDIR([deflatten.cpp])
 AM_CONFIG_HEADER([config.h])
 AM_INIT_AUTOMAKE([1.9 foreign])
 
-AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT_VERSION([0.18.1])
 AM_GNU_GETTEXT([external])
 
 # Checks for programs.
@@ -71,12 +71,12 @@ AC_FUNC_STAT
 AC_CHECK_FUNCS([memset mkdir strcasecmp strdup strncasecmp])
 
 AC_CONFIG_FILES([Makefile po/Makefile.in
-                 argyllsupport/Makefile
-                 imagesource/Makefile
-                 imageutils/Makefile
-                 support/Makefile
-				 miscwidgets/Makefile
-				 pixbufthumbnail/Makefile
-                 profilemanager/Makefile
+                 library/argyllsupport/Makefile
+                 library/imagesource/Makefile
+                 library/imageutils/Makefile
+                 library/support/Makefile
+		 library/miscwidgets/Makefile
+		 library/pixbufthumbnail/Makefile
+                 library/profilemanager/Makefile
 				 gfx/Makefile])
 AC_OUTPUT

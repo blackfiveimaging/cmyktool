@@ -1,13 +1,13 @@
 #ifndef PSRIP_CORE_H
 #define PSRIP_CORE_H
 
-#include "imagesource/imagesource.h"
-#include "support/tempfile.h"
-#include "support/configdb.h"
-#include "support/searchpath.h"
-#include "support/progress.h"
-#include "support/threadevent.h"
-#include "support/threadutil.h"
+#include "imagesource.h"
+#include "tempfile.h"
+#include "configdb.h"
+#include "searchpath.h"
+#include "progress.h"
+#include "threadevent.h"
+#include "threadutil.h"
 #include "externalghostscript.h"
 
 class PSRipOptions : public ExternalGhostScript

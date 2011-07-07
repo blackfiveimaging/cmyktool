@@ -3,14 +3,14 @@
 
 #include <gtk/gtk.h>
 
-#include "imagesource/imagesource_util.h"
-#include "imagesource/pixbuf_from_imagesource.h"
-#include "miscwidgets/imageselector.h"
-#include "miscwidgets/pixbufview.h"
-#include "miscwidgets/generaldialogs.h"
+#include "imagesource_util.h"
+#include "pixbuf_from_imagesource.h"
+#include "imageselector.h"
+#include "pixbufview.h"
+#include "generaldialogs.h"
 #include "progressbar.h"
-#include "support/progresstext.h"
-#include "support/thread.h"
+#include "progresstext.h"
+#include "thread.h"
 #include "psripui.h"
 
 #include "config.h"
