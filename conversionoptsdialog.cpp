@@ -1,5 +1,7 @@
 #include <iostream>
 
+#include "config.h"
+
 #include <gtk/gtk.h>
 
 #include "debug.h"
@@ -18,7 +20,6 @@
 #include "devicelink.h"
 #include "devicelinkdialog.h"
 
-#include "config.h"
 #include "gettext.h"
 #define _(x) gettext(x)
 

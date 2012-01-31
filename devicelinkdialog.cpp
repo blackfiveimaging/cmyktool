@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
 
+#include "config.h"
+
 #include "simplelistview.h"
 #include "debug.h"
 
