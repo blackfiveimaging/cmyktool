@@ -23,16 +23,26 @@ case $host_os in
   *mingw32* ) echo "Configuring for mingw"; LIBS="-lwinspool $LIBS"; CFLAGS="$CFLAGS -DNT"; CXXFLAGS="$CXXFLAGS -DNT";
 esac
 
-# Checks for libraries.
-PKG_CHECK_MODULES([GLIB2], [glib-2.0])
-PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
-PKG_CHECK_MODULES([GTK2], [gtk+-2.0])
-PKG_CHECK_MODULES([GDKPIXBUF2], [gdk-pixbuf-2.0])
+# By default we build with GTK.  Disable with --without-ui
+AC_ARG_WITH([ui],
+[AS_HELP_STRING([--without-ui],
+  [disable user-interface support])],
+[],
+[with_ui=yes])
+
+AS_IF([test "x$with_ui" != xno],
+[
+	PKG_CHECK_MODULES([GLIB2], [glib-2.0])
+	PKG_CHECK_MODULES([GTHREAD], [gthread-2.0])
+	PKG_CHECK_MODULES([GTK2], [gtk+-2.0],AC_DEFINE([HAVE_GTK],[1],[Use GTK+]))
+	PKG_CHECK_MODULES([GDKPIXBUF2], [gdk-pixbuf-2.0])
+	# Since the ProfileManager fetches an X atom from the server, we need to link with X11
+	# explicitly on some systems
+	PKG_CHECK_MODULES(X11, x11, [HAVE_X11=yes], [HAVE_X11=no])
+])
+
 PKG_CHECK_MODULES([LCMS], [lcms])
 
-# Since the ProfileManager fetches an X atom from the server, we need to link with X11
-# explicitly on some systems
-PKG_CHECK_MODULES(X11, x11, [HAVE_X11=yes], [HAVE_X11=no])
 
 AC_CHECK_LIB(m,pow, LIBM_LIBS="-lm")
 AC_SUBST([LIBM_LIBS])
