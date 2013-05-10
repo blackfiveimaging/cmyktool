@@ -41,7 +41,7 @@ AS_IF([test "x$with_ui" != xno],
 	PKG_CHECK_MODULES(X11, x11, [HAVE_X11=yes], [HAVE_X11=no])
 ])
 
-PKG_CHECK_MODULES([LCMS], [lcms])
+PKG_CHECK_MODULES([LCMS], [lcms2])
 
 
 AC_CHECK_LIB(m,pow, LIBM_LIBS="-lm")
