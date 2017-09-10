@@ -15,8 +15,6 @@
 #include "imagesource.h"
 #include "lcmswrapper.h"
 
-#include <lcms.h>
-
 
 class ImageSource_Deflatten : public ImageSource
 {

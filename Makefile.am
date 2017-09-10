@@ -67,7 +67,7 @@ LDADD = \
 	library/profilemanager/libprofilemanager.la	\
 	library/support/libsupport.la	\
 	library/pixbufthumbnail/libpixbufthumbnail.la	\
-	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(GTK2_LIBS) $(X11_LIBS)
+	$(LIBINTL) $(LIBM_LIBS) $(GETOPT_LIBS) $(JPEG_LIBS) $(PNM_LIBS) $(TIFF_LIBS) $(LCMS_LIBS) $(LCMS2_LIBS) $(GTK2_LIBS) $(LIBX11_LIBS)
 
 
 library/imagesource/libimagesource.la:
